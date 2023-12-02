@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\HouseholdController;
+use App\Http\Controllers\LookupController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -13,6 +15,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('{any?}', function() {
+
+Route::get('{any?}', function () {
     return view('application');
 })->where('any', '.*');

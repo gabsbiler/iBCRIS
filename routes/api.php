@@ -3,6 +3,9 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\LookupController;
+use App\Http\Controllers\HouseholdController;
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -13,6 +16,16 @@ use App\Http\Controllers\AuthController;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
+
+Route::get('lookup', [LookupController::class, 'show']);
+Route::get('lookup-list', [LookupController::class, 'showLookupList']);
+Route::get('household', [HouseholdController::class, 'show']);
+Route::get('household-list', [HouseholdController::class, 'findHousehold']);
+Route::get('household-member', [HouseholdController::class, 'findHouseholdMember']);
+
+Route::post('addHousehold', [HouseholdController::class, 'addHousehold']);
+Route::post('addMember', [HouseholdController::class, 'addMember']);
+Route::post('updateMember', [HouseholdController::class, 'updateMember']);
 
 Route::group(['prefix' => 'auth'], function () {
     Route::post('login', [AuthController::class, 'login']);
