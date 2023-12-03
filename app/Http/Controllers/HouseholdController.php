@@ -399,4 +399,42 @@ class HouseholdController extends Controller
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }
+
+    public function deleteHouseholdMember(Request $request)
+    {
+        // Validate the request to ensure a member ID is provided
+        $validated = $request->validate([
+            'household_member_id' => 'required|integer'
+        ]);
+
+        // Start a database transaction
+        DB::beginTransaction();
+
+        try {
+            // Find the household member by ID
+            $member = HouseholdMember::findOrFail($validated['household_member_id']);
+
+            // Check if the member is the head of the household
+            if ($member->head) {
+                return response()->json(["message" => 'Cannot delete the head of the household'], 400);
+            }
+
+            // Delete the demographic details for the member
+            if ($member->demographic) {
+                $member->demographic->delete();
+            }
+
+            // Delete the household member
+            $member->delete();
+
+            // Commit the transaction
+            DB::commit();
+
+            return response()->json(["message" => 'Household member deleted successfully'], 200);
+        } catch (\Exception $e) {
+            // Rollback the transaction in case of error
+            DB::rollback();
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
 }

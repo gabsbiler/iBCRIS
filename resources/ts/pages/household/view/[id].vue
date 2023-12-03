@@ -10,8 +10,22 @@ const householdInfo = ref()
 const progress = ref(97)
 const search = ref()
 
-const addMemberConfirmationBox = ref(false)
+const lookups = ref([])
 
+const addMemberConfirmationBox = ref(false)
+const deleteMemberConfirmationBox = ref(false)
+
+const memberIdToDelete = ref(null);
+
+const isSnackbarSuccessVisible = ref(false)
+const alertMessage = ref()
+const type = ref()
+
+const showSnackBar = data =>{
+  alertMessage.value = data.message
+  type.value = data.type
+  isSnackbarSuccessVisible.value = true
+}
 // 
 
 async function fetchData(){
@@ -27,6 +41,15 @@ async function fetchData(){
   }
 }
 
+async function fetchLookup() {
+  try {
+    const response = await axios.get('/api/lookup/')
+    lookups.value = response.data
+  } catch (error) {
+    console.error("Error fetching lookups:", error)
+  }
+}
+
 async function addMember () {
   try {
     const response = await axios.post('/api/addMember',{
@@ -39,6 +62,28 @@ async function addMember () {
   }
 
 }
+
+const deleteItem = async () => {
+  try {
+    // Make the delete request
+    await axios.delete(`/api/household/member`, { data: { household_member_id: memberIdToDelete.value } });
+    showSnackBar({ message: 'Household member successfully deleted', type: 'success' });
+
+    // Refresh the table data
+    fetchData();
+  } catch (error) {
+    showSnackBar({ message: error.response.data.message, type: 'warning' });
+  }
+  // Reset memberIdToDelete and close the dialog
+  memberIdToDelete.value = null;
+  deleteMemberConfirmationBox.value = false;
+};
+
+// Function to trigger the delete confirmation dialog
+const confirmDelete = (id) => {
+  memberIdToDelete.value = id;
+  deleteMemberConfirmationBox.value = true;
+};
 
 const headers = [
   {
@@ -73,11 +118,13 @@ const headers = [
 
 onMounted(() => {
   fetchData()
+  fetchLookup()
+  
 })
 </script>
 
 <template>
-  <VCard v-if="householdInfo">
+  <VCard v-if="householdInfo && lookups">
     <VImg
       :src="backdrop"
       min-height="125"
@@ -188,10 +235,9 @@ onMounted(() => {
       >
         <template #item.actions="{ item }">
           <div class="d-flex px-auto gap-1">
-            <IconBtn @click="deleteItem(item.raw.id)">
+            <IconBtn @click="confirmDelete(item.raw.id)">
               <VIcon icon="mdi-delete-outline" />
-            </IconBtn> 
-
+            </IconBtn>
             <IconBtn>
               <RouterLink :to="{name: 'household-member-tab', params: {tab: 'demographics'}, query:{
                 member_id:item.raw.id,
@@ -209,6 +255,21 @@ onMounted(() => {
           {{ item.raw.demographic.lastname +', '+ item.raw.demographic.firstname + ' '+ item.raw.demographic.middlename }}
           <!-- {{ item.raw.demographic.lastname }} -->
         </template>
+        <!-- lookups.value.find(lookup => lookup.lookup_name === 'Relationship').find(lookupkey => lookupkey === '') -->
+        <template #item.demographic.relationship="{ item }">
+          {{lookups.filter(lookup => lookup.column_number === '3')[0]?.lookup_list.filter(lookupkey => lookupkey.lookup_key === item.raw.demographic._3)[0]?.description || "Not Specified" }}
+        </template>
+
+        <template #item.demographic.sex="{ item }">
+          {{lookups.filter(lookup => lookup.column_number === '5')[0]?.lookup_list.filter(lookupkey => lookupkey.lookup_key === item.raw.demographic._5)[0]?.description || "Not Specified"}}
+        </template>
+
+        <template #item.demographic.age="{ item }">
+          {{
+            new Date().getFullYear() - new Date(item.raw.demographic._6).getFullYear() - (new Date().getMonth() < new Date(item.raw.demographic._6).getMonth() || (new Date().getMonth() === new Date(item.raw.demographic._6).getMonth() && new Date().getDate() < new Date(item.raw.demographic._6).getDate()) ? 1 : 0)
+          }}
+        </template>
+
 
         <template #item.Progress="{ }">
           <VProgressLinear
@@ -258,6 +319,29 @@ onMounted(() => {
 
       </VDataTable>
     </VCardText>
+    <!-- Confirmation Dialog for Deletion -->
+    <ConfirmDialog 
+      :isDialogVisible="deleteMemberConfirmationBox" 
+      confirmationQuestion="This will be deleted permanently. Are you sure?" 
+      @confirm="deleteItem"
+      @cancel="deleteMemberConfirmationBox = false"
+    />
+    <VSnackbar
+      v-model="isSnackbarSuccessVisible"
+      location="top center"
+      variant="flat"
+      :color="type"
+    >
+      {{ alertMessage }}
+      <template #actions>
+        <VBtn
+          color="white"
+          @click="isSnackbarSuccessVisible = false"
+        >
+          Close
+        </VBtn>
+      </template>
+    </VSnackbar>
   </VCard>
 </template>
 
