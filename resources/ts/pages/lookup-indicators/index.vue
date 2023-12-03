@@ -159,13 +159,13 @@ async function fetchLookupList(columnNumber){
   }
 }
 
-function deleteLookupEntry(lookupName, lookupEntryKey){
+function deleteLookupEntry(lookupName: any, lookupEntryKey: any){
   const requestData = {
     name: lookupName,
     lookupKey: lookupEntryKey,
   }
 
-  axios.delete('/deletelookupentry', { data: requestData })
+  axios.delete('/households', { data: requestData })
     .then(response => {
       fetchData()
       alertMessage.value = response.data.message

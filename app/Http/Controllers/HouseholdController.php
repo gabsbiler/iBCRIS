@@ -371,4 +371,32 @@ class HouseholdController extends Controller
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }
+
+    public function deleteHousehold(Request $request)
+    {
+        $validated = $request->validate([
+            'household_id' => 'required|integer'
+        ]);
+
+        DB::beginTransaction();
+
+        try {
+            $household = Household::findOrFail($validated['household_id']);
+
+            foreach ($household->householdMembers as $member) {
+                if ($member->demographic) {
+                    $member->demographic->delete();
+                }
+                $member->delete();
+            }
+
+            $household->delete();
+            DB::commit();
+
+            return response()->json(["message" => 'Household deleted successfully'], 200);
+        } catch (\Exception $e) {
+            DB::rollback();
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
 }

@@ -28,6 +28,8 @@ Route::post('addMember', [HouseholdController::class, 'addMember']);
 Route::post('updateMember', [HouseholdController::class, 'updateMember']);
 Route::post('updateDeceasedMember', [HouseholdController::class, 'updateDeceasedMember']);
 
+Route::delete('/households', [HouseholdController::class, 'deleteHousehold']);
+
 Route::group(['prefix' => 'auth'], function () {
     Route::post('login', [AuthController::class, 'login']);
     Route::post('register', [AuthController::class, 'register']);

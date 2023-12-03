@@ -148,13 +148,29 @@ async function fetchData(){
     const response = await axios.get('/api/household')
 
     households.value = response.data
-    console.log(households)
+
   
   } catch (error) {
     console.error('Error fetching data:', error)
   }
 }
 
+const deleteItem = async (householdId) => {
+  try {
+    // Make the delete request
+    const response = await axios.delete(`/api/households`, { data: { household_id: householdId } });
+
+    // Show success message
+    showSnackBar({ message: 'Household successfully deleted', type: 'success' });
+
+    // Refresh the table data
+    fetchData();
+  } catch (error) {
+    console.error('Error deleting household:', error);
+    // Show error message
+    showSnackBar({ message: 'Error deleting household', type: 'error' });
+  }
+};
 
 onMounted(() => {
   fetchData()
