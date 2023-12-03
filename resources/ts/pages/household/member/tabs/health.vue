@@ -16,26 +16,40 @@ const isSnackbarSuccessVisible = ref(false)
 const route = useRoute()
 
 
-const submitForm = async () => {
+const onSubmit = async() => {
   try {
+    const response = await axios.post('/api/updateMember', member.value.demographic);
 
-    const response = await axios.post('/api/household/member/update', { data: member.value })
-
-    fetchMember()
-    alertMessage.value = response.data.message
-    isSnackbarSuccessVisible.value = true
-    type.value = "success"
-
+    alertMessage.value = response.data.message;
+    isSnackbarSuccessVisible.value = true;
+    type.value = "success";
   } catch (error) {
-    alertMessage.value = error
-    isSnackbarSuccessVisible.value = true
-    type.value = "error"
+    console.error("There was an error updating the member:", error);
+    alertMessage.value = error.response?.data?.message || "An error occurred";
+    isSnackbarSuccessVisible.value = true;
+    type.value = "error";
   }
 }
 
+
 const resetForm = async() => {
-  member.value.demographic._13a = null
-  member.value.demographic._13b = null
+  member.value.demographic._39a = null
+  member.value.demographic._39b = null
+  member.value.demographic._39bb = null
+  member.value.demographic._39c_1 = null
+  member.value.demographic._39c_2 = null
+  member.value.demographic._39d = null
+  member.value.demographic._39e_1 = null
+  member.value.demographic._39e_2 = null
+  member.value.demographic._40 = null
+  member.value.demographic._41a = null
+  member.value.demographic._41b = null
+  member.value.demographic._42_1 = null
+  member.value.demographic._42_2 = null
+  member.value.demographic._43_1 = null
+  member.value.demographic._43_2 = null
+  member.value.demographic._44_1 = null
+  member.value.demographic._44_2 = null
 }
 
 
@@ -62,7 +76,7 @@ const resetForm = async() => {
                 >
                   <VSelect
                     v-model="member.demographic._39a"
-                    label="(39a) Relationship"
+                    label="(39a) Pregnant in Household"
                     :items="lookups.filter(lookup => lookup.column_number === '39a')[0]?.lookup_list"
                     item-title="description"
                     item-value="lookup_key"
@@ -261,7 +275,7 @@ const resetForm = async() => {
                 >
                   <VSelect
                     v-model="member.demographic._44_1"
-                    label="(4.1) Is there a member of HH that has Nutritional Issues?"
+                    label="(44.1) Is there a member of HH that has Nutritional Issues?"
                     :items="lookups.filter(lookup => lookup.column_number === '44.1')[0]?.lookup_list"
                     item-title="description"
                     item-value="lookup_key"
@@ -289,7 +303,7 @@ const resetForm = async() => {
                   cols="12"
                   class="d-flex flex-wrap gap-4"
                 >
-                  <VBtn @click.prevent="submitForm">
+                  <VBtn @click.prevent="onSubmit">
                     Save changes
                   </VBtn>
 

@@ -16,26 +16,37 @@ const isSnackbarSuccessVisible = ref(false)
 const route = useRoute()
 
 
-const submitForm = async () => {
+const onSubmit = async() => {
   try {
+    const response = await axios.post('/api/updateDeceasedMember', member.value.demographic);
 
-    const response = await axios.post('/api/household/member/update', { data: member.value })
-
-    fetchMember()
-    alertMessage.value = response.data.message
-    isSnackbarSuccessVisible.value = true
-    type.value = "success"
-
+    alertMessage.value = response.data.message;
+    isSnackbarSuccessVisible.value = true;
+    type.value = "success";
   } catch (error) {
-    alertMessage.value = error
-    isSnackbarSuccessVisible.value = true
-    type.value = "error"
+    console.error("There was an error updating the member:", error);
+    alertMessage.value = error.response?.data?.message || "An error occurred";
+    isSnackbarSuccessVisible.value = true;
+    type.value = "error";
   }
 }
 
+
 const resetForm = async() => {
-  member.value.demographic._13a = null
-  member.value.demographic._13b = null
+  member.value.demographic._27a = null
+  member.value.demographic._27b = null
+  member.value.demographic._27c = null
+  member.value.demographic._28 = null
+  member.value.demographic._29 = null
+  member.value.demographic._30 = null
+  member.value.demographic._31 = null
+  member.value.demographic._32 = null
+  member.value.demographic._33 = null
+  member.value.demographic._34 = null
+  member.value.demographic._35 = null
+  member.value.demographic._36 = null
+  member.value.demographic._37 = null
+  member.value.demographic._38 = null
 }
 
 
@@ -56,21 +67,31 @@ const resetForm = async() => {
                 <p>Person who died in the last five years</p>
               </VText>
               <VRow class="mt-2">
-                <!-- <VCol
-                  cols="12"
-                  md="6"
-                >
-                  <VTextField
-                    v-model="member.demographic._26"
-                    label="(26) Place of Death"
-                  />
-                </VCol> -->
                 <VCol
                   cols="12"
+                  md="4"
                 >
                   <VTextField
-                    v-model="member.demographic._27"
-                    label="(27) Name of household member (Surname, Given Name, Middle Name)"
+                    v-model="member.demographic._27a"
+                    label="(27a) Surname"
+                  />
+                </VCol>
+                <VCol
+                  cols="12"
+                  md="4"
+                >
+                  <VTextField
+                    v-model="member.demographic._27b"
+                    label="(27b) Given Name"
+                  />
+                </VCol>
+                <VCol
+                  cols="12"
+                  md="4"
+                >
+                  <VTextField
+                    v-model="member.demographic._27c"
+                    label="(27c) Middle Name"
                   />
                 </VCol>
                 <VCol
@@ -79,7 +100,7 @@ const resetForm = async() => {
                 > 
                   <VSelect
                     v-model="member.demographic._28"
-                    label="(28) Relationship of the deceassed to the household Head"
+                    label="(28) Relationship of the deceased to the Household Head"
                     :items="lookups.filter(lookup => lookup.column_number === '28')[0]?.lookup_list"
                     item-title="description"
                     item-value="lookup_key"
@@ -120,7 +141,7 @@ const resetForm = async() => {
                   md="4"
                   cols="12"
                 >
-                  <VSelect
+                  <VTextField
                     v-model="member.demographic._32"
                     label="(32) Age at the time of death"
                   />
@@ -128,7 +149,7 @@ const resetForm = async() => {
                 <VCol
                   cols="12"
                 >
-                  <VSelect
+                  <VTextField
                     v-model="member.demographic._33"
                     label="(33) Place of Death (Municipal/City, Province)"
                   />
@@ -136,7 +157,7 @@ const resetForm = async() => {
                 <VCol
                   cols="12"
                 >
-                  <VSelect
+                  <VTextField
                     v-model="member.demographic._34"
                     label="(34) What is __'s cause of death?"
                   />
@@ -200,7 +221,7 @@ const resetForm = async() => {
                   cols="12"
                   class="d-flex flex-wrap gap-4"
                 >
-                  <VBtn @click.prevent="submitForm">
+                  <VBtn @click.prevent="onSubmit">
                     Save changes
                   </VBtn>
 

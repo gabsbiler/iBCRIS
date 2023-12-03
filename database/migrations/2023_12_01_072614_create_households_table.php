@@ -15,12 +15,12 @@ return new class extends Migration
     {
         Schema::create('households', function (Blueprint $table) {
             $table->id();
-            $table->string("BSN");
-            $table->string("HUSN");
-            $table->string("HSN");
-            $table->string("Barangay");
-            $table->string("sitio");
-            $table->string("address");
+            $table->string("BSN")->nullable();
+            $table->string("HUSN")->nullable();
+            $table->string("HSN")->nullable();
+            $table->string("Barangay")->nullable();
+            $table->string("sitio")->nullable();
+            $table->string("address")->nullable();
             $table->boolean("surveyStatus")->default(0);
             $table->timestamps();
         });
@@ -86,17 +86,21 @@ return new class extends Migration
             $table->text('_16e')->nullable();
             $table->text('_16f')->nullable();
 
+            $table->text('_17')->nullable();
             $table->text('_18')->nullable();
             $table->text('_19')->nullable();
             $table->text('_20a')->nullable();
             $table->text('_20b')->nullable();
             $table->text('_21')->nullable();
             $table->text('_22')->nullable();
+            $table->text('_23')->nullable();
             $table->text('_24')->nullable();
             $table->text('_25')->nullable();
-
             $table->text('_26')->nullable();
-            $table->text('_27')->nullable();
+
+            $table->text('_27a')->nullable();
+            $table->text('_27b')->nullable();
+            $table->text('_27c')->nullable();
             $table->text('_28')->nullable();
             $table->text('_29')->nullable();
             $table->text('_30')->nullable();
@@ -109,6 +113,14 @@ return new class extends Migration
             $table->text('_37')->nullable();
             $table->text('_38')->nullable();
 
+            $table->text('_39a')->nullable();
+            $table->text('_39b')->nullable();
+            $table->text('_39bb')->nullable();
+            $table->text('_39c_1')->nullable();
+            $table->text('_39c_2')->nullable();
+            $table->text('_39d')->nullable();
+            $table->text('_39e_1')->nullable();
+            $table->text('_39e_2')->nullable();
             $table->text('_40')->nullable();
             $table->text('_41a')->nullable();
             $table->text('_41b')->nullable();
@@ -126,6 +138,15 @@ return new class extends Migration
             $table->text('_49_1')->nullable();
             $table->text('_49_2')->nullable();
             $table->text('_50')->nullable();
+
+            $table->text('_51')->nullable();
+            $table->text('_52')->nullable();
+            $table->text('_53_1')->nullable();
+            $table->text('_53_2')->nullable();
+            $table->text('_54')->nullable();
+            $table->text('_55')->nullable();
+            $table->text('_56')->nullable();
+            $table->text('_57')->nullable();
 
 
             $table->timestamps();

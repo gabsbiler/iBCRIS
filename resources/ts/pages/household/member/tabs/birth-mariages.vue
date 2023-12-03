@@ -16,40 +16,36 @@ const isSnackbarSuccessVisible = ref(false)
 const route = useRoute()
 
 
-const submitForm = async () => {
+const onSubmit = async() => {
   try {
-    const response = await axios.post('/api/household/member/update', { data: member.value })
+    const response = await axios.post('/api/updateMember', member.value.demographic);
 
-    fetchMember()
-    alertMessage.value = response.data.message
-    isSnackbarSuccessVisible.value = true
-    type.value = "success"
-
+    alertMessage.value = response.data.message;
+    isSnackbarSuccessVisible.value = true;
+    type.value = "success";
   } catch (error) {
-    alertMessage.value = error
-    isSnackbarSuccessVisible.value = true
-    type.value = "error"
+    console.error("There was an error updating the member:", error);
+    alertMessage.value = error.response?.data?.message || "An error occurred";
+    isSnackbarSuccessVisible.value = true;
+    type.value = "error";
   }
 }
 
+
 const resetForm = async() => {
-  member.value.demographic._13a = null
-  member.value.demographic._13b = null
+  member.value.demographic._17 = null
+  member.value.demographic._18 = null
 
-  member.value.demographic._14a = null
-  member.value.demographic._14b = null
-  member.value.demographic._14c = null
-  member.value.demographic._14d = null
-  member.value.demographic._14e = null
-  member.value.demographic._14f = null
+  member.value.demographic._19 = null
+  member.value.demographic._20a = null
+  member.value.demographic._20b = null
+  member.value.demographic._21 = null
+  member.value.demographic._22 = null
+  member.value.demographic._23 = null
 
-  member.value.demographic._15a = null
-  member.value.demographic._15b = null
-  member.value.demographic._15c = null
-
-  member.value.demographic._16a = null
-  member.value.demographic._16b = null
-  member.value.demographic._16c = null
+  member.value.demographic._24 = null
+  member.value.demographic._25 = null
+  member.value.demographic._26 = null
 }
 
 
@@ -97,7 +93,7 @@ const resetForm = async() => {
                   cols="12"
                 >
                   <VSelect
-                    v-model="member.demographic._19b"
+                    v-model="member.demographic._19"
                     label="(19) Why was ___'s birth not registered?"
                     :items="lookups.filter(lookup => lookup.column_number === '19')[0]?.lookup_list"
                     item-title="description"
@@ -157,7 +153,7 @@ const resetForm = async() => {
                   cols="12"
                   md="6"
                 >
-                  <VTextField
+                  <AppDateTimePicker
                     v-model="member.demographic._22"
                     label="(22) When did ___'s marriage occur?"
                   />
@@ -202,12 +198,9 @@ const resetForm = async() => {
                   md="6"
                   cols="12"
                 >
-                  <VSelect
+                  <VTextField
                     v-model="member.demographic._26"
                     label="(26)Why was ___'s marriage not registered?"
-                    :items="lookups.filter(lookup => lookup.column_number === '26')[0]?.lookup_list"
-                    item-title="description"
-                    item-value="lookup_key"
                   />
                 </VCol>
                 
@@ -222,7 +215,7 @@ const resetForm = async() => {
                   cols="12"
                   class="d-flex flex-wrap gap-4"
                 >
-                  <VBtn @click.prevent="submitForm">
+                  <VBtn @click.prevent="onSubmit">
                     Save changes
                   </VBtn>
 

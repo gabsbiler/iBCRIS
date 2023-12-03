@@ -35,24 +35,6 @@ const resetAvatar = () => {
 
 const route = useRoute()
 
-
-const submitForm = async () => {
-  try {
-
-    const response = await axios.post('/api/household/member/update', { data: member.value })
-
-    fetchMember()
-    alertMessage.value = response.data.message
-    isSnackbarSuccessVisible.value = true
-    type.value = "success"
-
-  } catch (error) {
-    alertMessage.value = error
-    isSnackbarSuccessVisible.value = true
-    type.value = "error"
-  }
-}
-
 const resetForm = async() => {
   member.value.demographic.lastname = null
   member.value.demographic.firstname = null
@@ -73,33 +55,10 @@ const resetForm = async() => {
 }
 
 const onSubmit = async() => {
-  const toPost = {
-    member_id: route.query.member_id,
-    household_id: route.query.household_id,
-    lastname: member.value.demographic.lastname,
-    firstname: member.value.demographic.firstname,
-    middlename: member.value.demographic.middlename,
-    _3: member.value.demographic._3,
-    _4: member.value.demographic._4,
-    _5: member.value.demographic._5,
-    _6: member.value.demographic._6,
-    _7: member.value.demographic._7,
-    _8: member.value.demographic._8,
-    _9: member.value.demographic._9,
-    _10: member.value.demographic._10,
-    _11: member.value.demographic._11,
-    _12a: member.value.demographic._12a,
-    _12b: member.value.demographic._12b,
-    _12c: member.value.demographic._12c,
-  }
-
-  // console.log(toPost)
-
   try {
-    const response = await axios.post('/api/updateMember', toPost);
-    // fetchMember();
+    const response = await axios.post('/api/updateMember', member.value.demographic);
+
     alertMessage.value = response.data.message;
-    console.log(response.data)
     isSnackbarSuccessVisible.value = true;
     type.value = "success";
   } catch (error) {
@@ -109,6 +68,7 @@ const onSubmit = async() => {
     type.value = "error";
   }
 }
+
 
 
 </script>

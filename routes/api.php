@@ -26,6 +26,7 @@ Route::get('household-member', [HouseholdController::class, 'findHouseholdMember
 Route::post('addHousehold', [HouseholdController::class, 'addHousehold']);
 Route::post('addMember', [HouseholdController::class, 'addMember']);
 Route::post('updateMember', [HouseholdController::class, 'updateMember']);
+Route::post('updateDeceasedMember', [HouseholdController::class, 'updateDeceasedMember']);
 
 Route::group(['prefix' => 'auth'], function () {
     Route::post('login', [AuthController::class, 'login']);

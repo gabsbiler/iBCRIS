@@ -15,23 +15,6 @@ const isSnackbarSuccessVisible = ref(false)
 
 const route = useRoute()
 
-const submitForm = async () => {
-  try {
-
-    const response = await axios.post('/api/household/member/update', { data: member.value })
-
-    fetchMember()
-    alertMessage.value = response.data.message
-    isSnackbarSuccessVisible.value = true
-    type.value = "success"
-
-  } catch (error) {
-    alertMessage.value = error
-    isSnackbarSuccessVisible.value = true
-    type.value = "error"
-  }
-}
-
 const resetForm = async() => {
   member.value.demographic._13a = null
   member.value.demographic._13b = null
@@ -53,6 +36,21 @@ const resetForm = async() => {
   member.value.demographic._16d = null
   member.value.demographic._16e = null
   member.value.demographic._16f = null
+}
+
+const onSubmit = async() => {
+  try {
+    const response = await axios.post('/api/updateMember', member.value.demographic);
+
+    alertMessage.value = response.data.message;
+    isSnackbarSuccessVisible.value = true;
+    type.value = "success";
+  } catch (error) {
+    console.error("There was an error updating the member:", error);
+    alertMessage.value = error.response?.data?.message || "An error occurred";
+    isSnackbarSuccessVisible.value = true;
+    type.value = "error";
+  }
 }
 
 
@@ -235,9 +233,12 @@ const resetForm = async() => {
                   md="6"
                   cols="12"
                 >
-                  <VTextField
+                  <VSelect
                     v-model="member.demographic._16a"
                     label="(16a) Type of Resident"
+                    :items="lookups.filter(lookup => lookup.column_number === '16a')[0]?.lookup_list"
+                    item-title="description"
+                    item-value="lookup_key"
                   />
                 </VCol>
                 <VCol
@@ -293,7 +294,7 @@ const resetForm = async() => {
                   cols="12"
                 >
                 <VSelect
-                    v-model="member.demographic._16e"
+                    v-model="member.demographic._16f"
                     label="(16f) How long do they intend to stay in the community?"
                     :items="lookups.filter(lookup => lookup.column_number === '16f')[0]?.lookup_list"
                     item-title="description"
@@ -310,7 +311,7 @@ const resetForm = async() => {
                   cols="12"
                   class="d-flex flex-wrap gap-4"
                 >
-                  <VBtn @click.prevent="submitForm">
+                  <VBtn @click.prevent="onSubmit">
                     Save changes
                   </VBtn>
 

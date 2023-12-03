@@ -59,7 +59,7 @@ async function fetchMember() {
     })
 
     member.value = response.data
-    console.log(member.value.demographic.tags.split(','))
+    // console.log(member.value.demographic.tags.split(','))
     for (var item of member.value.demographic.tags.split(','))  {
       death.value = item.trim()=="dead" ? true : false
       teenage_pregnant.value = item.trim()=="teenage_pregnancy" ? true : false

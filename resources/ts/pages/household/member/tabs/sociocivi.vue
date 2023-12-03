@@ -16,41 +16,30 @@ const isSnackbarSuccessVisible = ref(false)
 const route = useRoute()
 
 
-const submitForm = async () => {
+const onSubmit = async() => {
   try {
+    const response = await axios.post('/api/updateMember', member.value.demographic);
 
-    const response = await axios.post('/api/household/member/update', { data: member.value })
-
-    fetchMember()
-    alertMessage.value = response.data.message
-    isSnackbarSuccessVisible.value = true
-    type.value = "success"
-
+    alertMessage.value = response.data.message;
+    isSnackbarSuccessVisible.value = true;
+    type.value = "success";
   } catch (error) {
-    alertMessage.value = error
-    isSnackbarSuccessVisible.value = true
-    type.value = "error"
+    console.error("There was an error updating the member:", error);
+    alertMessage.value = error.response?.data?.message || "An error occurred";
+    isSnackbarSuccessVisible.value = true;
+    type.value = "error";
   }
 }
 
+
 const resetForm = async() => {
-  member.value.demographic._13a = null
-  member.value.demographic._13b = null
-
-  member.value.demographic._14a = null
-  member.value.demographic._14b = null
-  member.value.demographic._14c = null
-  member.value.demographic._14d = null
-  member.value.demographic._14e = null
-  member.value.demographic._14f = null
-
-  member.value.demographic._15a = null
-  member.value.demographic._15b = null
-  member.value.demographic._15c = null
-
-  member.value.demographic._16a = null
-  member.value.demographic._16b = null
-  member.value.demographic._16c = null
+  member.value.demographic._45 = null
+  member.value.demographic._47 = null
+  member.value.demographic._49_1 = null
+  member.value.demographic._49_2 = null
+  member.value.demographic._46 = null
+  member.value.demographic._50 = null
+  member.value.demographic._48 = null
 }
 
 
@@ -195,7 +184,7 @@ const resetForm = async() => {
                   cols="12"
                   class="d-flex flex-wrap gap-4"
                 >
-                  <VBtn @click.prevent="submitForm">
+                  <VBtn @click.prevent="onSubmit">
                     Save changes
                   </VBtn>
 
