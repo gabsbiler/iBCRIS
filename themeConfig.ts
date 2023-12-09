@@ -18,7 +18,7 @@ export const { themeConfig, layoutConfig } = defineThemeConfig({
     // logo: h('div', { innerHTML: logo, style: 'line-height:0; color: rgb(var(--v-global-theme-primary))' }),
     logo: h('img', { src: logo, alt: 'app-logo', style: 'max-height: 25px' }),
     contentWidth: ContentWidth.Boxed,
-    contentLayoutNav: AppContentLayoutNav.Vertical,
+    contentLayoutNav: AppContentLayoutNav.Horizontal,
     overlayNavFromBreakpoint: breakpointsVuetify.md + 16, // 16 for scrollbar. Docs: https://next.vuetifyjs.com/en/features/display-and-platform/
     enableI18n: false,
     theme: 'system',

@@ -16,7 +16,6 @@ const isSnackbarSuccessVisible = ref(false)
 const route = useRoute()
 
 const resetForm = async() => {
-
   member.value.demographic._15a = null
   member.value.demographic._15b = null
   member.value.demographic._15c = null
@@ -44,14 +43,6 @@ const onSubmit = async() => {
   }
 }
 
-const is15bDisabled = computed(() => {
-  return member.value.demographic._15a !== '0000' || ['1', '4', '5'].includes(member.value.demographic._15b);
-});
-
-const is15cDisabled = computed(() => {
-  return member.value.demographic._15a !== '0000';
-});
-
 
 </script>
 
@@ -61,151 +52,151 @@ const is15cDisabled = computed(() => {
       <VCard>
         <VCardText>
           <!-- 👉 Form -->
-          <VForm>   
-            <!-- RESIDENCY -->
+          <VForm>         
+            <!-- SKILLS DEVELOPMENT -->
+            <div v-show="member.demographic._7 >= 15" class="mb-5">
+              <VText class="text-button ">
+                <b>
+                  SKILLS DEVELOPMENT
+                </b>
+              </VText>
+              <VRow class="mt-2">
+                <!-- (13a) What type of skills do you have? -->
+                <VCol
+                  md="6"
+                  cols="12"
+                > 
+                  <VSelect
+                    v-model="member.demographic._13a"
+                    label="(13a) What type of skills do you have?"
+                    :items="lookups.filter(lookup => lookup.column_number === '13a')[0]?.lookup_list.map(item => ({ ...item, description: item.lookup_key + ' - ' + item.description }))"
+                    item-title="description"
+                    item-value="lookup_key"
+                  />
+                </VCol>
+                <!-- (13a) What type of skills do you have? -->
+                <VCol
+                  md="6"
+                  cols="12"
+                >
+                  <VSelect
+                    v-model="member.demographic._13b"
+                    label="(13b) What type of skills development training is __ interested to join?"
+                    :items="lookups.filter(lookup => lookup.column_number === '13b')[0]?.lookup_list.map(item => ({ ...item, description: item.lookup_key + ' - ' + item.description }))"
+                    item-title="description"
+                    item-value="lookup_key"
+                  />
+                </VCol>
+              </VRow>
+            </div>
+
+            <!-- ECONOMIC ACTIVITY (FOR 15 YEARS OLD AND ABOVE) -->
             <div>
-              <VText class="text-button">
+              <VText class="text-button ">
                 <b>
-                  RESIDENCY
+                  ECONOMIC ACTIVITY (FOR 15 YEARS OLD AND ABOVE)
                 </b>
               </VText>
               <VRow class="mt-2">
+                <!-- (14a) Indicator for OFW/OCW and Not Working? -->
                 <VCol
                   md="6"
                   cols="12"
-                >
-                  <VTextField
-                    v-model="member.demographic._15a"
-                    label="(15a) In what year did __ started residing in this housing unit?"
-                    type="number"
-                    min="0000" max="9999" step="1"
-                  />
-                </VCol>
-                <VCol
-                  md="6"
-                  cols="12"
-                  v-show="is15bDisabled"
                 >
                   <VSelect
-                    v-model="member.demographic._15b"
-                    label="(15b) Before moving in this housing unit, where did __ reside?"
-                    :items="lookups.filter(lookup => lookup.column_number === '15b')[0]?.lookup_list.map(item => ({ ...item, description: item.lookup_key + ' - ' + item.description }))"
+                    v-model="member.demographic._14a"
+                    label="(14a) Indicator for OFW/OCW and Not Working?"
+                    :items="lookups.filter(lookup => lookup.column_number === '14a')[0]?.lookup_list.map(item => ({ ...item, description: item.lookup_key + ' - ' + item.description }))"
                     item-title="description"
                     item-value="lookup_key"
                   />
                 </VCol>
+
                 <VCol
-                  md="12"
+                  md="6"
                   cols="12"
-                  v-show="is15cDisabled"
+                  v-show="member.demographic._14a == 9"
                 >
                   <VTextField
-                    v-model="member.demographic._15c"
+                    v-model="member.demographic._14a_1"
+                    label="(14a) Indicate Reason (for NOT WORKING)"
+                  />
+                </VCol>
+
+                <VCol
+                  md="6"
+                  cols="12"
+                  v-show="member.demographic._14a == 1"
+                >
+                  <VTextField
+                    v-model="member.demographic._14a_2"
+                    label="(14a) How many years working as OFW"
+                    type="number"
+                  />
+                </VCol>
+                <!-- (14b) What is __'s usual activity/ occupation during the past 12 months? -->
+                <VCol
+                  md="6"
+                  cols="12"
+                >
+                  <VTextField
+                    v-model="member.demographic._14b"
+                    label="(14b) What is __'s usual activity/ occupation during the past 12 months?"
+                  />
+                </VCol>
+                <!-- (14c) What is the major source of __'s income? -->
+                <VCol
+                  md="6"
+                  cols="12"
+                  v-show="member.demographic._7 >= 15"
+                >
+                  <VSelect
+                    v-model="member.demographic._14c"
+                    label="(14c) What is the major source of __'s income?"
+                    :items="lookups.filter(lookup => lookup.column_number === '14c')[0]?.lookup_list.map(item => ({ ...item, description: item.lookup_key + ' - ' + item.description }))"
+                    item-title="description"
+                    item-value="lookup_key"
                     
-                    label="(15c) In what barangay/ city/ municipality did __ resides before?"
                   />
                 </VCol>
-              </VRow>
-            </div>
-
-            <!-- MIGRATION -->
-            <div class="mt-5" v-show="is15bDisabled">
-              <VText class="text-button">
-                <b>
-                  MIGRATION
-                </b>
-              </VText>
-              <VRow class="mt-2">
+                <!-- (14d) Monthly Income -->
                 <VCol
                   md="6"
                   cols="12"
-                >
-                  <VSelect
-                    v-model="member.demographic._16a"
-                    label="(16a) Type of Resident"
-                    :items="lookups.filter(lookup => lookup.column_number === '16a')[0]?.lookup_list.map(item => ({ ...item, description: item.lookup_key + ' - ' + item.description }))"
-                    item-title="description"
-                    item-value="lookup_key"
-                  />
-                </VCol>
-                <VCol
-                  md="6"
-                  cols="12"
-                >
-                  <VSelect
-                    v-model="member.demographic._16b"
-                    label="(16b) What are the reason why  __ left his/her previous residence?"
-                    :items="lookups.filter(lookup => lookup.column_number === '16b')[0]?.lookup_list.map(item => ({ ...item, description: item.lookup_key + ' - ' + item.description }))"
-                    item-title="description"
-                    item-value="lookup_key"
-                  />
-                </VCol>
-                <VCol
-                  md="6"
-                  cols="12"
-                >
-                <VSelect
-                    v-model="member.demographic._16c"
-                    label="(16c) Does __ plan to return to previous residence? When?"
-                    :items="lookups.filter(lookup => lookup.column_number === '16c')[0]?.lookup_list.map(item => ({ ...item, description: item.lookup_key + ' - ' + item.description }))"
-                    item-title="description"
-                    item-value="lookup_key"
-                  />
-                </VCol>
-
-                <VCol
-                  md="6"
-                  cols="12"
-                  v-show="member.demographic._16c == 1"
+                  v-show="member.demographic._14c == 1 || member.demographic._c == 2"
                 >
                   <VTextField
-                    v-model="member.demographic._16c_1"
-                    label="(16c) WHEN to return"
-                    type="number"
-                    min="1600" max="9999" step="1"
+                    v-model="member.demographic._14d"
+                    label="(14d) Monthly Income"
                   />
                 </VCol>
-
-
-
+                <!-- (14e) What is the status of __'s work/ business? -->
                 <VCol
                   md="6"
                   cols="12"
                 >
-                <VSelect
-                    v-model="member.demographic._16d"
-                    label="(16d) What are the reasons why __ transferred in this barangay?"
-                    :items="lookups.filter(lookup => lookup.column_number === '16d')[0]?.lookup_list.map(item => ({ ...item, description: item.lookup_key + ' - ' + item.description }))"
+                  <VSelect
+                    v-model="member.demographic._14e"
+                    label="(14e) What is the status of __'s work/ business?"
+                    :items="lookups.filter(lookup => lookup.column_number === '14e')[0]?.lookup_list.map(item => ({ ...item, description: item.lookup_key + ' - ' + item.description }))"
                     item-title="description"
                     item-value="lookup_key"
                   />
                 </VCol>
+                <!-- (14f) In what barangay and city/ municipality is __'s work/business located? -->
                 <VCol
                   md="6"
                   cols="12"
                 >
-                <VSelect
-                    v-model="member.demographic._16e"
-                    label="(16e) Is Migration permanent?"
-                    :items="lookups.filter(lookup => lookup.column_number === '16e')[0]?.lookup_list.map(item => ({ ...item, description: item.lookup_key + ' - ' + item.description }))"
-                    item-title="description"
-                    item-value="lookup_key"
-                  />
-                </VCol>
-                <VCol
-                  md="6"
-                  cols="12"
-                >
-                <VSelect
-                    v-model="member.demographic._16f"
-                    label="(16f) How long do they intend to stay in the community?"
-                    :items="lookups.filter(lookup => lookup.column_number === '16f')[0]?.lookup_list.map(item => ({ ...item, description: item.lookup_key + ' - ' + item.description }))"
-                    item-title="description"
-                    item-value="lookup_key"
+                  <VTextField
+                    v-model="member.demographic._14f"
+                    label="(14f) In what barangay and city/ municipality is __'s work/business located?"
                   />
                 </VCol>
               </VRow>
             </div>
+
+            
 
             <!-- 👉 Form Actions -->
             <div class="mt-5">

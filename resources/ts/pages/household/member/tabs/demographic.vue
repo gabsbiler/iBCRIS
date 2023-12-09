@@ -69,6 +69,21 @@ const onSubmit = async() => {
   }
 }
 
+const calculatedAge = computed(() => {
+  if (!member.value.demographic._6) return 0;
+
+  const birthDate = new Date(member.value.demographic._6);
+  const today = new Date();
+  let age = today.getFullYear() - birthDate.getFullYear();
+  const monthDayDifference = today.getMonth() - birthDate.getMonth();
+
+  if (monthDayDifference < 0 || (monthDayDifference === 0 && today.getDate() < birthDate.getDate())) {
+    age--;
+  }
+  member.value.demographic._7 = age.toString()
+  return age;
+});
+
 
 
 </script>
@@ -181,7 +196,7 @@ const onSubmit = async() => {
                   <VSelect
                     v-model="member.demographic._3"
                     label="(3) How is __ related to household head?"
-                    :items="lookups.filter(lookup => lookup.column_number === '3')[0]?.lookup_list"
+                    :items="lookups.filter(lookup => lookup.column_number === '3')[0]?.lookup_list.map(item => ({ ...item, description: item.lookup_key + ' - ' + item.description }))"
                     item-title="description"
                     item-value="lookup_key"
                   />
@@ -194,7 +209,7 @@ const onSubmit = async() => {
                   <VSelect
                     v-model="member.demographic._4"
                     label="(4) Family Nucleus"
-                    :items="lookups.filter(lookup => lookup.column_number === '4')[0]?.lookup_list"
+                    :items="lookups.filter(lookup => lookup.column_number === '4')[0]?.lookup_list.map(item => ({ ...item, description: item.lookup_key + ' - ' + item.description }))"
                     item-title="description"
                     item-value="lookup_key"
                   />
@@ -207,28 +222,23 @@ const onSubmit = async() => {
                   <VSelect
                     v-model="member.demographic._5"
                     label="(5) is __ Male or Female"
-                    :items="lookups.filter(lookup => lookup.column_number === '5')[0]?.lookup_list"
+                    :items="lookups.filter(lookup => lookup.column_number === '5')[0]?.lookup_list.map(item => ({ ...item, description: item.lookup_key + ' - ' + item.description }))"
                     item-title="description"
                     item-value="lookup_key"
+                    
                   />
                 </VCol>
                 <!-- (6) When was ____ born? (mm-dd-yyyy) -->
-                <VCol
-                  cols="12"
-                  md="4"
-                >
+                <VCol cols="12" md="4">
                   <AppDateTimePicker
                     v-model="member.demographic._6"
                     label="(6) When was ____ born? (mm-dd-yyyy)"
                   />
                 </VCol>
-                <!-- (7) How old is ___ as of his/her last birthday? -->
-                <VCol
-                  cols="12"
-                  md="4"
-                >
+                <VCol cols="12" md="4">
                   <VTextField
                     v-model="member.demographic._7"
+                    :value="calculatedAge"
                     label="(7) How old is ___ as of his/her last birthday?"
                   />
                 </VCol>
@@ -240,7 +250,7 @@ const onSubmit = async() => {
                   <VSelect
                     v-model="member.demographic._8"
                     label="(8) What __'s citizenship?"
-                    :items="lookups.filter(lookup => lookup.column_number === '8')[0]?.lookup_list"
+                    :items="lookups.filter(lookup => lookup.column_number === '8')[0]?.lookup_list.map(item => ({ ...item, description: item.lookup_key + ' - ' + item.description }))"
                     item-title="description"
                     item-value="lookup_key"
                   />
@@ -253,7 +263,7 @@ const onSubmit = async() => {
                   <VSelect
                     v-model="member.demographic._9"
                     label="(9) What is ____'s religion/ religious affiliation?"
-                    :items="lookups.filter(lookup => lookup.column_number === '8')[0]?.lookup_list"
+                    :items="lookups.filter(lookup => lookup.column_number === '9')[0]?.lookup_list.map(item => ({ ...item, description: item.lookup_key + ' - ' + item.description }))"
                     item-title="description"
                     item-value="lookup_key"
                   />
@@ -266,7 +276,7 @@ const onSubmit = async() => {
                   <VSelect
                     v-model="member.demographic._10"
                     label="(10) What is ____'s ethnicity?"
-                    :items="lookups.filter(lookup => lookup.column_number === '10')[0]?.lookup_list"
+                    :items="lookups.filter(lookup => lookup.column_number === '10')[0]?.lookup_list.map(item => ({ ...item, description: item.lookup_key + ' - ' + item.description }))"
                     item-title="description"
                     item-value="lookup_key"
                   />
@@ -279,7 +289,7 @@ const onSubmit = async() => {
                   <VSelect
                     v-model="member.demographic._11"
                     label="(11) What is __'s highest educational attainment?"
-                    :items="lookups.filter(lookup => lookup.column_number === '11')[0]?.lookup_list"
+                    :items="lookups.filter(lookup => lookup.column_number === '11')[0]?.lookup_list.map(item => ({ ...item, description: item.lookup_key + ' - ' + item.description }))"
                     item-title="description"
                     item-value="lookup_key"
                   />
@@ -292,7 +302,7 @@ const onSubmit = async() => {
                   <VSelect
                     v-model="member.demographic._12a"
                     label="(12a) Is __ currently enrolled?"
-                    :items="lookups.filter(lookup => lookup.column_number === '12a')[0]?.lookup_list"
+                    :items="lookups.filter(lookup => lookup.column_number === '12a')[0]?.lookup_list.map(item => ({ ...item, description: item.lookup_key + ' - ' + item.description }))"
                     item-title="description"
                     item-value="lookup_key"
                   />
@@ -306,7 +316,7 @@ const onSubmit = async() => {
                   
                     v-model="member.demographic._12b"
                     label="(12b) What type of school is __ on?"
-                    :items="lookups.filter(lookup => lookup.column_number === '12b')[0]?.lookup_list"
+                    :items="lookups.filter(lookup => lookup.column_number === '12b')[0]?.lookup_list.map(item => ({ ...item, description: item.lookup_key + ' - ' + item.description }))"
                     item-title="description"
                     item-value="lookup_key"
                   />

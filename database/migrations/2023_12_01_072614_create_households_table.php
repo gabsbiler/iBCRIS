@@ -70,6 +70,8 @@ return new class extends Migration
             $table->text('_13a')->nullable();
             $table->text('_13b')->nullable();
             $table->text('_14a')->nullable();
+            $table->text('_14a_1')->nullable();
+            $table->text('_14a_2')->nullable();
             $table->text('_14b')->nullable();
             $table->text('_14c')->nullable();
             $table->text('_14d')->nullable();
@@ -91,6 +93,7 @@ return new class extends Migration
             $table->text('_19')->nullable();
             $table->text('_20a')->nullable();
             $table->text('_20b')->nullable();
+            $table->text('_20c')->nullable();
             $table->text('_21')->nullable();
             $table->text('_22')->nullable();
             $table->text('_23')->nullable();
@@ -115,7 +118,6 @@ return new class extends Migration
 
             $table->text('_39a')->nullable();
             $table->text('_39b')->nullable();
-            $table->text('_39bb')->nullable();
             $table->text('_39c_1')->nullable();
             $table->text('_39c_2')->nullable();
             $table->text('_39d')->nullable();
@@ -132,17 +134,24 @@ return new class extends Migration
             $table->text('_44_2')->nullable();
 
             $table->text('_45')->nullable();
+            $table->text('_45_1')->nullable();
             $table->text('_46')->nullable();
+            $table->text('_46_1')->nullable();
             $table->text('_47')->nullable();
+            $table->text('_47_1')->nullable();
             $table->text('_48')->nullable();
             $table->text('_49_1')->nullable();
             $table->text('_49_2')->nullable();
             $table->text('_50')->nullable();
+            $table->text('_50_1')->nullable();
 
+            $table->text('isPregnant')->nullable();
             $table->text('_51')->nullable();
+            $table->text('_51_1')->nullable();
             $table->text('_52')->nullable();
             $table->text('_53_1')->nullable();
             $table->text('_53_2')->nullable();
+            $table->text('_54_1')->nullable();
             $table->text('_54')->nullable();
             $table->text('_55')->nullable();
             $table->text('_56')->nullable();

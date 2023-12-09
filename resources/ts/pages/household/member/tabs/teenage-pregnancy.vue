@@ -61,11 +61,37 @@ const resetForm = async() => {
               <VRow class="mt-2">
                 <VCol
                   cols="12"
+                >
+                  <VSelect
+                    v-model="member.demographic.isPregnant"
+                    label="Is the HH enaged in teenage pregnancy incident in the last 3 years?"
+                    :items="lookups.filter(lookup => lookup.column_number === '50')[0]?.lookup_list.map(item => ({ ...item, description: item.lookup_key + ' - ' + item.description }))"
+                    item-title="description"
+                    item-value="lookup_key"
+                  />
+                </VCol>
+              </VRow>
+              <VRow v-show="member.demographic.isPregnant == 1">
+                <VCol
+                  cols="12"
                   md="6"
                 >
-                  <AppDateTimePicker
+                  <VTextField
                     v-model="member.demographic._51"
                     label="(51) When the incidence occurred?"
+                    min="1960" max="2999"
+                    type="number"
+                  />
+                </VCol>
+                <VCol
+                  cols="12"
+                  md="6"
+                >
+                  <VTextField
+                    v-model="member.demographic._51_1"
+                    label="(51) Age during the incidence occurred?"
+                    min="0" max="999"
+                    type="number"
                   />
                 </VCol>
                 <VCol
@@ -75,8 +101,12 @@ const resetForm = async() => {
                   <VTextField
                     v-model="member.demographic._52"
                     label="(52) Age of Father of the child during incidence occurred?"
+                    min="0" max="999"
+                    type="number"
                   />
                 </VCol>
+
+                
                 <VCol
                   md="6"
                   cols="12"
@@ -87,6 +117,17 @@ const resetForm = async() => {
                     :items="lookups.filter(lookup => lookup.column_number === '53.1')[0]?.lookup_list"
                     item-title="description"
                     item-value="lookup_key"
+                  />
+                </VCol>
+
+                <VCol
+                  cols="12"
+                  md="6"
+                  v-show="member.demographic._53_1==1"
+                >
+                  <VTextField
+                    v-model="member.demographic._54_1"
+                    label="(54.1) Where he/she studying"
                   />
                 </VCol>
 
@@ -104,6 +145,8 @@ const resetForm = async() => {
                 </VCol>
                 <VCol
                   cols="12"
+                  md="6"
+                  v-show="member.demographic._53_2 == 1"
                 >
                   <VTextField
                     v-model="member.demographic._54"
@@ -125,6 +168,7 @@ const resetForm = async() => {
                 <VCol
                   cols="12"
                   md="6"
+                  v-show="member.demographic._55==1"
                 >
                   <VTextField
                     v-model="member.demographic._56"

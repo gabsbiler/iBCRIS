@@ -31,6 +31,21 @@ const onSubmit = async() => {
   }
 }
 
+const calculatedAge = computed(() => {
+  if (!member.value.demographic._6) return 0;
+
+  const birthDate = new Date(member.value.demographic._6);
+  const today = new Date();
+  let age = today.getFullYear() - birthDate.getFullYear();
+  const monthDayDifference = today.getMonth() - birthDate.getMonth();
+
+  if (monthDayDifference < 0 || (monthDayDifference === 0 && today.getDate() < birthDate.getDate())) {
+    age--;
+  }
+  member.value.demographic._7 = age.toString()
+  return age;
+});
+
 
 const resetForm = async() => {
   member.value.demographic._17 = null
@@ -48,6 +63,13 @@ const resetForm = async() => {
   member.value.demographic._26 = null
 }
 
+const isMarriageDone = computed(() => {
+  if (member.value.demographic._21 == 1 || 
+  member.value.demographic._21 == 3 ||
+  member.value.demographic._21 == 9
+  ) return false
+  else return true
+})
 
 </script>
 
@@ -83,7 +105,7 @@ const resetForm = async() => {
                   <VSelect
                     v-model="member.demographic._18a"
                     label="(18) Is ____'s birth registered with the LRCO?"
-                    :items="lookups.filter(lookup => lookup.column_number === '18')[0]?.lookup_list"
+                    :items="lookups.filter(lookup => lookup.column_number === '18')[0]?.lookup_list.map(item => ({ ...item, description: item.lookup_key + ' - ' + item.description }))"
                     item-title="description"
                     item-value="lookup_key"
                   />
@@ -91,11 +113,12 @@ const resetForm = async() => {
                 <VCol
                   md="6"
                   cols="12"
+                  v-show="member.demographic._18a == 2"
                 >
                   <VSelect
                     v-model="member.demographic._19"
                     label="(19) Why was ___'s birth not registered?"
-                    :items="lookups.filter(lookup => lookup.column_number === '19')[0]?.lookup_list"
+                    :items="lookups.filter(lookup => lookup.column_number === '19')[0]?.lookup_list.map(item => ({ ...item, description: item.lookup_key + ' - ' + item.description }))"
                     item-title="description"
                     item-value="lookup_key"
                   />
@@ -103,11 +126,12 @@ const resetForm = async() => {
                 <VCol
                   md="6"
                   cols="12"
+                  v-show="calculatedAge < 1"
                 >
                   <VSelect
                     v-model="member.demographic._20a"
                     label="(20a) Where was  __ delivered?"
-                    :items="lookups.filter(lookup => lookup.column_number === '20a')[0]?.lookup_list"
+                    :items="lookups.filter(lookup => lookup.column_number === '20a')[0]?.lookup_list.map(item => ({ ...item, description: item.lookup_key + ' - ' + item.description }))"
                     item-title="description"
                     item-value="lookup_key"
                   />
@@ -115,13 +139,24 @@ const resetForm = async() => {
                 <VCol
                   md="6"
                   cols="12"
+                  v-show="calculatedAge < 1"
                 >
                   <VSelect
                     v-model="member.demographic._20b"
                     label="(20b) Who attended in the delivery of __?"
-                    :items="lookups.filter(lookup => lookup.column_number === '20b')[0]?.lookup_list"
+                    :items="lookups.filter(lookup => lookup.column_number === '20b')[0]?.lookup_list.map(item => ({ ...item, description: item.lookup_key + ' - ' + item.description }))"
                     item-title="description"
                     item-value="lookup_key"
+                  />
+                </VCol>
+
+                <VCol
+                  cols="12"
+                  md="6"
+                >
+                  <VTextField
+                    v-model="member.demographic._20c"
+                    label="(20c) What is the last vaccine received by ____?"
                   />
                 </VCol>
                 
@@ -143,7 +178,7 @@ const resetForm = async() => {
                   <VSelect
                     v-model="member.demographic._21"
                     label="(21) What is ______'s marital status?"
-                    :items="lookups.filter(lookup => lookup.column_number === '21')[0]?.lookup_list"
+                    :items="lookups.filter(lookup => lookup.column_number === '21')[0]?.lookup_list.map(item => ({ ...item, description: item.lookup_key + ' - ' + item.description }))"
                     item-title="description"
                     item-value="lookup_key"
                   />
@@ -152,6 +187,8 @@ const resetForm = async() => {
                 <VCol
                   cols="12"
                   md="6"
+
+                  v-show="isMarriageDone"
                 >
                   <AppDateTimePicker
                     v-model="member.demographic._22"
@@ -162,6 +199,7 @@ const resetForm = async() => {
                 <VCol
                   cols="12"
                   md="6"
+                  v-show="isMarriageDone"
                 >
                   <VTextField
                     v-model="member.demographic._23"
@@ -172,11 +210,12 @@ const resetForm = async() => {
                 <VCol
                   md="6"
                   cols="12"
+                  v-show="isMarriageDone"
                 >
                   <VSelect
                     v-model="member.demographic._24"
                     label="(24) Type of Marriage ceremony?"
-                    :items="lookups.filter(lookup => lookup.column_number === '24')[0]?.lookup_list"
+                    :items="lookups.filter(lookup => lookup.column_number === '24')[0]?.lookup_list.map(item => ({ ...item, description: item.lookup_key + ' - ' + item.description }))"
                     item-title="description"
                     item-value="lookup_key"
                   />
@@ -185,11 +224,12 @@ const resetForm = async() => {
                 <VCol
                   md="6"
                   cols="12"
+                  v-show="isMarriageDone"
                 >
                 <VSelect
                     v-model="member.demographic._25"
                     label="(25) Is __'s marriage registered with the LCRO?"
-                    :items="lookups.filter(lookup => lookup.column_number === '25')[0]?.lookup_list"
+                    :items="lookups.filter(lookup => lookup.column_number === '25')[0]?.lookup_list.map(item => ({ ...item, description: item.lookup_key + ' - ' + item.description }))"
                     item-title="description"
                     item-value="lookup_key"
                   />
@@ -197,6 +237,7 @@ const resetForm = async() => {
                 <VCol
                   md="6"
                   cols="12"
+                  v-show="isMarriageDone"
                 >
                   <VTextField
                     v-model="member.demographic._26"
