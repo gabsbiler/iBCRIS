@@ -146,7 +146,7 @@ const is15cDisabled = computed(() => {
                 >
                 <VSelect
                     v-model="member.demographic._16c"
-                    label="(16c) Does __ plan to return to previous residence? When?"
+                    label="(16c) Does __ plan to return to previous residence?"
                     :items="lookups.filter(lookup => lookup.column_number === '16c')[0]?.lookup_list.map(item => ({ ...item, description: item.lookup_key + ' - ' + item.description }))"
                     item-title="description"
                     item-value="lookup_key"

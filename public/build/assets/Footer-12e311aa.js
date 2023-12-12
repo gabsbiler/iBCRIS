@@ -1,0 +1,1 @@
+import{P as e,o as s,c as t,m as c}from"./main-78095835.js";const o={},n={class:"h-100 d-flex align-center justify-space-between"},a=c("span",{class:"d-flex align-center"}," © 2024, IBCRIS - A PROJECT OF COLEGIO DE LA CIUDAD DE TAYABAS UNDER DOST PCIERRD ",-1),r=[a];function _(d,i){return s(),t("div",n,r)}const f=e(o,[["render",_]]);export{f as default};
