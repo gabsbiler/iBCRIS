@@ -1,29 +1,32 @@
-import type { VerticalNavItems } from '@/@layouts/types'
 
 export default [
   {
     title: 'Dashboard',
     to: { name: 'index' },
-    icon: { icon: 'mdi-view-dashboard' },
+    icon: { icon: 'mdi-home-outline' },
   },
   {
-    title: 'Look ups / Indicators',
-    to: { name: 'lookup-indicators' },
-    icon: { icon: 'mdi-file-document-outline' },
+    title: 'Users',
+    icon: { icon: 'mdi-account-outline' },
+    to: {name: 'system-users'}
   },
   {
-    title: 'Household',
+    title: 'Records',
     to: { name: 'household' },
-    icon: { icon: 'mdi-file-document-outline' },
+    icon: { icon: 'mdi-clipboard-outline' },
   },
   {
-    title: 'Mass Upload',
-    to: { name: 'mass-upload' },
-    icon: { icon: 'mdi-file-document-outline' },
+    title: 'Reports',
+    icon: { icon: 'mdi-chart-pie-outline' },
+    to: {name: 'reports'}
   },
-  // {
-  //   title: 'System Users',
-  //   to: { name: 'system-users' },
-  //   icon: { icon: 'mdi-account-cog-outline' },
-  // },
-] as VerticalNavItems
+  {
+    title: 'Settings',
+    icon: {icon: 'mdi-playlist-check'},
+    children: [
+      {title: 'Look ups / Indicators', to: 'lookup-indicators' },
+      {title: 'Mass Upload', to: 'mass-upload' },
+    ]
+  }
+  
+] as HorizontalNavItems

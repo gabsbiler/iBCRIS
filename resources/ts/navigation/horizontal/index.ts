@@ -1,4 +1,3 @@
-import type { HorizontalNavItems } from '@layouts/types'
 
 export default [
   {
@@ -9,6 +8,7 @@ export default [
   {
     title: 'Users',
     icon: { icon: 'mdi-account-outline' },
+    to: {name: 'system-users'}
   },
   {
     title: 'Records',
@@ -18,6 +18,7 @@ export default [
   {
     title: 'Reports',
     icon: { icon: 'mdi-chart-pie-outline' },
+    to: {name: 'reports'}
   },
   {
     title: 'Settings',

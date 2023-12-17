@@ -4,7 +4,7 @@
   <div>
     <VCard>
       <VCardText class="text-center">
-        <h3 class="text-h3">iBCRIS > Dashboard</h3> 
+        <h3 class="text-h3">iBCRIS > Reports</h3> 
       </VCardText>
     </VCard>
   </div>
