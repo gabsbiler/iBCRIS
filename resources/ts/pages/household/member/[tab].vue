@@ -103,7 +103,7 @@ async function fetchLookup() {
   }
 }
 
-onMounted(() => {
+onBeforeMount(() => {
   fetchLookup()
   fetchMember()
   fetchHousehold()
@@ -209,7 +209,7 @@ onMounted(() => {
           
         </VTabs>
       </VCol>
-      <VCol cols="12">
+      <VCol cols="12" v-if="member && lookups">
         <VWindow
           v-model="activeTab"
           class="disable-tab-transition"

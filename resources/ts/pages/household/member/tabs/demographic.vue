@@ -3,11 +3,13 @@ import axios from '@axios';
 import avatar1 from '@images/avatars/avatar-1.png';
 
 const member = ref(props.member)
-const lookups = ref(props.lookups)
+// const lookups = ref(props.lookups)
+// const member = ref()
+const lookups = ref([])
 
 const props = defineProps({
   member: Array,
-  lookups: Array
+  // lookups: Array
 })
 
 const refInputEl = ref()
@@ -26,6 +28,15 @@ const changeAvatar = file => {
       if (typeof fileReader.result === 'string')
         avatarImg.value= fileReader.result
     }
+  }
+}
+
+async function fetchLookup() {
+  try {
+    const response = await axios.get('/api/lookup/')
+    lookups.value = response.data
+  } catch (error) {
+    console.error("Error fetching lookups:", error)
   }
 }
 
@@ -84,6 +95,10 @@ const calculatedAge = computed(() => {
   return age;
 });
 
+onBeforeMount(() => {
+  fetchLookup()
+})
+// fetchLookup()
 
 
 </script>

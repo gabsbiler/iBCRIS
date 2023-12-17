@@ -125,6 +125,7 @@ return new class extends Migration
             //health
             $table->text('_39a')->nullable(); //(39a) Any pregnant female members in this household?
             $table->text('_39b')->nullable(); //(39b) Number of Pregnancies
+            $table->text('_39bb')->nullable(); //(39b) Number of Pregnancies
             $table->text('_39c_1')->nullable(); //(39c.1) Is female age 10-54 using Family Planning Method?
             $table->text('_39c_2')->nullable(); //(39c.2) Family Planning Method?
             $table->text('_39d')->nullable(); //(39d) Where did they obtain the FP method?

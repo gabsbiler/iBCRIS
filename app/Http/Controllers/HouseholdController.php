@@ -437,4 +437,58 @@ class HouseholdController extends Controller
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }
+
+    public function multipleUploads(Request $request)
+    {
+        $households = [];
+
+        // Loop through the input data
+        foreach ($request->input('data') as $item) {
+            // Generate a key for each household
+            $householdKey = $item['bsn'] . '-' . $item['husn'] . '-' . $item['hsn'];
+
+            // Check if the household is already processed and mark the first member as head
+            $isFirstMember = !isset($households[$householdKey]);
+
+            // Create or update the Household
+            $household = Household::updateOrCreate(
+                ['bsn' => $item['bsn'], 'husn' => $item['husn'], 'hsn' => $item['hsn']],
+                ['barangay' => $item['barangay'], 'sitio' => $item['sitio'], 'address' => $item['address']]
+            );
+
+            // Initialize the members array if it's a new household
+            if ($isFirstMember) {
+                $households[$householdKey] = $household->toArray();
+                $households[$householdKey]['members'] = [];
+            }
+
+            // Create a new HouseholdMember and associate it with the Household
+            $member = new HouseholdMember();
+            $member->household_id = $households[$householdKey]['id'];
+            $member->head = $isFirstMember; // Mark the first member as head
+            $member->save();
+
+            // Prepare demographic data
+            $demographicData = [];
+            foreach ($item as $key => $value) {
+                if (!in_array($key, ['bsn', 'husn', 'hsn', 'barangay', 'sitio', 'address'])) {
+                    $demographicData[$key] = $value;
+                }
+            }
+
+            // Create or update member's demographic details
+            $demographic = new Demographic($demographicData);
+            $demographic->household_member_id = $member->id;
+            $demographic->save();
+
+            // Add the member and demographic details to the household's members array
+            $households[$householdKey]['members'][] = [
+                'member' => $member->toArray(),
+                'demographic' => $demographic->toArray()
+            ];
+        }
+
+        // Return the processed households
+        return response()->json($households);
+    }
 }

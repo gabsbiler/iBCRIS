@@ -27,6 +27,7 @@ Route::post('addHousehold', [HouseholdController::class, 'addHousehold']);
 Route::post('addMember', [HouseholdController::class, 'addMember']);
 Route::post('updateMember', [HouseholdController::class, 'updateMember']);
 Route::post('updateDeceasedMember', [HouseholdController::class, 'updateDeceasedMember']);
+Route::post('/households/multiple/upload', [HouseholdController::class, 'multipleUploads']);
 
 Route::delete('/households', [HouseholdController::class, 'deleteHousehold']);
 Route::delete('/household/member', [HouseholdController::class, 'deleteHouseholdMember']);
