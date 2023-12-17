@@ -26,7 +26,7 @@
         <VTab 
           v-for="item in lookups"
           :key="item.id"
-          @click="fetchLookupList(item.column_number)"
+          @click="fetchLookupList(item.id)"
         >
           <VIcon
             start
@@ -43,7 +43,7 @@
       
     >
       <!-- Main content area with windows for each tab -->
-      <VWindow v-model="currentTab" >
+      <VWindow v-model="currentTab">
         <!-- Window for creating a new lookup -->
         <VWindowItem>
           <AddLookupForm @run-after-submit="fetchData" />
@@ -71,7 +71,7 @@
               </thead>
               <tbody>
                 <!-- Iterate over existing lookup entries -->
-                <tr v-for="listing in lookupList">
+                <tr v-for="listing in lookupList" :key="listing.lookup_key ">
                   <td>{{ listing.lookup_key }}</td>
                   <td>
                     {{ listing.description }}
@@ -79,7 +79,7 @@
                   <td class="text-center">
                     <VBtn
                       variant="text"
-                      @click="deleteLookupEntry(item.name, key)"
+                      @click="deleteLookupEntry(listing.lookup_id, listing.lookup_key)"
                     >
                       <VIcon icon="mdi-trash-outline" />
                     </VBtn>
@@ -90,8 +90,8 @@
             <!-- Form row for adding a new lookup entry -->
             <AddLookupEntry
               class="my-3"
-              :look-up-entry-name="lookUpEntryName"
-              @run-after-submit="fetchData"
+              :lookUpEntryId="lookUpEntryName"
+              @run-after-submit="fetchLookupList"
             />
           </VCard>
         </VWindowItem>
@@ -111,6 +111,7 @@
         >
           Close
         </VBtn>
+        
       </template>
     </VSnackbar>
   </VRow>
@@ -120,37 +121,37 @@
 import axios from '@axios';
 import { onMounted, ref } from 'vue';
 
+const currentTab = ref(); 
+
 const lookUpEntryName = ref('')
 
-// State variables
 const lookups = ref([])
 const lookupList = ref([])
-const currentTab = ref(0)
 
 const isSnackbarSuccessVisible=ref(false)
 const alertMessage = ref('')
 const type = ref('')
 
-// Fetch data on component mount
 onMounted(() => {
-  fetchData()
-})
-
+  fetchData(); // Fetch data after setting the tab
+});
 // Async function to fetch data from the server
 async function fetchData() {
   try {
     const response = await axios.get('/api/lookup')
     lookups.value = response.data
+    console.log("hello")
   } catch (error) {
     console.error('Error fetching data:', error)
   }
 }
 
-async function fetchLookupList(columnNumber){
+async function fetchLookupList(lookupid:any){
+  lookUpEntryName.value = lookupid
   try {
     const response = await axios.get('/api/lookup-list', {
       params: {
-        column_number: columnNumber
+        lookupid: lookupid
       }
     })
     lookupList.value = response.data
@@ -159,15 +160,16 @@ async function fetchLookupList(columnNumber){
   }
 }
 
-function deleteLookupEntry(lookupName: any, lookupEntryKey: any){
+async function deleteLookupEntry(lookupid: any, lookupEntryKey: any){
   const requestData = {
-    name: lookupName,
+    lookup_id: lookupid,
     lookupKey: lookupEntryKey,
   }
 
-  axios.delete('/households', { data: requestData })
+  await axios.delete('/api/lookup/entry', { data: requestData })
     .then(response => {
       fetchData()
+      fetchLookupList(lookupid)
       alertMessage.value = response.data.message
       isSnackbarSuccessVisible.value = true
       type.value = "success"

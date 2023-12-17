@@ -122,7 +122,7 @@ const addNewLookup = () => {
   }
 
   axios
-    .post('/addnewlookup', formData)
+    .post('/api/lookup/add', formData)
     .then(response => {
       emit('runAfterSubmit')
       alertMessage.value = response.data.message
@@ -133,6 +133,7 @@ const addNewLookup = () => {
       alertMessage.value = error
       isSnackbarSuccessVisible.value = true
       type.value = "error"
+      console.log(error);
     })
 }
 

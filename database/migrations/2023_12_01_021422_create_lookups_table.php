@@ -15,7 +15,7 @@ return new class extends Migration
         Schema::create('lookups', function (Blueprint $table) {
             $table->id();
             $table->string("lookup_name");
-            $table->string("column_number");
+            $table->string("column_number")->default("unassigned");
             $table->timestamps();
         });
 

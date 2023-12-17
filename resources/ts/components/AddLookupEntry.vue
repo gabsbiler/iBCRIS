@@ -50,7 +50,7 @@ import axios from '@axios'
 import { defineProps, ref } from 'vue'
 
 const props = defineProps({
-  lookUpEntryName: String,
+  lookUpEntryId: String,
 })
 
 const emit = defineEmits(['runAfterSubmit'])
@@ -63,20 +63,19 @@ const alertMessage = ref('')
 const type = ref('')
 
 const addNewLookupEntry = () => {
-  // Prepare data for the new entry
   const formData = {
-    name: props.lookUpEntryName,
+    lookupid: props.lookUpEntryId, // Assuming you have the correct lookup ID here
     code: lookUpEntryCode.value,
     description: lookUpEntryDescription.value,
-  }
+  };
 
   // Send a POST request to add a new entry
-  axios.post('/addnewlookupentry', formData)
+  axios.post('/api/lookup/entry/add', formData)
     .then(response => {
       // Clear input fields and show success alert
       lookUpEntryCode.value = ''
       lookUpEntryDescription.value = ''
-      emit('runAfterSubmit')
+      emit('runAfterSubmit', props.lookUpEntryId)
       alertMessage.value = response.data.message
       isSnackbarSuccessVisible.value = true
       type.value = "success"
@@ -85,6 +84,7 @@ const addNewLookupEntry = () => {
       alertMessage.value = error
       isSnackbarSuccessVisible.value = true
       type.value = "error"
+      console.log(error)
     })
 }
 </script>

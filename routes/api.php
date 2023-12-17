@@ -28,9 +28,13 @@ Route::post('addMember', [HouseholdController::class, 'addMember']);
 Route::post('updateMember', [HouseholdController::class, 'updateMember']);
 Route::post('updateDeceasedMember', [HouseholdController::class, 'updateDeceasedMember']);
 Route::post('/households/multiple/upload', [HouseholdController::class, 'multipleUploads']);
+Route::post('/lookup/add', [LookupController::class, 'addLookup']);
+Route::post('/lookup/entry/add', [LookupController::class, 'addNewLookupEntry']);
+
 
 Route::delete('/households', [HouseholdController::class, 'deleteHousehold']);
 Route::delete('/household/member', [HouseholdController::class, 'deleteHouseholdMember']);
+Route::delete('/lookup/entry', [LookupController::class, 'deleteLookupEntry']);
 
 Route::group(['prefix' => 'auth'], function () {
     Route::post('login', [AuthController::class, 'login']);
