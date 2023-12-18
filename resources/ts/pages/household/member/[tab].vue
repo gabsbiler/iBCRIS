@@ -1,19 +1,20 @@
 <script setup>
 import BirthMariages from '@/pages/household/member/tabs/birth-mariages.vue';
-import Death from '@/pages/household/member/tabs/death.vue';
+
 import Demographic from '@/pages/household/member/tabs/demographic.vue';
 import Health from '@/pages/household/member/tabs/health.vue';
 import Skills from '@/pages/household/member/tabs/skills-dev.vue';
 import Residency from '@/pages/household/member/tabs/residency.vue';
 import SocioCivi from '@/pages/household/member/tabs/sociocivi.vue'
 import teenagePregnancy from '@/pages/household/member/tabs/teenage-pregnancy.vue'
+import Death from '@/pages/household/member/tabs/death.vue';
 import avatar1 from '@images/avatars/avatar-1.png';
-
+import {watch} from 'vue'
 import axios from "axios"
 
 const route = useRoute()
 
-const activeTab = ref(route.params.tab)
+const activeTab = ref(route.params.tab || 'demographics');
 
 const member = ref()
 const lookups = ref([])
@@ -62,6 +63,24 @@ const tabs = [
   },
 ]
 
+watch(() => route.params.tab, (newTab) => {
+  activeTab.value = newTab || 'demopgrahics';
+});
+
+async function switchToDeath(){
+  death.value = !death.value
+  try {
+    const response = await axios.put(`/api/household-member/${route.query.member_id}/status`, {
+      isDead: death.value
+    });
+    console.log(response.data.message); // Success message
+    route.params.tab = "death"
+  } catch (error) {
+    console.error('Error updating member status:', error);
+    // Handle the error
+  }
+}
+
 async function fetchHousehold(){
   try {
     const id = route.params.id
@@ -103,7 +122,7 @@ async function fetchLookup() {
   }
 }
 
-onBeforeMount(() => {
+onMounted(() => {
   fetchLookup()
   fetchMember()
   fetchHousehold()
@@ -159,10 +178,22 @@ onBeforeMount(() => {
                       </span> -->
                     </div>
                   </VCol>
-                  <VCol cols="2">
-                    <VBtn color="primary ms-auto">
-                      Change Photo
-                    </VBtn>
+                  <VCol cols="2" style="height: 100%;">
+                    <div class="d-flex flex-row-reverse">
+                      <VSwitch
+                        id="death-switch"
+                        inset
+                        v-model="death"
+                        @click="switchToDeath"
+                      />
+                      <VLabel for="death-switch" class="me-2 text-body-1"> Deceased </VLabel>
+                    </div>
+                    <div class="d-flex flex-row-reverse">
+                      <VBtn color="primary" >
+                        Change Photo
+                      </VBtn>
+                    </div>
+                    
                   </VCol>
                 </VRow>
               </VCol>
@@ -235,12 +266,9 @@ onBeforeMount(() => {
             <BirthMariages :member="member" :lookups="lookups"/>
           </VWindowItem>
 
-          <!-- Death -->
-          <VWindowItem value="death">
-            <Death :member="member" :lookups="lookups"/>
-          </VWindowItem>
+          
 
-          <!-- Death -->
+          <!-- Health -->
           <VWindowItem value="health">
             <Health :member="member" :lookups="lookups"/>
           </VWindowItem>
@@ -254,6 +282,11 @@ onBeforeMount(() => {
           <VWindowItem value="teenage-pregnancy">
             <teenagePregnancy :member="member" :lookups="lookups"/>
           </VWindowItem>
+
+          <!-- Death -->
+          <VWindowItem value="death">
+            <Death :member="member" :lookups="lookups"/>
+          </VWindowItem>
         </VWindow>
       </VCol>
     </VRow>
@@ -263,7 +296,7 @@ onBeforeMount(() => {
   </div>
 </template>
 
-<route lang="yaml">
+<!-- <route lang="yaml">
 meta:
   navActiveLink: pages-household-member-tab
-</route>
+</route> -->

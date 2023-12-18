@@ -9,6 +9,17 @@
               Household List
             </h1>
             <VSpacer />
+              <VTextField
+                v-model="search"
+                density="compact"
+                label="Search"
+                append-inner-icon="mdi-magnify"
+                single-line
+                hide-details
+                dense
+                outlined
+                style="max-width: 300px; margin-inline: 0.8rem;"
+              />
             <AddHouseholdDialog
               @snackbar="showSnackBar"
               @refresh-table="fetchData"
@@ -96,6 +107,7 @@ import { VDataTable } from 'vuetify/labs/VDataTable';
 
 
 const households = ref()
+const search = ref()
 
 const isSnackbarSuccessVisible = ref(false)
 const alertMessage = ref()

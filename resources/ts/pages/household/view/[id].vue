@@ -106,10 +106,10 @@ const headers = [
     title: "Status",
     key: 'demographic.tags',
   },
-  {
-    title: "Info Progress",
-    key: 'Progress',
-  },
+  // {
+  //   title: "Info Progress",
+  //   key: 'Progress',
+  // },
   {
     title: "Action",
     key: 'actions',
@@ -121,6 +121,22 @@ onMounted(() => {
   fetchLookup()
   
 })
+
+
+const updateHouseholdSurveyStatus = async (householdId, newSurveyStatus) => {
+  try {
+    const response = await axios.put('/api/household/survey-status', {
+      household_id: householdId,
+      surveyStatus: !newSurveyStatus
+    });
+    console.log(response.data.message, newSurveyStatus); 
+    householdInfo.value.surveyStatus = !newSurveyStatus
+  } catch (error) {
+    console.error('Error updating survey status:', error);
+    // Handle the error, such as displaying an error message
+  }
+};
+
 </script>
 
 <template>
@@ -177,9 +193,10 @@ onMounted(() => {
             >
               <VBtn
                 class="mx-auto"
-                color="warning"
+                @click="() => {updateHouseholdSurveyStatus(householdInfo.id, householdInfo.surveyStatus)}"
+                :color="householdInfo.surveyStatus ? 'success' : 'warning'"
               >
-                Completed
+                {{householdInfo.surveyStatus ? 'Completed' : 'Mark as Complete'}}
               </VBtn>
             </VCol>
           </VRow>
@@ -194,7 +211,15 @@ onMounted(() => {
   >
     <VCardText>
       <VRow>
-        <VCol offset-md="5">
+        <VCol  class="d-flex gap-x-3">
+          <VBtn
+            color="primary"
+            @click="addMemberConfirmationBox = true"
+          >
+            Add Member
+          </VBtn>
+        </VCol>
+        <VCol offset-md="4">
           <VTextField
             v-model="search"
             density="compact"
@@ -206,13 +231,7 @@ onMounted(() => {
             outlined
           />
         </VCol>
-        <VBtn
-          class="me-3 my-3 d-none d-md-block"
-          color="primary"
-          @click="addMemberConfirmationBox = true"
-        >
-          Add Member
-        </VBtn>
+        
         <ConfirmDialog 
           :isDialogVisible="addMemberConfirmationBox" 
           confirmationQuestion="Add another member?" 
@@ -271,7 +290,7 @@ onMounted(() => {
         </template>
 
 
-        <template #item.Progress="{ }">
+        <!-- <template #item.Progress="{ }">
           <VProgressLinear
             v-model="progress"
             color="primary"
@@ -281,7 +300,7 @@ onMounted(() => {
               <strong>{{ Math.ceil(value) }}%</strong>
             </template>
           </VProgressLinear>
-        </template>
+        </template> -->
 
         <template #item.demographic.tags="{ item }">
           <span v-for="(val, index) in item.raw.demographic.tags.split(',')" :key="index">

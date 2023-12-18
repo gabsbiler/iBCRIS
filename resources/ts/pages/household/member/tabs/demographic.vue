@@ -77,6 +77,7 @@ const onSubmit = async() => {
     alertMessage.value = error.response?.data?.message || "An error occurred";
     isSnackbarSuccessVisible.value = true;
     type.value = "error";
+    console.log(error)
   }
 }
 
@@ -99,7 +100,6 @@ onBeforeMount(() => {
   fetchLookup()
 })
 // fetchLookup()
-
 
 </script>
 
@@ -157,14 +157,14 @@ onBeforeMount(() => {
             </p>
           </form>
           <VSpacer />
-          <VBtn
+          <!-- <VBtn
             icon="mdi-content-save-outline"
             @click.prevent="submitForm"
-          />
+          /> -->
         </VCardText>
         <VCardText>
           <!-- 👉 Form -->
-          <VForm class="mt-6" @submit.prevent="onSubmit">
+          <VForm class="mt-6" @submit.prevent="onSubmit" ref="refForm">
             <!-- DEMOGRAPHICS CHARACTERISTICS -->
             <div>
               <VText class="text-button">
@@ -356,7 +356,7 @@ onBeforeMount(() => {
                   cols="12"
                   class="d-flex flex-wrap gap-4"
                 >
-                  <VBtn @click.prevent="onSubmit">
+                  <VBtn type="submit" @click="refForm?.validate()">
                     Save changes
                   </VBtn>
 

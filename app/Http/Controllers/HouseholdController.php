@@ -187,6 +187,23 @@ class HouseholdController extends Controller
             '_24' => 'string|nullable',
             '_25' => 'string|nullable',
             '_26' => 'string|nullable',
+
+            '_27a' => 'string|nullable',
+            '_27b' => 'string|nullable',
+            '_27c' => 'string|nullable',
+            '_28' => 'string|nullable',
+            '_29' => 'string|nullable',
+            '_30' => 'string|nullable',
+            '_31' => 'string|nullable',
+            '_32' => 'string|nullable',
+            '_33' => 'string|nullable',
+            '_34' => 'string|nullable',
+            '_35' => 'string|nullable',
+            '_36' => 'string|nullable',
+            '_37' => 'string|nullable',
+            '_38' => 'string|nullable',
+
+
             '_39a' => 'string|nullable',
             '_39b' => 'string|nullable',
             '_39bb' => 'string|nullable',
@@ -232,6 +249,7 @@ class HouseholdController extends Controller
             $demographic = $member->demographic;
             $demographic->lastname = $validated['lastname'];
             $demographic->firstname = $validated['firstname'];
+            $demographic->middlename = $validated['middlename'];
             $demographic->_3 = $validated['_3'];
             $demographic->_4 = $validated['_4'];
             $demographic->_5 = $validated['_5'];
@@ -272,6 +290,21 @@ class HouseholdController extends Controller
             $demographic->_24 = $validated['_24'];
             $demographic->_25 = $validated['_25'];
             $demographic->_26 = $validated['_26'];
+
+            $demographic->_27a = $validated['_27a'];
+            $demographic->_27b = $validated['_27b'];
+            $demographic->_27c = $validated['_27c'];
+            $demographic->_28 = $validated['_28'];
+            $demographic->_29 = $validated['_29'];
+            $demographic->_30 = $validated['_30'];
+            $demographic->_31 = $validated['_31'];
+            $demographic->_32 = $validated['_32'];
+            $demographic->_33 = $validated['_33'];
+            $demographic->_34 = $validated['_34'];
+            $demographic->_35 = $validated['_35'];
+            $demographic->_36 = $validated['_36'];
+            $demographic->_37 = $validated['_37'];
+            $demographic->_38 = $validated['_38'];
 
             $demographic->_39a = $validated['_39a'];
             $demographic->_39b = $validated['_39b'];
@@ -347,7 +380,7 @@ class HouseholdController extends Controller
             $demographic = $member->demographic;
             $demographic->lastname = $validated['_27a'];
             $demographic->firstname = $validated['_27b'];
-            $demographic->firstname = $validated['_27c'];
+            $demographic->middlename = $validated['_27c'];
 
             $demographic->_27a = $validated['_27a'];
             $demographic->_27b = $validated['_27b'];
@@ -490,5 +523,47 @@ class HouseholdController extends Controller
 
         // Return the processed households
         return response()->json($households);
+    }
+
+    public function updateMemberStatus(Request $request, $id)
+    {
+        $validatedData = $request->validate([
+            'isDead' => 'required|boolean', // true to add 'dead', false to remove
+        ]);
+
+        $householdMember = Demographic::findOrFail($id);
+
+        $tags = collect(explode(',', $householdMember->tags));
+
+        if ($validatedData['isDead']) {
+            // Add 'dead' tag if not already present
+            if (!$tags->contains('dead')) {
+                $tags->push('dead');
+            }
+        } else {
+            // Remove 'dead' tag if present
+            $tags = $tags->filter(function ($value) {
+                return $value !== 'dead';
+            });
+        }
+
+        $householdMember->tags = $tags->join(',');
+        $householdMember->save();
+
+        return response()->json(['message' => 'Member status updated successfully']);
+    }
+
+    public function updateSurveyStatus(Request $request)
+    {
+        $validatedData = $request->validate([
+            'household_id' => 'required|integer',
+            'surveyStatus' => 'required|boolean', // or 'required|string' based on your data type
+        ]);
+
+        $household = Household::findOrFail($validatedData['household_id']);
+        $household->surveyStatus = $validatedData['surveyStatus'];
+        $household->save();
+
+        return response()->json(['message' => 'Survey status updated successfully']);
     }
 }

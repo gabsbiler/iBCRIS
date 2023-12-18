@@ -32,6 +32,9 @@ Route::post('/lookup/add', [LookupController::class, 'addLookup']);
 Route::post('/lookup/entry/add', [LookupController::class, 'addNewLookupEntry']);
 
 Route::put('/lookup', [LookupController::class, 'updateLookup']);
+Route::put('/household-member/{id}/status', [HouseholdController::class, 'updateMemberStatus']);
+Route::put('/household/survey-status', [HouseholdController::class, 'updateSurveyStatus']);
+
 
 Route::delete('/households', [HouseholdController::class, 'deleteHousehold']);
 Route::delete('/household/member', [HouseholdController::class, 'deleteHouseholdMember']);
