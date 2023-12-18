@@ -12,4 +12,19 @@ const router = createRouter({
 
 // Docs: https://router.vuejs.org/guide/advanced/navigation-guards.html#global-before-guards
 
+router.beforeEach((to, from, next) => {
+  const isLoggedIn = localStorage.getItem('loggedIn');
+  
+  if (!isLoggedIn || isLoggedIn === '0') {
+    if (to.name !== 'login') {
+      next({ name: 'login' });
+    } else {
+      next();
+    }
+  } else {
+    next();
+  }
+});
+
+
 export default router

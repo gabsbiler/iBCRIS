@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import AuthProvider from '@/views/pages/authentication/AuthProvider.vue'
 import { useGenerateImageVariant } from '@core/composable/useGenerateImageVariant'
 import tree from '@images/pages/tree.png'
 import { VNodeRenderer } from '@layouts/components/VNodeRenderer'
@@ -18,6 +17,12 @@ const form = ref({
   remember: false,
 })
 
+// Router
+const route = useRoute()
+const router = useRouter()
+
+const isPromptShow = ref(false);
+
 const isPasswordVisible = ref(false)
 
 const authThemeImg = useGenerateImageVariant(
@@ -28,6 +33,18 @@ const authThemeImg = useGenerateImageVariant(
   true)
 
 const authThemeMask = useGenerateImageVariant(authV2MaskLight, authV2MaskDark)
+
+const onSubmit = () => {
+  if(form.value.email == 'admin@admin.com' && form.value.password == '@dm1n@dm1n'){
+    isPromptShow.value = false
+    localStorage.setItem('loggedIn', '1');
+    router.replace(route.query.to ? String(route.query.to) : '/')
+  }else{
+    isPromptShow.value = true
+  }
+
+  
+}
 </script>
 
 <template>
@@ -80,14 +97,14 @@ const authThemeMask = useGenerateImageVariant(authV2MaskLight, authV2MaskDark)
         >
           <VCardText>
             <h5 class="text-h5 font-weight-medium mb-1">
-              Welcome to {{ themeConfig.app.title }}! 👋🏻
+              Welcome to iBCRIS! 👋🏻
             </h5>
             <p class="mb-0">
-              Please sign-in to your account and start the adventure
+              Please sign-in to your account
             </p>
           </VCardText>
           <VCardText>
-            <VForm @submit.prevent="() => {}">
+            <VForm @submit.prevent="onSubmit">
               <VRow>
                 <!-- email -->
                 <VCol cols="12">
@@ -107,58 +124,19 @@ const authThemeMask = useGenerateImageVariant(authV2MaskLight, authV2MaskDark)
                     :append-inner-icon="isPasswordVisible ? 'mdi-eye-off-outline' : 'mdi-eye-outline'"
                     @click:append-inner="isPasswordVisible = !isPasswordVisible"
                   />
+                </VCol>
 
-                  <div class="d-flex align-center flex-wrap justify-space-between mt-1 mb-4">
-                    <VCheckbox
-                      v-model="form.remember"
-                      label="Remember me"
-                    />
-                    <a
-                      class="text-primary ms-2 mb-1"
-                      href="#"
-                    >
-                      Forgot Password?
-                    </a>
-                  </div>
 
+                <VCol>
                   <VBtn
                     block
                     type="submit"
                   >
                     Login
                   </VBtn>
+                  <p class="text-error mt-1" v-show="isPromptShow">Please check your email and password.</p>
                 </VCol>
 
-                <!-- create account -->
-                <VCol
-                  cols="12"
-                  class="text-center text-base"
-                >
-                  <span>New on our platform?</span>
-                  <a
-                    class="text-primary ms-2"
-                    href="#"
-                  >
-                    Create an account
-                  </a>
-                </VCol>
-
-                <VCol
-                  cols="12"
-                  class="d-flex align-center"
-                >
-                  <VDivider />
-                  <span class="mx-4">or</span>
-                  <VDivider />
-                </VCol>
-
-                <!-- auth providers -->
-                <VCol
-                  cols="12"
-                  class="text-center"
-                >
-                  <AuthProvider />
-                </VCol>
               </VRow>
             </VForm>
           </VCardText>
