@@ -102,4 +102,37 @@ class LookupController extends Controller
 
         return response()->json(['message' => 'Lookup entry deleted successfully']);
     }
+
+    public function deleteLookup(Request $request)
+    {
+        $validatedData = $request->validate([
+            'lookup_id' => 'required|integer',
+        ]);
+
+        $lookup = Lookup::findOrFail($validatedData['lookup_id']);
+
+        // Delete all associated LookupList items
+        $lookup->lookupList()->delete();
+
+        // Delete the Lookup
+        $lookup->delete();
+
+        return response()->json(['message' => 'Lookup and all associated items deleted successfully']);
+    }
+
+    public function updateLookup(Request $request)
+    {
+        $validatedData = $request->validate([
+            'lookup_id' => 'required|integer',
+            'column_number' => 'required|string',
+            'lookup_name' => 'required|string',
+        ]);
+
+        $lookup = Lookup::findOrFail($validatedData['lookup_id']);
+        $lookup->column_number = $validatedData['column_number'];
+        $lookup->lookup_name = $validatedData['lookup_name'];
+        $lookup->save();
+
+        return response()->json(['message' => 'Lookup updated successfully']);
+    }
 }

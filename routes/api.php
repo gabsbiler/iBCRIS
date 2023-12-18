@@ -31,10 +31,12 @@ Route::post('/households/multiple/upload', [HouseholdController::class, 'multipl
 Route::post('/lookup/add', [LookupController::class, 'addLookup']);
 Route::post('/lookup/entry/add', [LookupController::class, 'addNewLookupEntry']);
 
+Route::put('/lookup', [LookupController::class, 'updateLookup']);
 
 Route::delete('/households', [HouseholdController::class, 'deleteHousehold']);
 Route::delete('/household/member', [HouseholdController::class, 'deleteHouseholdMember']);
 Route::delete('/lookup/entry', [LookupController::class, 'deleteLookupEntry']);
+Route::delete('/lookup', [LookupController::class, 'deleteLookup']);
 
 Route::group(['prefix' => 'auth'], function () {
     Route::post('login', [AuthController::class, 'login']);
