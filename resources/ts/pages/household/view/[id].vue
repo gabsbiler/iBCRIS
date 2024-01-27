@@ -140,7 +140,8 @@ const updateHouseholdSurveyStatus = async (householdId, newSurveyStatus) => {
 </script>
 
 <template>
-  <VCard v-if="householdInfo && lookups">
+  <section>
+    <VCard v-if="householdInfo && lookups">
     <VImg
       :src="backdrop"
       min-height="125"
@@ -362,6 +363,8 @@ const updateHouseholdSurveyStatus = async (householdId, newSurveyStatus) => {
       </template>
     </VSnackbar>
   </VCard>
+  </section>
+  
 </template>
 
 <style lang="scss">

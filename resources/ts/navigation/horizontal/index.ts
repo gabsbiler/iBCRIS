@@ -26,6 +26,7 @@ export default [
     children: [
       {title: 'Look ups / Indicators', to: 'lookup-indicators' },
       {title: 'Mass Upload', to: 'mass-upload' },
+      {title: 'Household Container', to: 'containers' },
     ]
   }
   

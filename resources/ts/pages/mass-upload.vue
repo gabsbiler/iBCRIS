@@ -5,16 +5,20 @@ import { VDataTable } from 'vuetify/labs/VDataTable';
 
 const headers = [
   {
+    title: "Household UUID",
+    key: 'household_id'
+  },
+  {
     title: 'BSN',
-    key: 'BSN'
+    key: 'bsn'
   },
   {
     title: 'HUSN',
-    key: 'HUSN'
+    key: 'husn'
   },
   {
     title: 'HSN',
-    key: 'HSN'
+    key: 'hsn'
   },
   {
     title: 'Barangay',
@@ -348,6 +352,7 @@ const parseCSV = (content: string | ArrayBuffer | null) => {
         }
 
         return {
+          household_id: row['household_id'],
           bsn: row['BSN'],
           husn: row['HUSN'],
           hsn: row['HSN'],

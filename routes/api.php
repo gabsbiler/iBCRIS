@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\HouseholdContainerController;
 use App\Http\Controllers\LookupController;
 use App\Http\Controllers\HouseholdController;
 
@@ -17,6 +18,7 @@ use App\Http\Controllers\HouseholdController;
 |
 */
 
+Route::get('container', [HouseholdContainerController::class, 'show']);
 Route::get('lookup', [LookupController::class, 'show']);
 Route::get('lookup-list', [LookupController::class, 'showLookupList']);
 Route::get('household', [HouseholdController::class, 'show']);

@@ -13,8 +13,18 @@ return new class extends Migration
      */
     public function up(): void
     {
+        // Household Container
+        Schema::create('household_containers', function (Blueprint $table) {
+            $table->id();
+            $table->string('name')->default('Unassigned');
+            $table->timestamps();
+        });
+
+        // Households
         Schema::create('households', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger("container_id");
+            $table->string('HouseholdKey');
             $table->string("BSN")->nullable();
             $table->string("HUSN")->nullable();
             $table->string("HSN")->nullable();
@@ -177,8 +187,10 @@ return new class extends Migration
      */
     public function down(): void
     {
+
         Schema::dropIfExists('member_details');
         Schema::dropIfExists('household_members');
         Schema::dropIfExists('households');
+        Schema::dropIfExists('household_containers');
     }
 };

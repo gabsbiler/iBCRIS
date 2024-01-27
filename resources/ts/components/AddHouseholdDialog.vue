@@ -99,6 +99,7 @@ const saveData = async () => {
     lastname: headLastname.value,
     firstname: headFirstname.value,
     middlename: headMiddlename.value,
+    container_name: 'Unassigned'
   }
   console.log(postData)
   axios
@@ -116,9 +117,10 @@ const saveData = async () => {
     })
     .catch(error => {
       emit('snackbar', {
-        'message': error,
+        'message': error.response.data,
         'type': "error",
       })
+      console.log(error)
     })
 }
 

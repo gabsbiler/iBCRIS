@@ -11,10 +11,15 @@ class Household extends Model
 
     protected $table = "households";
     protected $primaryKey = "id";
-    protected $fillable = ['barangay', 'sitio', 'husn', 'bsn', 'hsn', 'address'];
+    protected $fillable = ['HouseholdKey', 'barangay', 'sitio', 'husn', 'bsn', 'hsn', 'address', 'container_id'];
 
     public function householdMembers()
     {
         return $this->hasMany(HouseholdMember::class);
+    }
+
+    public function householdContainer()
+    {
+        return $this->belongsTo(HouseholdContainer::class);
     }
 }
