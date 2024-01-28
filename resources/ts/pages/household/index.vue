@@ -139,7 +139,7 @@
 import axios from '@axios';
 import { VDataTable } from 'vuetify/labs/VDataTable';
 
-const filterShow = ref(true)
+const filterShow = ref(false)
 const households = ref()
 const containers = ref()
 const search = ref()
