@@ -20,6 +20,6 @@ class Household extends Model
 
     public function householdContainer()
     {
-        return $this->belongsTo(HouseholdContainer::class);
+        return $this->belongsTo(HouseholdContainer::class, 'container_id');
     }
 }

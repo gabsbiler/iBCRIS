@@ -147,7 +147,7 @@ const resetForm = () => {
     <!-- Dialog Activator -->
     <template #activator="{ props }">
       <VBtn v-bind="props">
-        Add Household
+        <VIcon icon="mdi-plus"/> Household
       </VBtn>
     </template>
 

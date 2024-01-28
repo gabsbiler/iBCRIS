@@ -14,13 +14,13 @@ class HouseholdController extends Controller
 {
     public function show()
     {
-        $household = Household::with(['householdMembers.demographic'])->get();
+        $household = Household::with(['householdContainer', 'householdMembers.demographic'])->get();
         return $household;
     }
 
     public function findHousehold(Request $request)
     {
-        $members = Household::with(['householdMembers.demographic'])
+        $members = Household::with(['HouseholdContainer', 'householdMembers.demographic'])
             ->where('id', $request->id)
             ->first();
 
@@ -114,6 +114,32 @@ class HouseholdController extends Controller
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }
+
+    public function updateHousehold(Request $request, $id)
+    {
+        $validatedData = $request->validate([
+            'barangay' => 'string|nullable',
+            'sitio' => 'string|nullable',
+            'husn' => 'string|nullable',
+            'bsn' => 'string|nullable',
+            'hsn' => 'string|nullable',
+            'address' => 'string|nullable',
+            // Include other fields that you may want to update
+        ]);
+        try {
+            // Find the household by ID
+            $household = Household::findOrFail($id);
+
+            // Update the household with validated data
+            $household->update($validatedData);
+
+            return response()->json(['message' => 'Household updated successfully.'], 200);
+        } catch (\Exception $e) {
+            // Handle any exceptions
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
+
 
     public function addMember(Request $request)
     {
@@ -543,8 +569,6 @@ class HouseholdController extends Controller
         }
     }
 
-
-
     public function updateMemberStatus(Request $request, $id)
     {
         $validatedData = $request->validate([
@@ -585,5 +609,27 @@ class HouseholdController extends Controller
         $household->save();
 
         return response()->json(['message' => 'Survey status updated successfully']);
+    }
+
+    public function updateContainer(Request $request, $id)
+    {
+        // Validate the request data
+        $validatedData = $request->validate([
+            'container_id' => 'required|integer|exists:household_containers,id' // Ensure container_id is provided and exists in the household_containers table
+        ]);
+
+        try {
+            // Find the household by ID
+            $household = Household::findOrFail($id);
+
+            // Update the container_id
+            $household->container_id = $validatedData['container_id'];
+            $household->save();
+
+            return response()->json(['message' => 'Container updated successfully.'], 200);
+        } catch (\Exception $e) {
+            // Handle any exceptions
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
     }
 }

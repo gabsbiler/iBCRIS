@@ -44,6 +44,7 @@ declare module '@vue/runtime-core' {
     CustomRadiosWithImage: typeof import('./resources/ts/@core/components/app-form-elements/CustomRadiosWithImage.vue')['default']
     DialogCloseBtn: typeof import('./resources/ts/@core/components/DialogCloseBtn.vue')['default']
     Edit: typeof import('./resources/ts/components/dialogs/Settings/HouseholdContainer/Edit.vue')['default']
+    EditHouseholdDialog: typeof import('./resources/ts/components/EditHouseholdDialog.vue')['default']
     EnableOneTimePasswordDialog: typeof import('./resources/ts/components/dialogs/EnableOneTimePasswordDialog.vue')['default']
     ErrorHeader: typeof import('./resources/ts/components/ErrorHeader.vue')['default']
     Filter: typeof import('./resources/ts/components/Filter.vue')['default']

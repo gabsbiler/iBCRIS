@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import axios from '@axios';
 import avatar1 from '@images/avatars/avatar-1.png';
 import backdrop from '@images/pages/background-1.jpg';
@@ -7,10 +7,14 @@ import { VDataTable } from 'vuetify/labs/VDataTable';
 const route = useRoute()
 const router = useRouter()
 const householdInfo = ref()
+const containers = ref()
 const progress = ref(97)
 const search = ref()
+const containerId = ref()
 
 const lookups = ref([])
+
+const folderLoading = ref(false)
 
 const addMemberConfirmationBox = ref(false)
 const deleteMemberConfirmationBox = ref(false)
@@ -21,7 +25,7 @@ const isSnackbarSuccessVisible = ref(false)
 const alertMessage = ref()
 const type = ref()
 
-const showSnackBar = data =>{
+const showSnackBar = data => {
   alertMessage.value = data.message
   type.value = data.type
   isSnackbarSuccessVisible.value = true
@@ -36,8 +40,17 @@ async function fetchData(){
     })
 
     householdInfo.value = response.data
+    containerId.value = householdInfo.value.household_container.id
   } catch (error) {
     console.log(error)
+  }
+
+  try {
+    const response = await axios.get('/api/container');
+    containers.value = response.data
+
+  } catch (error) {
+    console.error(error);
   }
 }
 
@@ -49,6 +62,21 @@ async function fetchLookup() {
     console.error("Error fetching lookups:", error)
   }
 }
+
+const updateContainer = async () => {
+  folderLoading.value=true
+  try {
+    const response = await axios.put(`/api/household/${route.query.household_id}/update-container`, {
+      container_id: containerId.value
+    });
+    showSnackBar({message: response.data.message, type: 'success'})
+    folderLoading.value=false
+
+  } catch (error) {
+    showSnackBar({message: error, type: 'error'})
+    folderLoading.value=false
+  }
+};
 
 async function addMember () {
   try {
@@ -167,7 +195,8 @@ const updateHouseholdSurveyStatus = async (householdId, newSurveyStatus) => {
           <VRow>
             <VCol
               cols="12"
-              sm="9"
+              sm="8"
+              class="d-flex flex-column gap-y-3"
             >
               <div class="d-flex flex-wrap justify-center justify-sm-start flex-grow-1 gap-5">
                 <span class="d-flex align-center">
@@ -186,14 +215,34 @@ const updateHouseholdSurveyStatus = async (householdId, newSurveyStatus) => {
                   <VText>Complete Address:<b>{{ householdInfo.GeographicIdentification.Address }}</b></VText>
                 </span> -->
               </div>
+              <div class="d-flex gap-x-3">
+                
+              </div>
             </VCol>
-            <VCol
-              class="d-flex"
+            <VCol 
+              class="d-flex flex-column gap-y-2"
               cols="12"
-              sm="3"
+              sm="4"
             >
+              <VRow>
+                <VCol>
+                  <VSelect 
+                    v-model=containerId
+                    :items="containers" 
+                    item-title="name" 
+                    item-value="id" 
+                    density="compact" 
+                    label="Folder"
+                    @update:modelValue="updateContainer"
+                    :loading="folderLoading"
+                  />
+                </VCol>
+                <VCol>
+                  <EditHouseholdDialog :household-data="householdInfo"/>
+                </VCol>
+              </VRow>
+              
               <VBtn
-                class="mx-auto"
                 @click="() => {updateHouseholdSurveyStatus(householdInfo.id, householdInfo.surveyStatus)}"
                 :color="householdInfo.surveyStatus ? 'success' : 'warning'"
               >

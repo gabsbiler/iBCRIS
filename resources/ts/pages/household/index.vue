@@ -1,5 +1,36 @@
 <template>
-  <section>
+  <section class="d-flex gap-y-3 flex-column" >
+    <VCard>
+      <VCardTitle class="mt-2 d-flex justify-space-between">
+        <div>
+          Filter
+        </div>
+        <VBtn
+          :icon="filterShow ? 'mdi-chevron-up' : 'mdi-chevron-down'"
+          @click="filterShow = !filterShow"
+          variant="text"
+        ></VBtn>
+      </VCardTitle>
+      
+      <VExpandTransition>
+        <div v-show="filterShow">
+
+          <VCardText>
+            <VRow>
+              <VCol v-for="i in containers" :key="i" >
+                <VBtn block variant="outlined" v-if="search!=i.name" @click="() => {search = search === i.name ? '' : i.name}">
+                  {{ i.name }}
+                </VBtn>
+                <VBtn block  v-else  @click="() => {search = search === i.name ? '' : i.name}">
+                  {{ i.name }}
+                </VBtn>
+              </VCol>
+            </VRow>
+          </VCardText>
+        </div>
+      </VExpandTransition>
+    </VCard>
+
     <!-- Data tables -->
     <VCard>
       <VCardText class="d-flex flex-wrap gap-4">
@@ -8,18 +39,21 @@
             <h1 class="text-h6">
               Household List
             </h1>
-            <VSpacer />
-              <VTextField
-                v-model="search"
-                density="compact"
-                label="Search"
-                append-inner-icon="mdi-magnify"
-                single-line
-                hide-details
-                dense
-                outlined
-                style="max-width: 300px; margin-inline: 0.8rem;"
-              />
+            
+            
+          </VCol>
+          <VCol class="d-flex justify-end">
+            <VTextField
+              v-model="search"
+              density="compact"
+              label="Search"
+              append-inner-icon="mdi-magnify"
+              single-line
+              hide-details
+              dense
+              outlined
+              style="max-width: 300px; margin-inline: 0.8rem;"
+            />
             <AddHouseholdDialog
               @snackbar="showSnackBar"
               @refresh-table="fetchData"
@@ -100,13 +134,14 @@
   </section>
 </template>
 
-<script setup>
+<script setup lang="ts">
 
 import axios from '@axios';
 import { VDataTable } from 'vuetify/labs/VDataTable';
 
-
+const filterShow = ref(true)
 const households = ref()
+const containers = ref()
 const search = ref()
 
 const isSnackbarSuccessVisible = ref(false)
@@ -114,6 +149,10 @@ const alertMessage = ref()
 const type = ref()
 
 const headers = [
+  {
+    title: 'Container',
+    key: 'household_container.name'
+  },
   {
     title: "BRGY/PUROK/SITIO",
     key: 'Barangay',
@@ -160,6 +199,16 @@ async function fetchData(){
     const response = await axios.get('/api/household')
 
     households.value = response.data
+
+  
+  } catch (error) {
+    console.error('Error fetching data:', error)
+  }
+
+  try {
+    const response = await axios.get('/api/container')
+
+    containers.value = response.data
 
   
   } catch (error) {
