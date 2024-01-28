@@ -66,6 +66,7 @@
           :headers="headers"
           :items="households"
           :search="search"
+          items-per-page="12"
         >
           <!-- Count -->
           <template #item.Count="{ item }">

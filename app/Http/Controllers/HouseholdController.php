@@ -611,7 +611,7 @@ class HouseholdController extends Controller
         return response()->json(['message' => 'Survey status updated successfully']);
     }
 
-    public function updateContainer(Request $request, $id)
+    public function updateHouseholdContainer(Request $request, $id)
     {
         // Validate the request data
         $validatedData = $request->validate([

@@ -11,7 +11,7 @@ class Household extends Model
 
     protected $table = "households";
     protected $primaryKey = "id";
-    protected $fillable = ['HouseholdKey', 'barangay', 'sitio', 'husn', 'bsn', 'hsn', 'address', 'container_id'];
+    protected $fillable = ['HouseholdKey', 'barangay', 'sitio', 'husn', 'bsn', 'hsn', 'address', 'container_id', 'surver-status'];
 
     public function householdMembers()
     {

@@ -32,18 +32,21 @@ Route::post('updateDeceasedMember', [HouseholdController::class, 'updateDeceased
 Route::post('/households/multiple/upload', [HouseholdController::class, 'multipleUploads']);
 Route::post('/lookup/add', [LookupController::class, 'addLookup']);
 Route::post('/lookup/entry/add', [LookupController::class, 'addNewLookupEntry']);
+Route::post('/household-container', [HouseholdContainerController::class, 'add']);
 
 Route::put('/lookup', [LookupController::class, 'updateLookup']);
 Route::put('/household/{id}', [HouseholdController::class, 'updateHousehold']);
 Route::put('/household-member/{id}/status', [HouseholdController::class, 'updateMemberStatus']);
 Route::put('/household/survey-status', [HouseholdController::class, 'updateSurveyStatus']);
-Route::put('/household/{id}/update-container', [HouseholdController::class, 'updateContainer']);
-
+Route::put('/household/{id}/update-container', [HouseholdController::class, 'updateHouseholdContainer']);
+Route::put('/household/{id}/container', [HouseholdController::class, 'updateContainer']);
+Route::put('/household-container/{id}', [HouseholdContainerController::class, 'update']);
 
 Route::delete('/households', [HouseholdController::class, 'deleteHousehold']);
 Route::delete('/household/member', [HouseholdController::class, 'deleteHouseholdMember']);
 Route::delete('/lookup/entry', [LookupController::class, 'deleteLookupEntry']);
 Route::delete('/lookup', [LookupController::class, 'deleteLookup']);
+Route::delete('/household-container/{id}', [HouseholdContainerController::class, 'deleteContainer']);
 
 Route::group(['prefix' => 'auth'], function () {
     Route::post('login', [AuthController::class, 'login']);
