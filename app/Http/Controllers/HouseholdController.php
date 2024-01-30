@@ -9,6 +9,7 @@ use App\Models\HouseholdContainer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
+use PhpParser\Node\Stmt\TryCatch;
 
 class HouseholdController extends Controller
 {
@@ -572,7 +573,7 @@ class HouseholdController extends Controller
     public function updateMemberStatus(Request $request, $id)
     {
         $validatedData = $request->validate([
-            'isDead' => 'required|boolean', // true to add 'dead', false to remove
+            'isDead' => 'required|boolean', // true to mark as 'dead', false to mark as 'alive'
         ]);
 
         $householdMember = Demographic::findOrFail($id);
@@ -580,15 +581,23 @@ class HouseholdController extends Controller
         $tags = collect(explode(',', $householdMember->tags));
 
         if ($validatedData['isDead']) {
-            // Add 'dead' tag if not already present
+            // Add 'dead' tag if not already present and remove 'alive' tag
+            $tags = $tags->filter(function ($value) {
+                return $value !== 'alive';
+            });
+
             if (!$tags->contains('dead')) {
                 $tags->push('dead');
             }
         } else {
-            // Remove 'dead' tag if present
+            // Remove 'dead' tag if present and add 'alive' tag
             $tags = $tags->filter(function ($value) {
                 return $value !== 'dead';
             });
+
+            if (!$tags->contains('alive')) {
+                $tags->push('alive');
+            }
         }
 
         $householdMember->tags = $tags->join(',');
@@ -597,16 +606,24 @@ class HouseholdController extends Controller
         return response()->json(['message' => 'Member status updated successfully']);
     }
 
+
     public function updateSurveyStatus(Request $request)
     {
+
         $validatedData = $request->validate([
             'household_id' => 'required|integer',
             'surveyStatus' => 'required|boolean', // or 'required|string' based on your data type
         ]);
 
-        $household = Household::findOrFail($validatedData['household_id']);
-        $household->surveyStatus = $validatedData['surveyStatus'];
-        $household->save();
+        try {
+            $household = Household::findOrFail($validatedData['household_id']);
+            $household->surveyStatus = $validatedData['surveyStatus'];
+            $household->save();
+            return response()->json(['message' => 'Status updated succesfully'], 200);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+
 
         return response()->json(['message' => 'Survey status updated successfully']);
     }

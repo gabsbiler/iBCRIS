@@ -44,14 +44,18 @@ const openDialog = () => {
 const upload = async () => {
   loadingSave.value = true
   try {
-    const response = await axios.post(`/api/household-container/`,{name: data.value.name});
+    const response = await axios.post(`/api/household-container`,{name: data.value.name});
     console.log(response.data)
-    emits('finish')
-    isDialogVisible.value=false
+    
+    
   } catch (error) {
     console.log(error)
+  } finally {
+    emits('finish')
+    loadingSave.value = false
+    isDialogVisible.value=false
   }
-  loadingSave.value = false
+  
 }
 
 </script>

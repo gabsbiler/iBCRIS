@@ -1,5 +1,6 @@
 <template>
   <div>
+    <SnackBar ref="SnackBarRef"></SnackBar>
     <VBtn @click="openDialog" block>Edit</VBtn>
     <VDialog v-model="isDialogVisible" max-width="800">
       <VCard title="Edit Household" v-if="data">
@@ -45,6 +46,7 @@
 import axios from '@axios';
 const isDialogVisible = ref(false)
 const data = ref()
+const SnackBarRef = ref()
 
 const loadingSave = ref(false)
 
@@ -53,11 +55,10 @@ const route = useRoute()
 const openDialog = () => {
   isDialogVisible.value =true
   data.value = { ...props.householdData }; 
-  console.log(data.value.HouseholdKey)
 }
 
 const props = defineProps(['householdData'])
-
+const emits = defineEmits(['finish'])
 const updateHousehold = async () => {
   loadingSave.value = true
   try {
@@ -69,11 +70,13 @@ const updateHousehold = async () => {
       hsn: data.value.HSN,
       address: data.value.address
     });
-    console.log(response);
+    emits('finish')
+    SnackBarRef.value.show('success', response.data.message)
 
   } catch (error) {
-    console.error(error);
+    SnackBarRef.value.show('error', error)
   }
+  isDialogVisible.value = false
   loadingSave.value = false
 };
 

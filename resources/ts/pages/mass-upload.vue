@@ -1,8 +1,10 @@
 <script setup lang="ts">
+import SnackBar from '@/components/SnackBar.vue';
 import axios from 'axios';
 import Papa from 'papaparse';
 import { VDataTable } from 'vuetify/labs/VDataTable';
 
+const SnackBarRef=ref(null)
 const headers = [
   {
     title: "Household UUID",
@@ -333,8 +335,9 @@ const readCSVFile = (event:any) => {
       parseCSV(content);
     };
     reader.readAsText(file);
+    SnackBarRef.value.show('success', "Data Loaded")
   }
-  console.log(uploaded)
+  
 };
 
 const parseCSV = (content: string | ArrayBuffer | null) => {
@@ -445,18 +448,22 @@ const parseCSV = (content: string | ArrayBuffer | null) => {
 const processUpload = async () => {
   try {
     const response = await axios.post('/api/households/multiple/upload', { data: uploaded.value });
-    console.log('Upload successful', response.data);
+
+    SnackBarRef.value.show('success', response.data)
     // Handle successful upload response
   } catch (error) {
-    console.error('Upload failed', error.response);
+    SnackBarRef.value.show('error', error)
     // Handle error response
   }
 };
+
+
 </script>
 
 
 <template>
   <section>
+    <SnackBar ref="SnackBarRef"/>
     <VCard class="pa-5">
       <VRow>
         <VCol class="d-flex align-middle text-center">
@@ -487,10 +494,11 @@ const processUpload = async () => {
 
       <VRow>
         <VCol class="d-flex flex-row-reverse">
-          <VBtn color="primary" @click="processUpload">Upload</VBtn>
+          <VBtn color="primary" @click="processUpload" :disabled=" uploaded.length > 1 ? false : true">Upload</VBtn>
         </VCol>
       </VRow>
       
     </VCard>
+    
   </section>
 </template>

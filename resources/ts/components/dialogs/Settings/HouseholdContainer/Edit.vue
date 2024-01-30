@@ -45,11 +45,12 @@ const upload = async () => {
   loadingSave.value = true
   try {
     const response = await axios.put(`/api/household-container/${data.value.id}`,{name: data.value.name});
+    const isDialogVisible = ref(false)
+    loadingSave.value = false
     emits('finish')
-    console.log(response.data)
   } catch (error) {
     console.log(error)
   }
-  loadingSave.value = false
+  
 }
 </script>

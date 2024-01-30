@@ -131,77 +131,75 @@ onMounted(() => {
 
 <template>
   <div v-if="member && householdInfo">
-    <VCard v-if="householdInfo">
-
+    <VCard style="min-height: 10rem;">
       <VCardText
         class="d-flex align-bottom flex-sm-row flex-column justify-center gap-x-4"
-        style="min-height: 160px;"
+        style="min-height: 125px;"
       >
-        <VRow>
-          <VCol>
-              <VAvatar
-                rounded
-                size="125"
-                :image="avatar1"
-                class="user-profile-avatar mx-auto"
-              />
-          </VCol>
-        </VRow>
-        <div class="user-profile-info w-100 d-flex">
-          <div class="mt-auto w-100">
+        <div class="d-flex h-0">
+          <VAvatar
+            rounded
+            size="125"
+            :image="avatar1"
+            class="user-profile-avatar mx-auto"
+          />
+        </div>
+
+        <div class="user-profile-info w-100 mt-16 pt-6 pt-sm-0 mt-sm-0">
+          <div class="d-flex align-center justify-center justify-sm-space-between flex-wrap gap-4">
             <VRow>
               <VCol
                 cols="12"
+                sm="8"
+                class="d-flex flex-column"
               >
-                <VRow class="mt-auto">
-                  <VCol>
-                    <h1>{{ member.demographic.lastname }}, {{ member.demographic.firstname }} {{ member.demographic.middlename }}</h1>
-                  </VCol>
-                </VRow>
-                <VRow>
-                  <VCol cols="10">
-                    <div class="d-flex flex-wrap justify-center justify-sm-start flex-grow-1 gap-5">
-                      <span class="d-flex align-center">
-                        <VText>Brgy (Purok/Sitio):<b class="text-primary">{{ householdInfo.Barangay }}</b></VText>
-                      </span>
-                      <span class="d-flex align-center">
-                        <VText>BSN:<b class="text-primary">{{ householdInfo.BSN }}</b></VText>
-                      </span>
-                      <span class="d-flex align-center">
-                        <VText>HUSN:<b class="text-primary">{{ householdInfo.HUSN }}</b></VText>
-                      </span>
-                      <span class="d-flex align-center">
-                        <VText>HSN:<b class="text-primary">{{ householdInfo.HSN }}</b></VText>
-                      </span>
-                      <!-- <span class="d-flex align-center">
-                        <VText>Complete Address:<b>{{ householdInfo.GeographicIdentification.Address }}</b></VText>
-                      </span> -->
-                    </div>
-                  </VCol>
-                  <VCol cols="2" style="height: 100%;">
-                    <div class="d-flex flex-row-reverse">
-                      <VSwitch
-                        id="death-switch"
-                        inset
-                        v-model="death"
-                        @click="switchToDeath"
-                      />
-                      <VLabel for="death-switch" class="me-2 text-body-1"> Deceased </VLabel>
-                    </div>
-                    <div class="d-flex flex-row-reverse">
-                      <VBtn color="primary" >
-                        Change Photo
-                      </VBtn>
-                    </div>
-                    
-                  </VCol>
-                </VRow>
+                <h5 class="text-h5"><b>{{ member.demographic.lastname }}, {{ member.demographic.firstname }} {{ member.demographic.middlename }}</b></h5>
+                <div class="d-flex gap-x-5">
+                  <span class="d-flex align-center">
+                    <VText>Brgy (Purok/Sitio): <b>{{ householdInfo.Barangay }}</b></VText>
+                  </span>
+                  <span class="d-flex align-center">
+                    <VText>BSN: <b>{{ householdInfo.BSN }}</b></VText>
+                  </span>
+                  <span class="d-flex align-center">
+                    <VText>HUSN: <b>{{ householdInfo.HUSN }}</b></VText>
+                  </span>
+                  <span class="d-flex align-center">
+                    <VText>HSN: <b>{{ householdInfo.HSN }}</b></VText>
+                  </span>
+                </div>
+                <div class="d-flex">
+                    <VText>Complete Address: <b>{{ householdInfo.address }}</b></VText>
+                </div>
+              </VCol>
+              <VCol
+                cols="12"
+                sm="4"
+                class="d-flex flex-column"
+              >
+                <div class="d-flex flex-row-reverse">
+                  <VSwitch
+                    id="death-switch"
+                    inset
+                    v-model="death"
+                    @click="switchToDeath"
+                  />
+                  <VLabel for="death-switch" class="me-2 text-body-1"> Deceased </VLabel>
+                </div>
+                <div class="d-flex flex-row-reverse">
+                  <VBtn>
+                    Change Photo
+                  </VBtn>
+                </div>
               </VCol>
             </VRow>
           </div>
         </div>
       </VCardText>
     </VCard>
+
+
+
     <VRow>
       <VCol cols="12" class="mt-5">
         <VTabs
@@ -236,8 +234,6 @@ onMounted(() => {
             />
             Death
           </VTab>
-
-          
         </VTabs>
       </VCol>
       <VCol cols="12" v-if="member && lookups">

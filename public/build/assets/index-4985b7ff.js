@@ -1,1 +1,0 @@
-import{P as e,o as t,b as o}from"./main-be644d5f.js";import{V as r}from"./VFileInput-826705d4.js";import"./VCounter-4048111b.js";import"./forwardRefs-9d31fcaa.js";import"./VChip-30808de3.js";const c={};function a(i,n){return t(),o(r,{accept:"image/*",label:"File input"})}const l=e(c,[["render",a]]);export{l as default};
