@@ -51,7 +51,7 @@ jobs:
           server-dir: /ibcris/
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
-          local-dir: ./ibcris/
+          local-dir: ./
 
       # FTP Deploy Vue Frontend
       - name: Deploy Vue Frontend to Bluehost
@@ -61,4 +61,4 @@ jobs:
           server-dir: /public_html/ibcris/
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
-          local-dir: ./public_html/ibcris/
+          local-dir: ./public/
