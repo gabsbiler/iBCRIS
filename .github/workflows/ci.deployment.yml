@@ -36,7 +36,7 @@ jobs:
           php-version: "8.2"
 
       - name: Install Composer Dependencies for Laravel
-        run: composer install --working-dir=./ --no-interaction --prefer-dist --optimize-autoloader
+        run: composer install
 
       # Vue Frontend Setup
       - name: Install NPM Dependencies for Vue
