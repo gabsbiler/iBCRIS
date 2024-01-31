@@ -46,8 +46,8 @@ jobs:
       # Create directories for compressed files
       - name: Create Directories for Compressed Files
         run: |
-          rm node_modules
-          rm vendor
+          rm -r node_modules
+          rm -r vendor
           mkdir -p compressed_backend
           mkdir -p compressed_frontend
 
