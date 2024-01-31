@@ -43,17 +43,27 @@ jobs:
       - name: Compile Vue Assets
         run: npm run build
 
-      # SSH and Deployment
+      # Set up SSH for rsync
       - name: Set up SSH
-        uses: shimataro/ssh-key-action@v2
+        uses: webfactory/ssh-agent@v0.5.0
         with:
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
+      # Deploy Laravel Backend to Bluehost using rsync
       - name: Deploy Laravel Backend to Bluehost
-        run: rsync -avz --exclude='.git*' --exclude='/vendor' --exclude='/storage' ./ibcris/ ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }}:/ibcris
+        uses: jaredpalmer/github-actions-rsync@master
+        with:
+          flags: -avz --exclude='.git*' --exclude='/vendor' --exclude='/storage'
+          remote_path: ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }}:/ibcris
+          local_path: ./ibcris/
 
+      # Deploy Vue Frontend to Bluehost using rsync
       - name: Deploy Vue Frontend to Bluehost
-        run: rsync -avz --exclude='.git*' --exclude='/node_modules' ./public_html/ibcris/ ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }}:/public_html/ibcris
+        uses: jaredpalmer/github-actions-rsync@master
+        with:
+          flags: -avz --exclude='.git*' --exclude='/node_modules'
+          remote_path: ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }}:/public_html/ibcris
+          local_path: ./public_html/ibcris/
 
       - name: Run Post-Deployment Scripts
         run: ssh ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} 'cd /ibcris && php artisan migrate --force'
