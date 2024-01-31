@@ -10,11 +10,6 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Set up SSH
-        uses: webfactory/ssh-agent@v0.5.0
-        with:
-          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
-
       - name: Checkout Repository
         uses: actions/checkout@v2
 
@@ -49,6 +44,10 @@ jobs:
         run: npm run build
 
       # SSH and Deployment
+      - name: Set up SSH
+        uses: shimataro/ssh-key-action@v2
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
       - name: Deploy Laravel Backend to Bluehost
         run: rsync -avz --exclude='.git*' --exclude='/vendor' --exclude='/storage' ./ibcris/ ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }}:/ibcris
