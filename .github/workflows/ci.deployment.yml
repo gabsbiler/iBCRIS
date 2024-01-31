@@ -43,13 +43,19 @@ jobs:
       - name: Compile Vue Assets
         run: npm run build
 
+      # Create directories for compressed files
+      - name: Create Directories for Compressed Files
+        run: |
+          mkdir -p compressed_backend
+          mkdir -p compressed_frontend
+
       # Compress Laravel Backend
       - name: Compress Laravel Backend
-        run: tar -czvf /compressed_backend/ibcris.tar.gz .
+        run: tar -czvf compressed_backend/ibcris.tar.gz .
 
       # Compress Vue Frontend
       - name: Compress Vue Frontend
-        run: tar -czvf /compressed_frontend/ibcris-frontend.tar.gz ./public/
+        run: tar -czvf compressed_frontend/ibcris-frontend.tar.gz ./public/
 
       # FTP Deploy Vue Frontend
       - name: Deploy Vue Frontend to Bluehost
