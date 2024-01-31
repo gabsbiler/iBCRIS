@@ -48,7 +48,7 @@ jobs:
         uses: SamKirkland/FTP-Deploy-Action@4.1.0
         with:
           server: ${{ secrets.FTP_SERVER }}
-          server-dir: /ibcris
+          server-dir: /ibcris/
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
           local-dir: ./ibcris/
@@ -58,7 +58,7 @@ jobs:
         uses: SamKirkland/FTP-Deploy-Action@4.1.0
         with:
           server: ${{ secrets.FTP_SERVER }}
-          server-dir: /public_html/ibcris
+          server-dir: /public_html/ibcris/
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
           local-dir: ./public_html/ibcris/
