@@ -43,27 +43,22 @@ jobs:
       - name: Compile Vue Assets
         run: npm run build
 
-      # Set up SSH for rsync
-      - name: Set up SSH
-        uses: webfactory/ssh-agent@v0.5.0
-        with:
-          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
-
-      # Deploy Laravel Backend to Bluehost using rsync
+      # FTP Deploy Laravel Backend
       - name: Deploy Laravel Backend to Bluehost
-        uses: jaredpalmer/github-actions-rsync@master
+        uses: SamKirkland/FTP-Deploy-Action@4.1.0
         with:
-          flags: -avz --exclude='.git*' --exclude='/vendor' --exclude='/storage'
-          remote_path: ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }}:/ibcris
-          local_path: ./ibcris/
+          ftp-server: ${{ secrets.FTP_SERVER }}/ibcris
+          ftp-username: ${{ secrets.FTP_USERNAME }}
+          ftp-password: ${{ secrets.FTP_PASSWORD }}
+          local-dir: ./ibcris/
+          git-ftp-args: --insecure # Use this if your FTP does not support FTPS
 
-      # Deploy Vue Frontend to Bluehost using rsync
+      # FTP Deploy Vue Frontend
       - name: Deploy Vue Frontend to Bluehost
-        uses: jaredpalmer/github-actions-rsync@master
+        uses: SamKirkland/FTP-Deploy-Action@4.1.0
         with:
-          flags: -avz --exclude='.git*' --exclude='/node_modules'
-          remote_path: ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }}:/public_html/ibcris
-          local_path: ./public_html/ibcris/
-
-      - name: Run Post-Deployment Scripts
-        run: ssh ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} 'cd /ibcris && php artisan migrate --force'
+          ftp-server: ${{ secrets.FTP_SERVER }}/public_html/ibcris
+          ftp-username: ${{ secrets.FTP_USERNAME }}
+          ftp-password: ${{ secrets.FTP_PASSWORD }}
+          local-dir: ./public_html/ibcris/
+          git-ftp-args: --insecure # Use this if your FTP does not support FTPS
