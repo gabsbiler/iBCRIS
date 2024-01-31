@@ -47,7 +47,7 @@ jobs:
 
       # Rsync Deploy Vue Frontend
       - name: Deploy Vue Frontend using Rsync
-        uses: contention/rsync-deployments@v2.0.0
+        uses: gabsbiler/rsync-deployments
         with:
           FLAGS: -avzr --delete
           EXCLUDES: --exclude '.git*' --exclude 'node_modules' --exclude '.env'
@@ -59,7 +59,7 @@ jobs:
 
         # Rsync Deploy Laravel Backend
       - name: Deploy Laravel Backend using Rsync
-        uses: contention/rsync-deployments@v2.0.0
+        uses: gabsbiler/rsync-deployments
         with:
           FLAGS: -avzr --delete
           EXCLUDES: --exclude '.git*' --exclude 'vendor' --exclude '.env'
