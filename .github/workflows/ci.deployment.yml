@@ -56,12 +56,12 @@ jobs:
       # Rsync Deploy Vue Frontend
       - name: Deploy Vue Frontend using Rsync
         run: |
-          rsync -avzr --delete --exclude='.git*' --exclude='node_modules' --exclude='.env' \
+          rsync -avzr --exclude='.git*' --exclude='node_modules' --exclude='.env' \
           ./public/ ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }}:public_html/ibcris/
 
       # Rsync Deploy Laravel Backend
       - name: Deploy Laravel Backend using Rsync
         run: |
-          rsync -avzr --delete --exclude='.git*' --exclude='.vscode' --exclude='resources' \
-          --exclude='.env' --exclude='node_modules' --exclude='public'\
+          rsync -avzr --exclude='.git*' --exclude='.vscode' --exclude='resources' \
+          --exclude='.env' --exclude='node_modules' --exclude='public' \
           ./ ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }}:ibcris
