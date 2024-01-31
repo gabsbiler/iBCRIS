@@ -43,16 +43,6 @@ jobs:
       - name: Compile Vue Assets
         run: npm run build
 
-      # FTP Deploy Laravel Backend
-      - name: Deploy Laravel Backend to Bluehost
-        uses: SamKirkland/FTP-Deploy-Action@4.1.0
-        with:
-          server: ${{ secrets.FTP_SERVER }}
-          server-dir: /ibcris/
-          username: ${{ secrets.FTP_USERNAME }}
-          password: ${{ secrets.FTP_PASSWORD }}
-          local-dir: ./
-
       # FTP Deploy Vue Frontend
       - name: Deploy Vue Frontend to Bluehost
         uses: SamKirkland/FTP-Deploy-Action@4.1.0
@@ -61,4 +51,38 @@ jobs:
           server-dir: /public_html/ibcris/
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
-          local-dir: ./public/
+          local-dir: ./ibcris-frontend.tar.gz
+
+      # FTP Deploy Laravel Backend
+      - name: Deploy Laravel Backend to Bluehost
+        uses: SamKirkland/FTP-Deploy-Action@4.1.0
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          server-dir: /ibcris/
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          local-dir: ./ibcris.tar.gz
+
+      # SSH and Deployment
+      - name: Set up SSH
+        uses: webfactory/ssh-agent@v0.5.0
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      # Run Post-Deployment Scripts
+      - name: Run Post-Deployment Scripts
+        run: |
+          ssh ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} << 'EOF'
+            # Extract Laravel Backend
+            cd /ibcris
+            tar -xzvf ibcris.tar.gz
+            rm ibcris.tar.gz
+
+            # Run Laravel Migrations
+            php artisan migrate --force
+
+            # Extract Vue Frontend
+            cd /public_html/ibcris
+            tar -xzvf ibcris-frontend.tar.gz
+            rm ibcris-frontend.tar.gz
+          EOF
