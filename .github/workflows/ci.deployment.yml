@@ -62,7 +62,8 @@ jobs:
       # Rsync Deploy Laravel Backend
       - name: Deploy Laravel Backend using Rsync
         run: |
-          rsync -avzr --delete --exclude='.git*' --exclude='vendor' --exclude='.env' \
+          rsync -avzr --delete --exclude='.git*' --exclude='vendor' --exclude='resources'\
+          --exclude='.env' --exclude='node_modules' --exclude='storage' \
           ./ ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }}:ibcris
 
       # Run Post-Deployment Scripts
