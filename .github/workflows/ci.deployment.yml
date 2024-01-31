@@ -45,48 +45,25 @@ jobs:
       - name: Compile Vue Assets
         run: npm run build
 
-      # Rsync Deploy Vue Frontend
-      - name: Deploy Vue Frontend using Rsync
-        uses: contention/rsync-deployments@v2.0.0
-        with:
-          FLAGS: -avzr --delete
-          EXCLUDES: --exclude '.git*' --exclude 'node_modules' --exclude '.env'
-          USER: ${{ secrets.SSH_USERNAME }}
-          HOST: ${{ secrets.SSH_HOST }}
-          LOCALPATH: public/
-          REMOTEPATH: public_html/ibcris/
-          DEPLOY_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-
-      # Clear ssh
-      - name: Clear SSH
-        run: rm -r /github/home/.ssh
-
-        # Rsync Deploy Laravel Backend
-      - name: Deploy Laravel Backend using Rsync
-        uses: contention/rsync-deployments@v2.0.0
-        with:
-          FLAGS: -avzr --delete
-          EXCLUDES: --exclude '.git*' --exclude 'vendor' --exclude '.env'
-          USER: ${{ secrets.SSH_USERNAME }}
-          HOST: ${{ secrets.SSH_HOST }}
-          LOCALPATH: ./
-          REMOTEPATH: ibcris
-          DEPLOY_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-
-      # Clear ssh
-      - name: Clear SSH
-        run: rm -r /github/home/.ssh
-
       # SSH and Deployment Commands
       - name: Set up SSH
         uses: webfactory/ssh-agent@v0.5.0
         with:
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
+      # Rsync Deploy Vue Frontend
+      - name: Deploy Vue Frontend using Rsync
+        run: |
+          rsync -avzr --delete --exclude='.git*' --exclude='node_modules' --exclude='.env' \
+          ./public/ ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }}:public_html/ibcris/
+
+      # Rsync Deploy Laravel Backend
+      - name: Deploy Laravel Backend using Rsync
+        run: |
+          rsync -avzr --delete --exclude='.git*' --exclude='vendor' --exclude='.env' \
+          ./ ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }}:ibcris
+
       # Run Post-Deployment Scripts
       - name: Run Post-Deployment Scripts
         run: |
-          ssh ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} << 'EOF'
-            # Run Laravel Migrations
-            php artisan migrate --force
-          EOF
+          ssh ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} 'php artisan migrate --force'
