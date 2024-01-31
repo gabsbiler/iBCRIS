@@ -13,21 +13,35 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v2
 
+      - name: Cache Composer Dependencies
+        uses: actions/cache@v2
+        with:
+          path: ibcris/vendor
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+          restore-keys: ${{ runner.os }}-composer-
+
+      - name: Cache NPM Dependencies
+        uses: actions/cache@v2
+        with:
+          path: public_html/ibcris/node_modules
+          key: ${{ runner.os }}-npm-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: ${{ runner.os }}-npm-
+
       # Laravel Backend Setup
       - name: Set up PHP for Laravel
         uses: shivammathur/setup-php@v2
         with:
-          php-version: "8.2" # Set to PHP version 8.2 for Laravel
+          php-version: "8.2"
 
       - name: Install Composer Dependencies for Laravel
         run: composer install --working-dir=./ --no-interaction --prefer-dist --optimize-autoloader
 
       # Vue Frontend Setup
       - name: Install NPM Dependencies for Vue
-        run: npm install --prefix public_html/ibcris
+        run: npm install
 
       - name: Compile Vue Assets
-        run: npm run prod --prefix public_html/ibcris
+        run: npm run prod
 
       # SSH and Deployment
       - name: Set up SSH
@@ -36,10 +50,10 @@ jobs:
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
       - name: Deploy Laravel Backend to Bluehost
-        run: rsync -avz --exclude='.git*' --exclude='/vendor' --exclude='/storage' ./ibcris/ ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }}:/ibcris
+        run: rsync -avz --exclude='.git*' --exclude='/vendor' --exclude='/storage' ./ ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }}:/ibcris
 
       - name: Deploy Vue Frontend to Bluehost
-        run: rsync -avz --exclude='.git*' --exclude='/node_modules' ./public_html/ibcris/ ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }}:/public_html/ibcris
+        run: rsync -avz --exclude='.git*' --exclude='/node_modules' ./public/ ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }}:/public_html/ibcris
 
       - name: Run Post-Deployment Scripts
         run: ssh ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} 'cd /ibcris && php artisan migrate --force'
