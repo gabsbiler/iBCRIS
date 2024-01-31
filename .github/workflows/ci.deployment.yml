@@ -1,0 +1,45 @@
+name: Laravel Vue SPA CI/CD Deployment
+
+on:
+  push:
+    branches:
+      - main # Trigger deployment on push to the main branch
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      # Laravel Backend Setup
+      - name: Set up PHP for Laravel
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.2" # Set to PHP version 8.2 for Laravel
+
+      - name: Install Composer Dependencies for Laravel
+        run: composer install --working-dir=ibcris --no-interaction --prefer-dist --optimize-autoloader
+
+      # Vue Frontend Setup
+      - name: Install NPM Dependencies for Vue
+        run: npm install --prefix public_html/ibcris
+
+      - name: Compile Vue Assets
+        run: npm run prod --prefix public_html/ibcris
+
+      # SSH and Deployment
+      - name: Set up SSH
+        uses: webfactory/ssh-agent@v0.5.0
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      - name: Deploy Laravel Backend to Bluehost
+        run: rsync -avz --exclude='.git*' --exclude='/vendor' --exclude='/storage' ./ibcris/ ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }}:/ibcris
+
+      - name: Deploy Vue Frontend to Bluehost
+        run: rsync -avz --exclude='.git*' --exclude='/node_modules' ./public_html/ibcris/ ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }}:/public_html/ibcris
+
+      - name: Run Post-Deployment Scripts
+        run: ssh ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} 'cd /ibcris && php artisan migrate --force'
