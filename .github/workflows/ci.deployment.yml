@@ -1,4 +1,4 @@
-name: Laravel Vue SPA CI/CD Deployment
+name: SPA CI/CD Deployment
 
 on:
   push:
