@@ -20,7 +20,7 @@ jobs:
           php-version: "8.2" # Set to PHP version 8.2 for Laravel
 
       - name: Install Composer Dependencies for Laravel
-        run: composer install --working-dir=ibcris --no-interaction --prefer-dist --optimize-autoloader
+        run: composer install --working-dir=./ --no-interaction --prefer-dist --optimize-autoloader
 
       # Vue Frontend Setup
       - name: Install NPM Dependencies for Vue
