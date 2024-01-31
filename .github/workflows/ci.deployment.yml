@@ -48,6 +48,7 @@ jobs:
         uses: webfactory/ssh-agent@v0.5.0
         with:
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+          ssh-passphrase: ${{ secrets.SSH_PASSPHRASE }} # Assuming you stored your passphrase in this secret
 
       - name: Deploy Laravel Backend to Bluehost
         run: rsync -avz --exclude='.git*' --exclude='/vendor' --exclude='/storage' ./ibcris/ ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }}:/ibcris
