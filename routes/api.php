@@ -6,6 +6,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\HouseholdContainerController;
 use App\Http\Controllers\LookupController;
 use App\Http\Controllers\HouseholdController;
+use App\Http\Controllers\ReportController;
 
 /*
 |--------------------------------------------------------------------------
@@ -24,6 +25,7 @@ Route::get('lookup-list', [LookupController::class, 'showLookupList']);
 Route::get('household', [HouseholdController::class, 'show']);
 Route::get('household-list', [HouseholdController::class, 'findHousehold']);
 Route::get('household-member', [HouseholdController::class, 'findHouseholdMember']);
+Route::get('/reports/generate', [ReportController::class, 'generate']);
 
 Route::post('addHousehold', [HouseholdController::class, 'addHousehold']);
 Route::post('addMember', [HouseholdController::class, 'addMember']);
