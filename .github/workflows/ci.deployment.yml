@@ -65,8 +65,3 @@ jobs:
           rsync -avzr --delete --exclude='.git*' --exclude='vendor' --exclude='resources'\
           --exclude='.env' --exclude='node_modules' --exclude='storage' \
           ./ ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }}:ibcris
-
-      # Run Post-Deployment Scripts
-      - name: Run Post-Deployment Scripts
-        run: |
-          ssh ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} 'php artisan migrate --force'
