@@ -43,6 +43,14 @@ jobs:
       - name: Compile Vue Assets
         run: npm run build
 
+      # Compress Laravel Backend
+      - name: Compress Laravel Backend
+        run: tar -czvf /compressed_backend/ibcris.tar.gz .
+
+      # Compress Vue Frontend
+      - name: Compress Vue Frontend
+        run: tar -czvf /compressed_frontend/ibcris-frontend.tar.gz ./public/
+
       # FTP Deploy Vue Frontend
       - name: Deploy Vue Frontend to Bluehost
         uses: SamKirkland/FTP-Deploy-Action@4.1.0
@@ -51,7 +59,7 @@ jobs:
           server-dir: /public_html/ibcris/
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
-          local-dir: ./ibcris-frontend.tar.gz
+          local-dir: ./compressed_frontend/
 
       # FTP Deploy Laravel Backend
       - name: Deploy Laravel Backend to Bluehost
@@ -61,7 +69,7 @@ jobs:
           server-dir: /ibcris/
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
-          local-dir: ./ibcris.tar.gz
+          local-dir: ./compressed_backend/
 
       # SSH and Deployment
       - name: Set up SSH
