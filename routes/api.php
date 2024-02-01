@@ -25,7 +25,7 @@ Route::get('lookup-list', [LookupController::class, 'showLookupList']);
 Route::get('household', [HouseholdController::class, 'show']);
 Route::get('household-list', [HouseholdController::class, 'findHousehold']);
 Route::get('household-member', [HouseholdController::class, 'findHouseholdMember']);
-Route::get('/reports/generate', [ReportController::class, 'generate']);
+
 
 Route::post('addHousehold', [HouseholdController::class, 'addHousehold']);
 Route::post('addMember', [HouseholdController::class, 'addMember']);
@@ -35,7 +35,7 @@ Route::post('/households/multiple/upload', [HouseholdController::class, 'multipl
 Route::post('/lookup/add', [LookupController::class, 'addLookup']);
 Route::post('/lookup/entry/add', [LookupController::class, 'addNewLookupEntry']);
 Route::post('/household-container', [HouseholdContainerController::class, 'add']);
-
+Route::get('/reports/generate', [ReportController::class, 'generate']);
 
 Route::put('/household/survey-status', [HouseholdController::class, 'updateSurveyStatus']);
 Route::put('/lookup', [LookupController::class, 'updateLookup']);

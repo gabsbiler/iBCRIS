@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import axios from 'axios';
+import moment from 'moment';
 
 const isSettingVisible = ref(true)
 const generateLoading = ref(false)
@@ -130,8 +131,13 @@ const addAndSortByFrom = (from, to) => {
 const generateReport = async() => {
   generateLoading.value = true
   try{
-    const response = await axios.get('/api/reports/generate')
-    console.log(response)
+    const response = await axios.get('/api/reports/generate', {
+      params: {
+        dateFrom: moment(settings.value.dateFrom).format('YYYY-MM-DD'),
+        dateTo:  moment(settings.value.dateFrom).format('YYYY-MM-DD')
+      }
+    })
+    data.value = response.data
   }catch(error){
     console.log(error)
   }
@@ -160,7 +166,7 @@ const generateReport = async() => {
                   :items="baranggayList"
                   multiple
                   chips
-                  clearable=""
+                  clearable
                 />
               </VCol>
             </VRow>
