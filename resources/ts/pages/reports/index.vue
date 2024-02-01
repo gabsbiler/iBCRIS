@@ -149,7 +149,7 @@ const generateReport = async() => {
   <div class="d-flex flex-column gap-y-5">
     <VCard>
       <VCardTitle class="d-flex justify-space-between align-center" @click="isSettingVisible = !isSettingVisible">
-        <h6 class="text-h6">Settings</h6>
+        <h6 class="text-h6">Setting</h6>
         <VBtn 
           :icon="isSettingVisible ? 'mdi-chevron-down' : 'mdi-chevron-up'"
           variant="text"
