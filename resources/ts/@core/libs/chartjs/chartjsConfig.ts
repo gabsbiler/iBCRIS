@@ -1,5 +1,5 @@
-import type { ThemeInstance } from 'vuetify'
 import { hexToRgb } from '@layouts/utils'
+import type { ThemeInstance } from 'vuetify'
 
 // 👉 Colors variables
 const colorVariables = (themeColors: ThemeInstance['themes']['value']['colors']) => {
@@ -56,7 +56,6 @@ export const getHorizontalBarChartConfig = (themeColors: ThemeInstance['themes']
   return {
     indexAxis: 'y',
     responsive: true,
-    maintainAspectRatio: false,
     animation: { duration: 500 },
     elements: {
       bar: {
@@ -184,7 +183,6 @@ export const getPolarChartConfig = (themeColors: ThemeInstance['themes']['value'
 
   return {
     responsive: true,
-    maintainAspectRatio: false,
     animation: { duration: 500 },
     layout: {
       padding: {
@@ -194,7 +192,7 @@ export const getPolarChartConfig = (themeColors: ThemeInstance['themes']['value'
     },
     scales: {
       r: {
-        grid: { display: false },
+        grid: { display: true },
         ticks: { display: false },
       },
     },
@@ -202,10 +200,13 @@ export const getPolarChartConfig = (themeColors: ThemeInstance['themes']['value'
       legend: {
         position: 'right',
         labels: {
-          padding: 25,
-          boxWidth: 9,
+          paddingLeft: 25,
+          boxWidth: 4,
           color: legendColor,
-          usePointStyle: true,
+          // usePointStyle: true,
+          font: {
+            size: 15, // Set your desired font size here
+          },
         },
       },
     },

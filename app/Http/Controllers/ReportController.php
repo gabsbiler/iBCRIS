@@ -40,9 +40,9 @@ class ReportController extends Controller
         $unknown = Demographic::where('_5', null)->count();
 
         return [
-            'male_count' => $maleCount,
-            'female_count' => $femaleCount,
-            'unknown' => $unknown
+            'Male' => $maleCount,
+            'Female' => $femaleCount,
+            'Unknown' => $unknown
         ];
     }
 

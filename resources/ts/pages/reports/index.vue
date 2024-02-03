@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import axios from 'axios';
 
+
 const isSettingVisible = ref(true)
 const generateLoading = ref(false)
 const dateToday = new Date()
@@ -128,6 +129,13 @@ const addAndSortByFrom = (from, to) => {
   settings.value.ageRange.sort((a, b) => a.from - b.from);
 };
 
+
+
+
+const clearData = () => {
+  data.value = null
+}
+
 const generateReport = async() => {
   generateLoading.value = true
   try{
@@ -145,6 +153,7 @@ const generateReport = async() => {
 </script>
 <template>
   <div class="d-flex flex-column gap-y-5">
+    
     <VCard>
       <VCardTitle class="d-flex justify-space-between align-center" @click="isSettingVisible = !isSettingVisible">
         <h6 class="text-h6">Setting</h6>
@@ -224,6 +233,9 @@ const generateReport = async() => {
             
             <VDivider class="my-5"/>
             <div class="d-flex justify-end">
+              <VBtn variant="text" @click="clearData">
+                Clear
+              </VBtn>
               <VBtn variant="elevated" @click="generateReport" :loading="generateLoading">
                 Generate
               </VBtn>
@@ -237,60 +249,50 @@ const generateReport = async() => {
 
     <VRow v-if="data">
       <VCol cols="12" md="6">
-        <VCard title="Total Gender Count">
-          <VCardText>
-            <h3>{{data.totalCountGender}}</h3>
-          </VCardText>
-        </VCard>
+        <TotalGenderCount :data="data"/>
       </VCol>
 
       <VCol cols="12" md="6">
-        <VCard title="Gender By Age">
-          <VCardText>
-            <div v-for="item in data.countGenderByAge">
-              {{ item }}
-            </div>
-          </VCardText>
-        </VCard>
+        <GenderByAge :data="data"/>
       </VCol>
 
       <VCol cols="12">
         <VCard title="Martial By Age">
           <VCardText >
-            <VRow>
-              <VCol cols="3" v-for="item in data.countMaritalByAge">
-                  {{item.age}}
-                  <div v-for="(value, key) in item.status">
-                    {{ key }}: {{ value }}
-                  </div>
-              </VCol>
-            </VRow>
+            <VTable>
+              <thead>
+                <th>Age</th>
+                <th>Single</th>
+                <th>Married</th>
+                <th>Consensual</th>
+                <th>Widow</th>
+                <th>Divorced</th>
+                <th>Common Law</th>
+                <th>Unknown</th>
+              </thead>
+              <tbody>
+                <tr v-for="item in data.countMaritalByAge">
+                  <td>{{item.age.from}}-{{item.age.to}}</td>
+                  <td>{{ item.status.single }}</td>
+                  <td>{{ item.status.married }}</td>
+                  <td>{{ item.status.consensual }}</td>
+                  <td>{{ item.status.widow }}</td>
+                  <td>{{ item.status.divorced }}</td>
+                  <td>{{ item.status.commonLaw }}</td>
+                  <td>{{ item.status.unknown }}</td>
+                </tr>
+              </tbody>
+            </VTable>
           </VCardText>
         </VCard>
       </VCol>
 
       <VCol cols="12" md="6">
-        <VCard title="Male (Single & Married)">
-          <VCardText>
-            <VRow>
-              <VCol cols="4" v-for="item in data.countMaleMaritalStats">
-                  {{item}}
-              </VCol>
-            </VRow>
-          </VCardText>
-        </VCard>
+        <MaleMarital :data="data"/>
       </VCol>
 
       <VCol cols="12" md="6">
-        <VCard title="Female (Single & Married)">
-          <VCardText>
-            <VRow>
-              <VCol cols="4" v-for="item in data.countFemaleMaritalStats">
-                  {{item}}
-              </VCol>
-            </VRow>
-          </VCardText>
-        </VCard>
+        <FemaleMarital :data="data"/>
       </VCol>
     </VRow>
 
