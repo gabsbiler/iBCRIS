@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import axios from 'axios';
-import moment from 'moment';
 
 const isSettingVisible = ref(true)
 const generateLoading = ref(false)
@@ -10,7 +9,8 @@ const ageTo = ref()
 const data = ref()
 const settings = ref({
   dateFrom: dateToday,
-  dateTo: new Date(dateToday.getFullYear() - 1, dateToday.getMonth(), dateToday.getDate()),
+  dateTo: dateToday,
+  barangay: [],
   ageRange: [
     {
       from: 0,
@@ -132,16 +132,14 @@ const generateReport = async() => {
   generateLoading.value = true
   try{
     const response = await axios.get('/api/reports/generate', {
-      params: {
-        dateFrom: moment(settings.value.dateFrom).format('YYYY-MM-DD'),
-        dateTo:  moment(settings.value.dateFrom).format('YYYY-MM-DD')
-      }
+      params: settings.value
     })
     data.value = response.data
   }catch(error){
     console.log(error)
   }
   generateLoading.value = false
+  isSettingVisible.value = false
 }
 
 </script>
@@ -164,6 +162,7 @@ const generateReport = async() => {
                 <VCombobox 
                   label="Selected Barangay" 
                   :items="baranggayList"
+                  v-model="settings.barangay"
                   multiple
                   chips
                   clearable
@@ -236,10 +235,65 @@ const generateReport = async() => {
     </VCard>
 
 
-    <VCard>
-      <VCardText>
-        Result = {{ data }}
-      </VCardText>
-    </VCard>
+    <VRow v-if="data">
+      <VCol cols="12" md="6">
+        <VCard title="Total Gender Count">
+          <VCardText>
+            <h3>{{data.totalCountGender}}</h3>
+          </VCardText>
+        </VCard>
+      </VCol>
+
+      <VCol cols="12" md="6">
+        <VCard title="Gender By Age">
+          <VCardText>
+            <div v-for="item in data.countGenderByAge">
+              {{ item }}
+            </div>
+          </VCardText>
+        </VCard>
+      </VCol>
+
+      <VCol cols="12">
+        <VCard title="Martial By Age">
+          <VCardText >
+            <VRow>
+              <VCol cols="3" v-for="item in data.countMaritalByAge">
+                  {{item.age}}
+                  <div v-for="(value, key) in item.status">
+                    {{ key }}: {{ value }}
+                  </div>
+              </VCol>
+            </VRow>
+          </VCardText>
+        </VCard>
+      </VCol>
+
+      <VCol cols="12" md="6">
+        <VCard title="Male (Single & Married)">
+          <VCardText>
+            <VRow>
+              <VCol cols="4" v-for="item in data.countMaleMaritalStats">
+                  {{item}}
+              </VCol>
+            </VRow>
+          </VCardText>
+        </VCard>
+      </VCol>
+
+      <VCol cols="12" md="6">
+        <VCard title="Female (Single & Married)">
+          <VCardText>
+            <VRow>
+              <VCol cols="4" v-for="item in data.countFemaleMaritalStats">
+                  {{item}}
+              </VCol>
+            </VRow>
+          </VCardText>
+        </VCard>
+      </VCol>
+    </VRow>
+
+
   </div>
 </template>

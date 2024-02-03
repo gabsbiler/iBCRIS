@@ -44,10 +44,6 @@ return new class extends Migration
                 ->references('id')
                 ->on('households')
                 ->onDelete('cascade');
-            // $table->unsignedBigInteger('demographic_id');
-            // $table->unsignedBigInteger('skills_id');
-            // $table->unsignedBigInteger('economic_id');
-            // $table->unsignedBigInteger('residency');
             $table->timestamps();
         });
 
@@ -69,7 +65,7 @@ return new class extends Migration
             $table->text('_4')->nullable(); //(4) Family Nucleus
             $table->text('_5')->nullable(); //(5) is __ Male or Female
             $table->date('_6')->nullable(); //(6) When was ____ born? (mm-dd-yyyy)
-            $table->text('_7')->nullable(); //(7) How old is ___ as of his/her last birthday?
+            $table->integer('_7')->unsigned()->nullable(); //(7) How old is ___ as of his/her last birthday?
             $table->text('_8')->nullable(); //(8) What __'s citizenship?
             $table->text('_9')->nullable(); //(9) What is ____'s religion/ religious affiliation?
             $table->text('_10')->nullable(); //(10) What is ____'s ethnicity?
