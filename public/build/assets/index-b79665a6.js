@@ -1,0 +1,1 @@
+import{P as a,o as s,c,p as e,w as t,$ as n,U as r,m as o}from"./main-fc279098.js";const d={},l=o("h3",{class:"text-h3"},"iBCRIS > User Management",-1);function _(f,i){return s(),c("div",null,[e(r,null,{default:t(()=>[e(n,{class:"text-center"},{default:t(()=>[l]),_:1})]),_:1})])}const u=a(d,[["render",_]]);export{u as default};
