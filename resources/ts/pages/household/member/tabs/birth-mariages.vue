@@ -96,7 +96,7 @@ const isMarriageDone = computed(() => {
                   <VTextField
                     v-model="member.demographic._17"
                     label="(17) In what City/ Municipality/ and province was born?"
-                    :error="!member.demographic._17"
+                    :base-color="member.demographic._17 ? null : 'warning'"
                   />
                 </VCol>
                 <VCol
@@ -109,6 +109,7 @@ const isMarriageDone = computed(() => {
                     :items="lookups.filter(lookup => lookup.column_number === '18')[0]?.lookup_list.map(item => ({ ...item, description: item.lookup_key + ' - ' + item.description }))"
                     item-title="description"
                     item-value="lookup_key"
+                    :base-color="member.demographic._18a ? null : 'warning'"
                   />
                 </VCol>
                 <VCol
@@ -122,6 +123,7 @@ const isMarriageDone = computed(() => {
                     :items="lookups.filter(lookup => lookup.column_number === '19')[0]?.lookup_list.map(item => ({ ...item, description: item.lookup_key + ' - ' + item.description }))"
                     item-title="description"
                     item-value="lookup_key"
+                    :base-color="member.demographic._19 ? null : 'warning'"
                   />
                 </VCol>
                 <VCol
@@ -135,6 +137,7 @@ const isMarriageDone = computed(() => {
                     :items="lookups.filter(lookup => lookup.column_number === '20a')[0]?.lookup_list.map(item => ({ ...item, description: item.lookup_key + ' - ' + item.description }))"
                     item-title="description"
                     item-value="lookup_key"
+                    :base-color="member.demographic._20a ? null : 'warning'"
                   />
                 </VCol>
                 <VCol
@@ -148,6 +151,7 @@ const isMarriageDone = computed(() => {
                     :items="lookups.filter(lookup => lookup.column_number === '20b')[0]?.lookup_list.map(item => ({ ...item, description: item.lookup_key + ' - ' + item.description }))"
                     item-title="description"
                     item-value="lookup_key"
+                    :base-color="member.demographic._20b ? null : 'warning'"
                   />
                 </VCol>
 
@@ -158,6 +162,7 @@ const isMarriageDone = computed(() => {
                   <VTextField
                     v-model="member.demographic._20c"
                     label="(20c) What is the last vaccine received by ____?"
+                    :base-color="member.demographic._20c ? null : 'warning'"
                   />
                 </VCol>
                 
@@ -182,6 +187,7 @@ const isMarriageDone = computed(() => {
                     :items="lookups.filter(lookup => lookup.column_number === '21')[0]?.lookup_list.map(item => ({ ...item, description: item.lookup_key + ' - ' + item.description }))"
                     item-title="description"
                     item-value="lookup_key"
+                    :base-color="member.demographic._21 ? null : 'warning'"
                   />
                 </VCol>
 
@@ -194,6 +200,7 @@ const isMarriageDone = computed(() => {
                   <AppDateTimePicker
                     v-model="member.demographic._22"
                     label="(22) When did ___'s marriage occur?"
+                    :base-color="member.demographic._22 ? null : 'warning'"
                   />
                 </VCol>
 
@@ -205,6 +212,7 @@ const isMarriageDone = computed(() => {
                   <VTextField
                     v-model="member.demographic._23"
                     label="(23) In what City/ Municipality/ and province did ___'s marriage occur?"
+                    :base-color="member.demographic._23 ? null : 'warning'"
                   />
                 </VCol>
 
@@ -219,6 +227,7 @@ const isMarriageDone = computed(() => {
                     :items="lookups.filter(lookup => lookup.column_number === '24')[0]?.lookup_list.map(item => ({ ...item, description: item.lookup_key + ' - ' + item.description }))"
                     item-title="description"
                     item-value="lookup_key"
+                    :base-color="member.demographic._24 ? null : 'warning'"
                   />
                 </VCol>
 
@@ -233,6 +242,7 @@ const isMarriageDone = computed(() => {
                     :items="lookups.filter(lookup => lookup.column_number === '25')[0]?.lookup_list.map(item => ({ ...item, description: item.lookup_key + ' - ' + item.description }))"
                     item-title="description"
                     item-value="lookup_key"
+                    :base-color="member.demographic._25 ? null : 'warning'"
                   />
                 </VCol>
                 <VCol
@@ -243,6 +253,7 @@ const isMarriageDone = computed(() => {
                   <VTextField
                     v-model="member.demographic._26"
                     label="(26)Why was ___'s marriage not registered?"
+                    :base-color="member.demographic._26 ? null : 'warning'"
                   />
                 </VCol>
                 

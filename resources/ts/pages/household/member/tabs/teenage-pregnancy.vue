@@ -12,7 +12,7 @@ const props = defineProps({
 const alertMessage = ref()
 const type = ref()
 const isSnackbarSuccessVisible = ref(false)
-
+const isPregnant = ref(false)
 const route = useRoute()
 
 
@@ -62,16 +62,16 @@ const resetForm = async() => {
                 <VCol
                   cols="12"
                 >
-                  <VSelect
-                    v-model="member.demographic.isPregnant"
-                    label="Is the HH enaged in teenage pregnancy incident in the last 3 years?"
-                    :items="lookups.filter(lookup => lookup.column_number === '50')[0]?.lookup_list.map(item => ({ ...item, description: item.lookup_key + ' - ' + item.description }))"
-                    item-title="description"
-                    item-value="lookup_key"
-                  />
+                <VSelect
+                  v-model="isPregnant"
+                  label="Is the household engaged in a teenage pregnancy incident in the last 3 years?"
+                  :items="[{ description: 'Yes', lookup_key: true }, { description: 'No', lookup_key: false }]"
+                  item-title="description"
+                  item-value="lookup_key"
+                />
                 </VCol>
               </VRow>
-              <VRow v-show="member.demographic.isPregnant == 1">
+              <VRow v-show="isPregnant == true">
                 <VCol
                   cols="12"
                   md="6"
@@ -81,6 +81,7 @@ const resetForm = async() => {
                     label="(51) When the incidence occurred?"
                     min="1960" max="2999"
                     type="number"
+                    :base-color="member.demographic._51 ? null : 'warning'"
                   />
                 </VCol>
                 <VCol
@@ -92,6 +93,7 @@ const resetForm = async() => {
                     label="(51) Age during the incidence occurred?"
                     min="0" max="999"
                     type="number"
+                    :base-color="member.demographic._51_1 ? null : 'warning'"
                   />
                 </VCol>
                 <VCol
@@ -103,6 +105,7 @@ const resetForm = async() => {
                     label="(52) Age of Father of the child during incidence occurred?"
                     min="0" max="999"
                     type="number"
+                    :base-color="member.demographic._52 ? null : 'warning'"
                   />
                 </VCol>
 
@@ -117,6 +120,7 @@ const resetForm = async() => {
                     :items="lookups.filter(lookup => lookup.column_number === '53.1')[0]?.lookup_list"
                     item-title="description"
                     item-value="lookup_key"
+                    :base-color="member.demographic._53_1 ? null : 'warning'"
                   />
                 </VCol>
 
@@ -128,6 +132,7 @@ const resetForm = async() => {
                   <VTextField
                     v-model="member.demographic._54_1"
                     label="(54.1) Where he/she studying"
+                    :base-color="member.demographic._54_1 ? null : 'warning'"
                   />
                 </VCol>
 
@@ -141,6 +146,7 @@ const resetForm = async() => {
                     :items="lookups.filter(lookup => lookup.column_number === '53.2')[0]?.lookup_list"
                     item-title="description"
                     item-value="lookup_key"
+                    :base-color="member.demographic._53_2 ? null : 'warning'"
                   />
                 </VCol>
                 <VCol
@@ -151,6 +157,7 @@ const resetForm = async() => {
                   <VTextField
                     v-model="member.demographic._54"
                     label="(54) Where he/she is studying?"
+                    :base-color="member.demographic._54 ? null : 'warning'"
                   />
                 </VCol>
                 <VCol
@@ -163,6 +170,7 @@ const resetForm = async() => {
                     :items="lookups.filter(lookup => lookup.column_number === '55')[0]?.lookup_list"
                     item-title="description"
                     item-value="lookup_key"
+                    :base-color="member.demographic._55 ? null : 'warning'"
                   />
                 </VCol>
                 <VCol
@@ -173,6 +181,7 @@ const resetForm = async() => {
                   <VTextField
                     v-model="member.demographic._56"
                     label="(56) What are the complications?"
+                    :base-color="member.demographic._56 ? null : 'warning'"
                   />
                 </VCol>
                 <VCol
@@ -185,6 +194,7 @@ const resetForm = async() => {
                     :items="lookups.filter(lookup => lookup.column_number === '57')[0]?.lookup_list"
                     item-title="description"
                     item-value="lookup_key"
+                    :base-color="member.demographic._57 ? null : 'warning'"
                   />
                 </VCol>
               </VRow>

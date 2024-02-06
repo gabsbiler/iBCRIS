@@ -79,6 +79,7 @@ const is15cDisabled = computed(() => {
                     label="(15a) In what year did __ started residing in this housing unit?"
                     type="number"
                     min="0000" max="9999" step="1"
+                    :base-color="member.demographic._15a ? null : 'warning'"
                   />
                 </VCol>
                 <VCol
@@ -92,6 +93,7 @@ const is15cDisabled = computed(() => {
                     :items="lookups.filter(lookup => lookup.column_number === '15b')[0]?.lookup_list.map(item => ({ ...item, description: item.lookup_key + ' - ' + item.description }))"
                     item-title="description"
                     item-value="lookup_key"
+                    :base-color="member.demographic._15b ? null : 'warning'"
                   />
                 </VCol>
                 <VCol
@@ -101,7 +103,7 @@ const is15cDisabled = computed(() => {
                 >
                   <VTextField
                     v-model="member.demographic._15c"
-                    
+                    :base-color="member.demographic._15c ? null : 'warning'"
                     label="(15c) In what barangay/ city/ municipality did __ resides before?"
                   />
                 </VCol>
@@ -126,6 +128,7 @@ const is15cDisabled = computed(() => {
                     :items="lookups.filter(lookup => lookup.column_number === '16a')[0]?.lookup_list.map(item => ({ ...item, description: item.lookup_key + ' - ' + item.description }))"
                     item-title="description"
                     item-value="lookup_key"
+                    :base-color="member.demographic._16a ? null : 'warning'"
                   />
                 </VCol>
                 <VCol
@@ -138,6 +141,7 @@ const is15cDisabled = computed(() => {
                     :items="lookups.filter(lookup => lookup.column_number === '16b')[0]?.lookup_list.map(item => ({ ...item, description: item.lookup_key + ' - ' + item.description }))"
                     item-title="description"
                     item-value="lookup_key"
+                    :base-color="member.demographic._16b ? null : 'warning'"
                   />
                 </VCol>
                 <VCol
@@ -150,6 +154,7 @@ const is15cDisabled = computed(() => {
                     :items="lookups.filter(lookup => lookup.column_number === '16c')[0]?.lookup_list.map(item => ({ ...item, description: item.lookup_key + ' - ' + item.description }))"
                     item-title="description"
                     item-value="lookup_key"
+                    :base-color="member.demographic._39a ? null : 'warning'"
                   />
                 </VCol>
 
@@ -163,6 +168,7 @@ const is15cDisabled = computed(() => {
                     label="(16c) WHEN to return"
                     type="number"
                     min="1600" max="9999" step="1"
+                    :base-color="member.demographic._16c_1 ? null : 'warning'"
                   />
                 </VCol>
 
@@ -178,6 +184,7 @@ const is15cDisabled = computed(() => {
                     :items="lookups.filter(lookup => lookup.column_number === '16d')[0]?.lookup_list.map(item => ({ ...item, description: item.lookup_key + ' - ' + item.description }))"
                     item-title="description"
                     item-value="lookup_key"
+                    :base-color="member.demographic._16d ? null : 'warning'"
                   />
                 </VCol>
                 <VCol
@@ -190,6 +197,7 @@ const is15cDisabled = computed(() => {
                     :items="lookups.filter(lookup => lookup.column_number === '16e')[0]?.lookup_list.map(item => ({ ...item, description: item.lookup_key + ' - ' + item.description }))"
                     item-title="description"
                     item-value="lookup_key"
+                    :base-color="member.demographic._16e ? null : 'warning'"
                   />
                 </VCol>
                 <VCol
@@ -202,6 +210,7 @@ const is15cDisabled = computed(() => {
                     :items="lookups.filter(lookup => lookup.column_number === '16f')[0]?.lookup_list.map(item => ({ ...item, description: item.lookup_key + ' - ' + item.description }))"
                     item-title="description"
                     item-value="lookup_key"
+                    :base-color="member.demographic._16f ? null : 'warning'"
                   />
                 </VCol>
               </VRow>

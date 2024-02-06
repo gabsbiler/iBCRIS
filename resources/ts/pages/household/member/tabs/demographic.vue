@@ -181,6 +181,7 @@ onBeforeMount(() => {
                   <VTextField 
                     v-model="member.demographic.lastname"
                     label="Last Name"
+                    :base-color="member.demographic.lastname ? null : 'warning'"
                   />
                 </VCol>
                 <!-- First Name -->
@@ -191,6 +192,7 @@ onBeforeMount(() => {
                   <VTextField 
                     v-model="member.demographic.firstname"
                     label="First Name"
+                    :base-color="member.demographic.firstname ? null : 'warning'"
                   />
                 </VCol>
                 <!-- Middle Name -->
@@ -201,6 +203,7 @@ onBeforeMount(() => {
                   <VTextField 
                     v-model="member.demographic.middlename"
                     label="Middle Name"
+                    :base-color="member.demographic.middlename ? null : 'warning'"
                   />
                 </VCol>
                 <!-- How is __ related to household head? -->
@@ -214,6 +217,7 @@ onBeforeMount(() => {
                     :items="lookups.filter(lookup => lookup.column_number === '3')[0]?.lookup_list.map(item => ({ ...item, description: item.lookup_key + ' - ' + item.description }))"
                     item-title="description"
                     item-value="lookup_key"
+                    :base-color="member.demographic._3 ? null : 'warning'"
                   />
                 </VCol>
                 <!-- (4) Family Nucleus -->
@@ -227,6 +231,7 @@ onBeforeMount(() => {
                     :items="lookups.filter(lookup => lookup.column_number === '4')[0]?.lookup_list.map(item => ({ ...item, description: item.lookup_key + ' - ' + item.description }))"
                     item-title="description"
                     item-value="lookup_key"
+                    :base-color="member.demographic._4 ? null : 'warning'"
                   />
                 </VCol>
                 <!-- (5) is __ Male or Female -->
@@ -240,6 +245,7 @@ onBeforeMount(() => {
                     :items="lookups.filter(lookup => lookup.column_number === '5')[0]?.lookup_list.map(item => ({ ...item, description: item.lookup_key + ' - ' + item.description }))"
                     item-title="description"
                     item-value="lookup_key"
+                    :base-color="member.demographic._5 ? null : 'warning'"
                     
                   />
                 </VCol>
@@ -248,6 +254,7 @@ onBeforeMount(() => {
                   <AppDateTimePicker
                     v-model="member.demographic._6"
                     label="(6) When was ____ born? (mm-dd-yyyy)"
+                    :base-color="member.demographic._6 ? null : 'warning'"
                   />
                 </VCol>
                 <VCol cols="12" md="4">
@@ -255,6 +262,7 @@ onBeforeMount(() => {
                     v-model="member.demographic._7"
                     :value="calculatedAge"
                     label="(7) How old is ___ as of his/her last birthday?"
+                    :base-color="member.demographic._7 ? null : 'warning'"
                   />
                 </VCol>
                 <!-- (8) What __'s citizenship? -->
@@ -268,6 +276,7 @@ onBeforeMount(() => {
                     :items="lookups.filter(lookup => lookup.column_number === '8')[0]?.lookup_list.map(item => ({ ...item, description: item.lookup_key + ' - ' + item.description }))"
                     item-title="description"
                     item-value="lookup_key"
+                    :base-color="member.demographic._8 ? null : 'warning'"
                   />
                 </VCol>
                 <!-- (9) What is ____'s religion/ religious affiliation? -->
@@ -281,6 +290,7 @@ onBeforeMount(() => {
                     :items="lookups.filter(lookup => lookup.column_number === '9')[0]?.lookup_list.map(item => ({ ...item, description: item.lookup_key + ' - ' + item.description }))"
                     item-title="description"
                     item-value="lookup_key"
+                    :base-color="member.demographic._9 ? null : 'warning'"
                   />
                 </VCol>
                 <!-- (10) What is ____'s ethnicity? -->
@@ -294,6 +304,7 @@ onBeforeMount(() => {
                     :items="lookups.filter(lookup => lookup.column_number === '10')[0]?.lookup_list.map(item => ({ ...item, description: item.lookup_key + ' - ' + item.description }))"
                     item-title="description"
                     item-value="lookup_key"
+                    :base-color="member.demographic._10 ? null : 'warning'"
                   />
                 </VCol>
                 <!-- (11) What is __'s highest educational attainment? -->
@@ -307,6 +318,7 @@ onBeforeMount(() => {
                     :items="lookups.filter(lookup => lookup.column_number === '11')[0]?.lookup_list.map(item => ({ ...item, description: item.lookup_key + ' - ' + item.description }))"
                     item-title="description"
                     item-value="lookup_key"
+                    :base-color="member.demographic._11 ? null : 'warning'"
                   />
                 </VCol>
                 <!-- (12a) Is __ currently enrolled? -->
@@ -320,6 +332,7 @@ onBeforeMount(() => {
                     :items="lookups.filter(lookup => lookup.column_number === '12a')[0]?.lookup_list.map(item => ({ ...item, description: item.lookup_key + ' - ' + item.description }))"
                     item-title="description"
                     item-value="lookup_key"
+                    :base-color="member.demographic._12a ? null : 'warning'"
                   />
                 </VCol>
                 <!-- (12b) What type of school is __ on? -->
@@ -334,6 +347,7 @@ onBeforeMount(() => {
                     :items="lookups.filter(lookup => lookup.column_number === '12b')[0]?.lookup_list.map(item => ({ ...item, description: item.lookup_key + ' - ' + item.description }))"
                     item-title="description"
                     item-value="lookup_key"
+                    :base-color="member.demographic._12b ? null : 'warning'"
                   />
                 </VCol>
                 <!-- (12c) In what baranagay and city/ municipality is __ currently attending school? -->
@@ -344,6 +358,7 @@ onBeforeMount(() => {
                   <VTextField 
                     v-model="member.demographic._12c"
                     label="(12c) In what baranagay and city/ municipality is __ currently attending school?"
+                    :base-color="member.demographic._12c ? null : 'warning'"
                   />
                 </VCol>
               </VRow>

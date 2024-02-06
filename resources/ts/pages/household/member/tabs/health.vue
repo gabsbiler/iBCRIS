@@ -79,6 +79,7 @@ const resetForm = async() => {
                     :items="lookups.filter(lookup => lookup.column_number === '39a')[0]?.lookup_list.map(item => ({ ...item, description: item.lookup_key + ' - ' + item.description }))"
                     item-title="description"
                     item-value="lookup_key"
+                    :base-color="member.demographic._39a ? null : 'warning'"
                   />
                 </VCol>
                 <VCol
@@ -89,6 +90,7 @@ const resetForm = async() => {
                   <VTextField
                     v-model="member.demographic._39b"
                     label="(39b) Number of Pregnancies"
+                    :base-color="member.demographic._39b ? null : 'warning'"
                   />
                 </VCol>
               </VRow>
@@ -112,6 +114,7 @@ const resetForm = async() => {
                     :items="lookups.filter(lookup => lookup.column_number === '39c.1')[0]?.lookup_list.map(item => ({ ...item, description: item.lookup_key + ' - ' + item.description }))"
                     item-title="description"
                     item-value="lookup_key"
+                    :base-color="member.demographic._39c_1 ? null : 'warning'"
                     
                   />
                 </VCol>
@@ -126,6 +129,7 @@ const resetForm = async() => {
                     :items="lookups.filter(lookup => lookup.column_number === '39c.2')[0]?.lookup_list.map(item => ({ ...item, description: item.lookup_key + ' - ' + item.description }))"
                     item-title="description"
                     item-value="lookup_key"
+                    :base-color="member.demographic._39c_2 ? null : 'warning'"
                     
                   />
                 </VCol>
@@ -141,6 +145,7 @@ const resetForm = async() => {
                     :items="lookups.filter(lookup => lookup.column_number === '39d')[0]?.lookup_list.map(item => ({ ...item, description: item.lookup_key + ' - ' + item.description }))"
                     item-title="description"
                     item-value="lookup_key"
+                    :base-color="member.demographic._39d ? null : 'warning'"
                     
                   />
                 </VCol>
@@ -155,6 +160,7 @@ const resetForm = async() => {
                     :items="lookups.filter(lookup => lookup.column_number === '39e.1')[0]?.lookup_list.map(item => ({ ...item, description: item.lookup_key + ' - ' + item.description }))"
                     item-title="description"
                     item-value="lookup_key"
+                    :base-color="member.demographic._39e_1 ? null : 'warning'"
                   />
                 </VCol>
                 <VCol
@@ -168,6 +174,7 @@ const resetForm = async() => {
                     :items="lookups.filter(lookup => lookup.column_number === '39e.2')[0]?.lookup_list.map(item => ({ ...item, description: item.lookup_key + ' - ' + item.description }))"
                     item-title="description"
                     item-value="lookup_key"
+                    :base-color="member.demographic._39e_2 ? null : 'warning'"
                   />
                 </VCol>
               </VRow>
@@ -190,6 +197,7 @@ const resetForm = async() => {
                     :items="lookups.filter(lookup => lookup.column_number === '40')[0]?.lookup_list.map(item => ({ ...item, description: item.lookup_key + ' - ' + item.description }))"
                     item-title="description"
                     item-value="lookup_key"
+                    :base-color="member.demographic._40 ? null : 'warning'"
                   />
                 </VCol>
                 <VCol
@@ -202,6 +210,7 @@ const resetForm = async() => {
                     :items="lookups.filter(lookup => lookup.column_number === '41a')[0]?.lookup_list.map(item => ({ ...item, description: item.lookup_key + ' - ' + item.description }))"
                     item-title="description"
                     item-value="lookup_key"
+                    :base-color="member.demographic._41a ? null : 'warning'"
                   />
                 </VCol>
                 
@@ -214,6 +223,7 @@ const resetForm = async() => {
                     :items="lookups.filter(lookup => lookup.column_number === '41b')[0]?.lookup_list.map(item => ({ ...item, description: item.lookup_key + ' - ' + item.description }))"
                     item-title="description"
                     item-value="lookup_key"
+                    :base-color="member.demographic._41b ? null : 'warning'"
                   />
                 </VCol>
 
@@ -227,6 +237,7 @@ const resetForm = async() => {
                     :items="lookups.filter(lookup => lookup.column_number === '42.1')[0]?.lookup_list.map(item => ({ ...item, description: item.lookup_key + ' - ' + item.description }))"
                     item-title="description"
                     item-value="lookup_key"
+                    :base-color="member.demographic._42_1 ? null : 'warning'"
                   />
                 </VCol>
                 <VCol
@@ -240,6 +251,7 @@ const resetForm = async() => {
                     :items="lookups.filter(lookup => lookup.column_number === '42.2')[0]?.lookup_list.map(item => ({ ...item, description: item.lookup_key + ' - ' + item.description }))"
                     item-title="description"
                     item-value="lookup_key"
+                    :base-color="member.demographic._42_2 ? null : 'warning'"
                   />
                 </VCol>
               </VRow>

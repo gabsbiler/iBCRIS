@@ -72,6 +72,7 @@ const onSubmit = async() => {
                     :items="lookups.filter(lookup => lookup.column_number === '13a')[0]?.lookup_list.map(item => ({ ...item, description: item.lookup_key + ' - ' + item.description }))"
                     item-title="description"
                     item-value="lookup_key"
+                    :base-color="member.demographic._15a ? null : 'warning'"
                   />
                 </VCol>
                 <!-- (13a) What type of skills do you have? -->
@@ -85,6 +86,7 @@ const onSubmit = async() => {
                     :items="lookups.filter(lookup => lookup.column_number === '13b')[0]?.lookup_list.map(item => ({ ...item, description: item.lookup_key + ' - ' + item.description }))"
                     item-title="description"
                     item-value="lookup_key"
+                    :base-color="member.demographic._13b ? null : 'warning'"
                   />
                 </VCol>
               </VRow>
@@ -109,6 +111,7 @@ const onSubmit = async() => {
                     :items="lookups.filter(lookup => lookup.column_number === '14a')[0]?.lookup_list.map(item => ({ ...item, description: item.lookup_key + ' - ' + item.description }))"
                     item-title="description"
                     item-value="lookup_key"
+                    :base-color="member.demographic._14a ? null : 'warning'"
                   />
                 </VCol>
 
@@ -120,6 +123,7 @@ const onSubmit = async() => {
                   <VTextField
                     v-model="member.demographic._14a_1"
                     label="(14a) Indicate Reason (for NOT WORKING)"
+                    :base-color="member.demographic._14a_1 ? null : 'warning'"
                   />
                 </VCol>
 
@@ -132,6 +136,7 @@ const onSubmit = async() => {
                     v-model="member.demographic._14a_2"
                     label="(14a) How many years working as OFW"
                     type="number"
+                    :base-color="member.demographic._14a_2 ? null : 'warning'"
                   />
                 </VCol>
                 <!-- (14b) What is __'s usual activity/ occupation during the past 12 months? -->
@@ -142,6 +147,7 @@ const onSubmit = async() => {
                   <VTextField
                     v-model="member.demographic._14b"
                     label="(14b) What is __'s usual activity/ occupation during the past 12 months?"
+                    :base-color="member.demographic._14b ? null : 'warning'"
                   />
                 </VCol>
                 <!-- (14c) What is the major source of __'s income? -->
@@ -156,6 +162,7 @@ const onSubmit = async() => {
                     :items="lookups.filter(lookup => lookup.column_number === '14c')[0]?.lookup_list.map(item => ({ ...item, description: item.lookup_key + ' - ' + item.description }))"
                     item-title="description"
                     item-value="lookup_key"
+                    :base-color="member.demographic._14c ? null : 'warning'"
                     
                   />
                 </VCol>
@@ -168,6 +175,7 @@ const onSubmit = async() => {
                   <VTextField
                     v-model="member.demographic._14d"
                     label="(14d) Monthly Income"
+                    :base-color="member.demographic._14c ? null : 'warning'"
                   />
                 </VCol>
                 <!-- (14e) What is the status of __'s work/ business? -->
@@ -181,6 +189,7 @@ const onSubmit = async() => {
                     :items="lookups.filter(lookup => lookup.column_number === '14e')[0]?.lookup_list.map(item => ({ ...item, description: item.lookup_key + ' - ' + item.description }))"
                     item-title="description"
                     item-value="lookup_key"
+                    :base-color="member.demographic._14e ? null : 'warning'"
                   />
                 </VCol>
                 <!-- (14f) In what barangay and city/ municipality is __'s work/business located? -->
@@ -191,6 +200,7 @@ const onSubmit = async() => {
                   <VTextField
                     v-model="member.demographic._14f"
                     label="(14f) In what barangay and city/ municipality is __'s work/business located?"
+                    :base-color="member.demographic._14f ? null : 'warning'"
                   />
                 </VCol>
               </VRow>

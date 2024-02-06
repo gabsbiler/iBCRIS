@@ -74,6 +74,7 @@ const resetForm = async() => {
                   <VTextField
                     v-model="member.demographic._27a"
                     label="(27a) Surname"
+                    :base-color="member.demographic._27a ? null : 'warning'"
                   />
                 </VCol>
                 <VCol
@@ -83,6 +84,7 @@ const resetForm = async() => {
                   <VTextField
                     v-model="member.demographic._27b"
                     label="(27b) Given Name"
+                    :base-color="member.demographic._27b ? null : 'warning'"
                   />
                 </VCol>
                 <VCol
@@ -92,6 +94,7 @@ const resetForm = async() => {
                   <VTextField
                     v-model="member.demographic._27c"
                     label="(27c) Middle Name"
+                    :base-color="member.demographic._27c ? null : 'warning'"
                   />
                 </VCol>
                 <VCol
@@ -104,6 +107,7 @@ const resetForm = async() => {
                     :items="lookups.filter(lookup => lookup.column_number === '28')[0]?.lookup_list"
                     item-title="description"
                     item-value="lookup_key"
+                    :base-color="member.demographic._28 ? null : 'warning'"
                   />
                 </VCol>
                 
@@ -117,6 +121,7 @@ const resetForm = async() => {
                     :items="lookups.filter(lookup => lookup.column_number === '29')[0]?.lookup_list"
                     item-title="description"
                     item-value="lookup_key"
+                    :base-color="member.demographic._29 ? null : 'warning'"
                   />
                 </VCol>
                 <VCol
@@ -126,6 +131,7 @@ const resetForm = async() => {
                   <AppDateTimePicker
                     v-model="member.demographic._30"
                     label="(30) Date of Birth"
+                    :base-color="member.demographic._30 ? null : 'warning'"
                   />
                 </VCol>
                 <VCol
@@ -135,6 +141,7 @@ const resetForm = async() => {
                   <AppDateTimePicker
                     v-model="member.demographic._31"
                     label="(31) Date of Death"
+                    :base-color="member.demographic._31 ? null : 'warning'"
                   />
                 </VCol>
                 <VCol
@@ -144,6 +151,7 @@ const resetForm = async() => {
                   <VTextField
                     v-model="member.demographic._32"
                     label="(32) Age at the time of death"
+                    :base-color="member.demographic._32 ? null : 'warning'"
                   />
                 </VCol>
                 <VCol
@@ -152,6 +160,7 @@ const resetForm = async() => {
                   <VTextField
                     v-model="member.demographic._33"
                     label="(33) Place of Death (Municipal/City, Province)"
+                    :base-color="member.demographic._33 ? null : 'warning'"
                   />
                 </VCol>
                 <VCol
@@ -160,6 +169,7 @@ const resetForm = async() => {
                   <VTextField
                     v-model="member.demographic._34"
                     label="(34) What is __'s cause of death?"
+                    :base-color="member.demographic._34 ? null : 'warning'"
                   />
                 </VCol>
                 <VCol
@@ -172,6 +182,7 @@ const resetForm = async() => {
                     :items="lookups.filter(lookup => lookup.column_number === '35')[0]?.lookup_list"
                     item-title="description"
                     item-value="lookup_key"
+                    :base-color="member.demographic._35 ? null : 'warning'"
                   />
                 </VCol>
                 <VCol
@@ -184,6 +195,7 @@ const resetForm = async() => {
                     :items="lookups.filter(lookup => lookup.column_number === '36')[0]?.lookup_list"
                     item-title="description"
                     item-value="lookup_key"
+                    :base-color="member.demographic._36 ? null : 'warning'"
                   />
                 </VCol>
                 <VCol
@@ -196,6 +208,7 @@ const resetForm = async() => {
                     :items="lookups.filter(lookup => lookup.column_number === '37')[0]?.lookup_list"
                     item-title="description"
                     item-value="lookup_key"
+                    :base-color="member.demographic._37 ? null : 'warning'"
                   />
                 </VCol>
                 <VCol
@@ -208,6 +221,7 @@ const resetForm = async() => {
                     :items="lookups.filter(lookup => lookup.column_number === '38')[0]?.lookup_list"
                     item-title="description"
                     item-value="lookup_key"
+                    :base-color="member.demographic._38 ? null : 'warning'"
                   />
                 </VCol>
                 
