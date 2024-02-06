@@ -517,11 +517,16 @@ class HouseholdController extends Controller
         $container = HouseholdContainer::firstOrCreate([
             'name' => 'Unassigned'
         ]);
+        $householdKey = '';
 
         try {
+
             $households = [];
 
             foreach ($request->input('data') as $item) {
+                if ($item['household_id'] == null || $item['household_id'] == '') continue;
+
+
                 // Use the provided household ID from the front end
                 $householdKey = $item['household_id'];
 
@@ -561,12 +566,12 @@ class HouseholdController extends Controller
                     'demographic' => $demographic->toArray()
                 ];
             }
-
             DB::commit();
-            return response()->json($households);
+            return response()->json('Uploaded Successful');
         } catch (\Exception $e) {
             DB::rollback();
-            return response()->json(['error' => $e->getMessage()], 500);
+            return response()->json(['error' => $e->getMessage()]);
+            // return response()->json($demographic);
         }
     }
 

@@ -96,6 +96,7 @@ const isMarriageDone = computed(() => {
                   <VTextField
                     v-model="member.demographic._17"
                     label="(17) In what City/ Municipality/ and province was born?"
+                    :error="!member.demographic._17"
                   />
                 </VCol>
                 <VCol

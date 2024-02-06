@@ -141,11 +141,11 @@ onMounted(() => {
             rounded
             size="125"
             :image="avatar1"
-            class="user-profile-avatar mx-auto"
+            class=" mx-auto"
           />
         </div>
 
-        <div class="user-profile-info w-100 mt-16 pt-6 pt-sm-0 mt-sm-0">
+        <div class="w-100 mt-16 pt-6 pt-sm-0 mt-sm-0">
           <div class="d-flex align-center justify-center justify-sm-space-between flex-wrap gap-4">
             <VRow>
               <VCol

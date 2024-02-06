@@ -452,6 +452,7 @@ const processUpload = async () => {
     SnackBarRef.value.show('success', response.data)
     // Handle successful upload response
   } catch (error) {
+    console.log(error)
     SnackBarRef.value.show('error', error)
     // Handle error response
   }
