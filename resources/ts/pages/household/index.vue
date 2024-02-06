@@ -151,7 +151,7 @@ const type = ref()
 
 const headers = [
   {
-    title: 'Container',
+    title: 'Record Batch',
     key: 'household_container.name'
   },
   {

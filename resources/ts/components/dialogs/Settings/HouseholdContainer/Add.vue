@@ -2,11 +2,11 @@
   <div>
     <VBtn @click="openDialog">
       <VIcon icon="mdi-plus"/>
-      Container
+      Add Batch
     </VBtn>
 
     <VDialog max-width="400" v-model="isDialogVisible">
-      <VCard title="Add Folder">
+      <VCard title="Add Batch">
         <VCardText>
           <VRow>
             <VCol>

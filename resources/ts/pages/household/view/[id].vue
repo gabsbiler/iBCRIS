@@ -229,7 +229,7 @@ const updateHouseholdSurveyStatus = async (householdId, newSurveyStatus) => {
                       item-title="name" 
                       item-value="id" 
                       density="compact" 
-                      label="Folder"
+                      label="Record Batch"
                       @update:modelValue="updateContainer"
                       :loading="folderLoading"
                     />

@@ -7,7 +7,7 @@
           <template #top>
             <div class="d-flex justify-space-between my-2">
               <div>
-                <h6 class="text-h6">Household Container</h6>
+                <h6 class="text-h6">Record Batch</h6>
               </div>
               <div class="d-flex align-center gap-x-3">
                 <VTextField label="Search" density="compact" style="min-width: 20rem;"/>
