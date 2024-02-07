@@ -345,9 +345,9 @@ const parseCSV = (content: string | ArrayBuffer | null) => {
     header: true, // Assumes your CSV has headers
     complete: (results:any) => {
       uploaded.value = results.data.map((row: { [x: string]: any; }) => {
-        let formattedDate = row['_6'];
-        if (row['_6']) {
-          const [month, day, year] = row['_6'].split('/');
+        let formattedDate = row['(6) When was ____ born? (mm-dd-yyyy)'];
+        if (row['(6) When was ____ born? (mm-dd-yyyy)']) {
+          const [month, day, year] = row['(6) When was ____ born? (mm-dd-yyyy)'].split('/');
           const formattedYear = parseInt(year, 10) < 100 ? '20' + year : year;
           formattedDate = `${formattedYear}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
         }else{
@@ -446,6 +446,7 @@ const parseCSV = (content: string | ArrayBuffer | null) => {
 };
 
 const processUpload = async () => {
+  console.log(uploaded.value)
   try {
     const response = await axios.post('/api/households/multiple/upload', { data: uploaded.value });
 
