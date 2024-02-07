@@ -57,5 +57,6 @@ declare module '@vue/runtime-core' {
     ThemeSwitcher: typeof import('./resources/ts/@core/components/ThemeSwitcher.vue')['default']
     TotalCountGender: typeof import('./resources/ts/components/reports/totalCountGender.vue')['default']
     TotalGenderCount: typeof import('./resources/ts/components/reports/cards/TotalGenderCount.vue')['default']
+    UserTable: typeof import('./resources/ts/components/users/UserTable.vue')['default']
   }
 }

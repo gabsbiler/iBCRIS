@@ -14,7 +14,7 @@ const router = createRouter({
 // Docs: https://router.vuejs.org/guide/advanced/navigation-guards.html#global-before-guards
 
 router.beforeEach((to, from, next) => {
-  const isLoggedIn = localStorage.getItem('loggedIn');
+  const isLoggedIn = localStorage.getItem('accessToken');
   
   if (!isLoggedIn || isLoggedIn === '0') {
     if (to.name !== 'login') {

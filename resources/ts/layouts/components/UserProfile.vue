@@ -1,11 +1,25 @@
 <script setup lang="ts">
+import axiosIns from '@/plugins/axios';
 import avatar1 from '@images/avatars/avatar-1.png';
 const route = useRoute()
 const router = useRouter()
 
-const logout = () => {
-  localStorage.removeItem('loggedIn');
-  router.replace(route.query.to ? String(route.query.to) : '/login')
+const logout = async () => {
+  try {
+    // Make a request to the logout endpoint
+    await axiosIns.get('/auth/logout');
+
+    // Clear local storage or state management data
+    localStorage.removeItem('userData');
+    localStorage.removeItem('accessToken');
+    localStorage.removeItem('userAbilities');
+
+    // Redirect to login or home page
+    router.push('/login');
+  } catch (error) {
+    console.error('Logout failed:', error);
+    // Handle any errors here
+  }
 }
 </script>
 

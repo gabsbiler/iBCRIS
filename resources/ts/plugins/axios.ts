@@ -1,10 +1,11 @@
+import router from '@/router/index'
 import axios from 'axios'
 
 const axiosIns = axios.create({
   // You can add your headers here
   // ================================
   baseURL: 'https://ibcris.thinkingbees.tech/',
-  // baseURL: 'http://127.0.0.1:8000/'
+  // baseURL: 'http://127.0.0.1:8000'
   // timeout: 1000,
   // headers: {'X-Custom-Header': 'foobar'}
 })
@@ -21,7 +22,7 @@ axiosIns.interceptors.request.use(config => {
 
     // Set authorization header
     // ℹ️ JSON.parse will convert token to string
-    config.headers.Authorization = token ? `Bearer ${JSON.parse(token)}` : ''
+    config.headers.Authorization = token ? `Bearer ${token}` : ''
   }
 
   // Return modified config
@@ -30,24 +31,28 @@ axiosIns.interceptors.request.use(config => {
 
 // ℹ️ Add response interceptor to handle 401 response
 axiosIns.interceptors.response.use(response => {
-  return response
+  return response;
 }, error => {
-  // Handle error
-  if (error.response.status === 401) {
-    // ℹ️ Logout user and redirect to login page
-    // Remove "userData" from localStorage
-    localStorage.removeItem('userData')
-
-    // Remove "accessToken" from localStorage
-    localStorage.removeItem('accessToken')
-    localStorage.removeItem('userAbilities')
-
-    // If 401 response returned from api
-    router.push('/login')
+  
+  // Check if error.response exists
+  if (error.response) {
+    // Handle HTTP errors
+    if (error.response.status === 401) {
+      // Logout user and redirect to login page
+      localStorage.removeItem('userData');
+      localStorage.removeItem('accessToken');
+      localStorage.removeItem('userAbilities');
+      // Redirect to login page
+      router.push('/not-authorized');
+      console.log(error)
+    }
+  } else {
+    // Handle non-HTTP errors (e.g., network errors)
+    console.error('Network error or server not reachable:', error);
   }
-  else {
-    return Promise.reject(error)
-  }
-})
+
+  return Promise.reject(error);
+});
+
 
 export default axiosIns

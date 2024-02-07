@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import axios from 'axios';
+import axiosIns from '@/plugins/axios';
 
 
 const isSettingVisible = ref(true)
@@ -129,9 +129,6 @@ const addAndSortByFrom = (from, to) => {
   settings.value.ageRange.sort((a, b) => a.from - b.from);
 };
 
-
-
-
 const clearData = () => {
   data.value = null
 }
@@ -139,7 +136,7 @@ const clearData = () => {
 const generateReport = async() => {
   generateLoading.value = true
   try{
-    const response = await axios.get('/api/reports/generate', {
+    const response = await axiosIns.get('/api/reports/generate', {
       params: settings.value
     })
     data.value = response.data

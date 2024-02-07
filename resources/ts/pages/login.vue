@@ -11,9 +11,12 @@ import authV2LoginIllustrationLight from '@images/pages/auth-v2-login-illustrati
 import authV2MaskDark from '@images/pages/auth-v2-mask-dark.png'
 import authV2MaskLight from '@images/pages/auth-v2-mask-light.png'
 
+import axios from '@/plugins/axios'
+
+
 const form = ref({
-  email: '',
-  password: '',
+  email: 'a@a.com',
+  password: 'gabsbiler331',
   remember: false,
 })
 
@@ -34,17 +37,24 @@ const authThemeImg = useGenerateImageVariant(
 
 const authThemeMask = useGenerateImageVariant(authV2MaskLight, authV2MaskDark)
 
-const onSubmit = () => {
-  if(form.value.email == 'admin@admin.com' && form.value.password == '@dm1n@dm1n'){
-    isPromptShow.value = false
-    localStorage.setItem('loggedIn', '1');
-    router.replace(route.query.to ? String(route.query.to) : '/')
-  }else{
-    isPromptShow.value = true
-  }
+const onSubmit = async () => {
+  try {
+    await axios.get('/sanctum/csrf-cookie');
 
-  
-}
+    const response = await axios.post('/api/auth/login', {
+      email: form.value.email,
+      password: form.value.password,
+    });
+    
+    localStorage.setItem('userData',  JSON.stringify(response.data.userData));
+    localStorage.setItem('accessToken', response.data.accessToken);
+    router.replace(route.query.to ? String(route.query.to) : '/');
+
+  } catch (error) {
+    console.error(error);
+    isPromptShow.value = true;
+  }
+};
 </script>
 
 <template>

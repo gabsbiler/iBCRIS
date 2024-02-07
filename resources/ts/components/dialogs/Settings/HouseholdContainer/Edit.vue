@@ -28,7 +28,7 @@
 </template>
 
 <script setup lang="ts">
-import axios from 'axios';
+import axios from '@axios';
 const isDialogVisible = ref(false)
 const data = ref()
 const loadingSave = ref(false)
