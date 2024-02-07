@@ -16,9 +16,9 @@ import { themeConfig } from '@themeConfig'
 import { alphaDashValidator, emailValidator, requiredValidator } from '@validators'
 
 const refVForm = ref<VForm>()
-const username = ref('gabs')
-const email = ref('gabsbiler@gmail.com')
-const password = ref('gabsbiler123')
+const username = ref('')
+const email = ref('')
+const password = ref('')
 const privacyPolicies = ref(true)
 
 // Router
