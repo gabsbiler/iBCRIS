@@ -37,7 +37,7 @@ class ReportController extends Controller
     {
         $maleCount = Demographic::where('_5', '01')->count();
         $femaleCount = Demographic::where('_5', '02')->count();
-        $unknown = Demographic::where('_5', null)->count();
+        $unknown = Demographic::whereNotIn('_5', ['01', '02'])->count();
 
         return [
             'Male' => $maleCount,
@@ -61,7 +61,7 @@ class ReportController extends Controller
                 // ->whereRaw("DATE_FORMAT(created_at, '%Y-%m-%d') <= ?", [$this->dateTo])
                 ->count();
 
-            $unknown = Demographic::whereBetween('_7', [$age['from'], $age['to']])->where('_5', null)
+            $unknown = Demographic::whereBetween('_7', [$age['from'], $age['to']])->whereNotIn('_5', ['01', '02'])
                 // ->whereRaw("DATE_FORMAT(created_at, '%Y-%m-%d') >= ?", [$this->dateFrom])
                 // ->whereRaw("DATE_FORMAT(created_at, '%Y-%m-%d') <= ?", [$this->dateTo])
                 ->count();
@@ -82,7 +82,7 @@ class ReportController extends Controller
         $maritalCountByAge = [];
         foreach ($this->ageRange as $age) {
             $unknown = Demographic::whereBetween('_7', [$age['from'], $age['to']])
-                ->where('_21', null)
+                ->whereNotIn('_5', ['01', '02'])
                 ->count();
             $single = Demographic::whereBetween('_7', [$age['from'], $age['to']])
                 ->where('_21', '1')
