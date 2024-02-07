@@ -15,8 +15,8 @@ import axios from '@/plugins/axios'
 
 
 const form = ref({
-  email: 'a@a.com',
-  password: 'gabsbiler331',
+  email: '',
+  password: '',
   remember: false,
 })
 

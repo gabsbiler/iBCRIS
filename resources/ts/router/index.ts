@@ -17,6 +17,10 @@ router.beforeEach((to, from, next) => {
   const isLoggedIn = localStorage.getItem('accessToken');
   
   if (!isLoggedIn || isLoggedIn === '0') {
+    if(to.name == 'register'){
+      next()
+    }
+
     if (to.name !== 'login') {
       next({ name: 'login' });
     } else {
