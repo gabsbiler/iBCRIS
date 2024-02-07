@@ -33,7 +33,7 @@
 
     <!-- Data tables -->
     <VCard>
-      <VCardText class="d-flex flex-wrap gap-4">
+      <VCardText class="d-flex flex-wrap gap-4 flex-column">
         <VRow>
           <VCol class="d-flex align-middle">
             <h1 class="text-h6">
@@ -60,13 +60,16 @@
             />
           </VCol>
         </VRow>
-    
+        <div v-if="!households">
+          Fetching data...
+        </div>
         <VDataTable
           class="mt-3"
           :headers="headers"
           :items="households"
           :search="search"
           items-per-page="12"
+          v-if="households"
         >
           <!-- Count -->
           <template #item.Count="{ item }">
@@ -144,6 +147,7 @@ const filterShow = ref(false)
 const households = ref()
 const containers = ref()
 const search = ref()
+const isLoading = ref(true)
 
 const isSnackbarSuccessVisible = ref(false)
 const alertMessage = ref()
@@ -196,6 +200,7 @@ const showSnackBar = data =>{
 }
 
 async function fetchData(){
+  isLoading.value = true
   try {
     const response = await axios.get('/api/household')
 
@@ -215,6 +220,7 @@ async function fetchData(){
   } catch (error) {
     console.error('Error fetching data:', error)
   }
+  isLoading.value = false
 }
 
 const deleteItem = async (householdId) => {
