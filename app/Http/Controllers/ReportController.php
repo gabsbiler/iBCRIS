@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Demographic;
 use Carbon\Carbon;
+
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Http\Request;
 
 class ReportController extends Controller

@@ -14,6 +14,7 @@ declare module '@vue/runtime-core' {
     AddHouseholdMemberDialog: typeof import('./resources/ts/components/AddHouseholdMemberDialog.vue')['default']
     AddLookupEntry: typeof import('./resources/ts/components/AddLookupEntry.vue')['default']
     AddLookupForm: typeof import('./resources/ts/components/AddLookupForm.vue')['default']
+    AddUserDialog: typeof import('./resources/ts/components/users/AddUserDialog.vue')['default']
     AppBarSearch: typeof import('./resources/ts/@core/components/AppBarSearch.vue')['default']
     AppCardActions: typeof import('./resources/ts/@core/components/cards/AppCardActions.vue')['default']
     AppCardCode: typeof import('./resources/ts/@core/components/cards/AppCardCode.vue')['default']

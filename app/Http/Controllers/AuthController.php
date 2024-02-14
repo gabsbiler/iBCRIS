@@ -9,6 +9,21 @@ use Validator;
 
 class AuthController extends Controller
 {
+
+    /**
+     * Show all users
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function showAll()
+    {
+        $users = User::all(); // Fetch all users from the database
+
+        return response()->json([
+            'users' => $users
+        ]);
+    }
+
     /**
      * Create user
      *
@@ -21,25 +36,28 @@ class AuthController extends Controller
     public function register(Request $request)
     {
         $request->validate([
-            'name' => 'required|string',
+            'first_name' => 'required|string',
+            'last_name' => 'required|string',
+            'username' => 'required|string',
+            'barangay' => 'required|string',
+            'role' => 'required|string',
             'email' => 'required|string|unique:users',
             'password' => 'required|string',
             'c_password' => 'required|same:password'
         ]);
 
         $user = new User([
-            'name'  => $request->name,
+            'name'  => $request->first_name . ' ' . $request->last_name,
+            'username' => $request->username,
             'email' => $request->email,
+            'barangay' => $request->barangay,
+            'role' => $request->role,
             'password' => bcrypt($request->password),
         ]);
 
         if ($user->save()) {
-            $tokenResult = $user->createToken('Personal Access Token');
-            $token = $tokenResult->plainTextToken;
-
             return response()->json([
                 'message' => 'Successfully created user!',
-                'accessToken' => $token,
             ], 201);
         } else {
             return response()->json(['error' => 'Provide proper details']);
@@ -73,10 +91,21 @@ class AuthController extends Controller
         $tokenResult = $user->createToken('Personal Access Token');
         $token = $tokenResult->plainTextToken;
 
+        $userAbilities = [
+            'accessDashboard' => $user->can('access-dashboard'),
+            'accessUsers' => $user->can('access-users'),
+            'accessRecords' => $user->can('access-records'),
+            'accessReports' => $user->can('access-reports'),
+            'accessLookups' => $user->can('access-lookups'),
+            'accessMassUploads' => $user->can('access-mass-uploads'),
+            'accessRecordBatch' => $user->can('access-record-batch'),
+        ];
+
         return response()->json([
             'accessToken' => $token,
             'token_type' => 'Bearer',
-            'userData' => $request->user()
+            'userData' => $user,
+            'userAbilities' => $userAbilities,
         ]);
     }
 

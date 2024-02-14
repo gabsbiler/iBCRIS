@@ -30,6 +30,7 @@ Route::group(['prefix' => 'auth'], function () {
 });
 
 Route::group(['middleware' => 'auth:sanctum'], function () {
+    Route::get('users/all', [AuthController::class, 'showAll']);
     Route::get('container', [HouseholdContainerController::class, 'show']);
     Route::get('lookup', [LookupController::class, 'show']);
     Route::get('lookup-list', [LookupController::class, 'showLookupList']);

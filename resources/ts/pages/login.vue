@@ -11,8 +11,7 @@ import authV2LoginIllustrationLight from '@images/pages/auth-v2-login-illustrati
 import authV2MaskDark from '@images/pages/auth-v2-mask-dark.png'
 import authV2MaskLight from '@images/pages/auth-v2-mask-light.png'
 
-import axios from '@/plugins/axios'
-
+import axiosIns from '@/plugins/axios'
 
 const form = ref({
   email: '',
@@ -39,22 +38,60 @@ const authThemeMask = useGenerateImageVariant(authV2MaskLight, authV2MaskDark)
 
 const onSubmit = async () => {
   try {
-    await axios.get('/sanctum/csrf-cookie');
+    await axiosIns.get('/sanctum/csrf-cookie');
 
-    const response = await axios.post('/api/auth/login', {
+    const response = await axiosIns.post('/api/auth/login', {
       email: form.value.email,
       password: form.value.password,
     });
-    
-    localStorage.setItem('userData',  JSON.stringify(response.data.userData));
-    localStorage.setItem('accessToken', response.data.accessToken);
-    router.replace(route.query.to ? String(route.query.to) : '/');
 
+    localStorage.setItem('userData', JSON.stringify(response.data.userData));
+    localStorage.setItem('accessToken', response.data.accessToken);
+
+    // Assume that the user role is part of the response data
+    const userRole = response.data.userData.role;
+
+
+    updateCASLAbilities(userRole)
+
+    router.replace(route.query.to ? String(route.query.to) : '/');
   } catch (error) {
     console.error(error);
     isPromptShow.value = true;
   }
 };
+
+
+
+const updateCASLAbilities = (userRole) => {
+    const abilities = [];
+    if (userRole === 'admin') {
+      abilities.push(
+          { action: 'Access', subject: 'Dashboard' },
+          { action: 'Access', subject: 'Users' },
+          { action: 'Access', subject: 'Records' },
+          { action: 'Access', subject: 'Reports' },
+          { action: 'Access', subject: 'Lookups' },
+          { action: 'Access', subject: 'MassUpload' },
+          { action: 'Access', subject: 'RecordBatch' },
+      );
+    } else if (userRole === 'brgyAdmin' ){
+      abilities.push(
+          { action: 'Access', subject: 'Dashboard' },
+          { action: 'Access', subject: 'Users' },
+          { action: 'Access', subject: 'Records' },
+          { action: 'Access', subject: 'Lookups' },
+          { action: 'Access', subject: 'MassUpload' },
+          { action: 'Access', subject: 'RecordBatch' },
+      );
+    }else if (userRole === 'brgyEncoder') {
+      abilities.push(
+          { action: 'Access', subject: 'Records' },
+      );
+    }
+    localStorage.setItem('userAbilities', JSON.stringify(abilities))
+};
+
 </script>
 
 <template>

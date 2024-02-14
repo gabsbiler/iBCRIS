@@ -10,7 +10,7 @@ import teenagePregnancy from '@/pages/household/member/tabs/teenage-pregnancy.vu
 import Death from '@/pages/household/member/tabs/death.vue';
 import avatar1 from '@images/avatars/avatar-1.png';
 import {watch} from 'vue'
-import axios from "axios"
+import axios from "@axios"
 
 const route = useRoute()
 

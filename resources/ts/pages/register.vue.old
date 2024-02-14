@@ -19,7 +19,7 @@ const refVForm = ref<VForm>()
 const username = ref('')
 const email = ref('')
 const password = ref('')
-const privacyPolicies = ref(true)
+const privacyPolicies = ref(false)
 
 // Router
 const route = useRoute()

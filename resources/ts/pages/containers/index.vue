@@ -46,7 +46,7 @@
 <script setup lang="ts">
 import ContainerAddDialog from '@/components/dialogs/Settings/HouseholdContainer/Add.vue';
 import ContainerEditDialog from '@/components/dialogs/Settings/HouseholdContainer/Edit.vue';
-import axios from '@axios';
+import axiosIns from '@axios';
 import { onMounted, ref } from 'vue';
 import { VDataTable } from 'vuetify/labs/VDataTable';
 
@@ -66,7 +66,7 @@ const headers = [
 
 const fetchData = async () => {
   try {
-    const response = await axios.get('/api/container')
+    const response = await axiosIns.get('/api/container')
 
     data.value = response.data
 
@@ -81,7 +81,7 @@ const deleteContainerId = ref()
 const deleteContainer = async (containerId:any) => {
   isDeleting.value = true;
   try {
-    const response = await axios.delete(`/api/household-container/${containerId}`);
+    const response = await axiosIns.delete(`/api/household-container/${containerId}`);
     fetchData()
     SnackBarRef.value.show('success', response.data.message)
   } catch (error) {

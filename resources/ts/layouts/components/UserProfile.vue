@@ -21,6 +21,10 @@ const logout = async () => {
     // Handle any errors here
   }
 }
+
+const userData = JSON.parse(localStorage.getItem('userData'))
+
+console.log(userData)
 </script>
 
 <template>
@@ -68,9 +72,13 @@ const logout = async () => {
             </template>
 
             <VListItemTitle class="font-weight-medium">
-              John Doe
+              {{userData.name}}
             </VListItemTitle>
-            <VListItemSubtitle>Admin</VListItemSubtitle>
+            <VListItemSubtitle>
+              {{userData.role == 'admin' ? 'Administrator' : ''}}
+              {{userData.role == 'brgyAdmin' ? 'Brgy. Administrator' : ''}}
+              {{userData.role == 'brgyEncoder' ? 'Brgy. Encoder' : ''}}
+            </VListItemSubtitle>
           </VListItem>
 
           <VListItem @click="logout">

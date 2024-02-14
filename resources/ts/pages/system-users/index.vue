@@ -1,5 +1,25 @@
 <script setup lang="ts">
+import axiosIns from '@/plugins/axios';
+
 const isFilterOpen = ref(false)
+
+
+const userList = ref([])
+
+const fetchData = async () => {
+  try {
+    const response = await axiosIns.get('/api/users/all')
+
+    userList.value = response.data.users
+    console.log(response)
+  } catch (error) {
+    console.log(error)   
+  }
+}
+
+onMounted(() => {
+  fetchData();
+})
 </script>
 <template>
   <div>
@@ -31,7 +51,7 @@ const isFilterOpen = ref(false)
       </VExpandTransition>
     </VCard>
     <VCard class="mt-5">
-      <VCardTitle class="mt-1 d-flex align-center">
+      <VCardTitle class="mt-1 d-flex">
         <h6 class="text-h6">System User List</h6>
         <VSpacer/>
         <VTextField
@@ -40,12 +60,10 @@ const isFilterOpen = ref(false)
           density="compact"
           style="max-width: 300px;"
         />
-        <VBtn>
-          Add User
-        </VBtn>
+        <AddUserDialog @submitted="fetchData"/>
       </VCardTitle>
       <VCardText class="text-center">
-        <UserTable/>
+        <UserTable :user-list="userList"/>
       </VCardText>
     </VCard>
   </div>

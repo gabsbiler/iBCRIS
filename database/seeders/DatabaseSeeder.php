@@ -14,12 +14,16 @@ class DatabaseSeeder extends Seeder
     {
         // \App\Models\User::factory(10)->create();
 
-        // \App\Models\User::factory()->create([
-        //     'name' => 'Test User',
-        //     'email' => 'test@example.com',
-        // ]);
+        \App\Models\User::factory()->create([
+            'name' => 'Gabriel Biler',
+            'email' => 'gabsbiler@gmail.com',
+            'password' => bcrypt('gabsbiler331'),
+            'role' => 'admin',
+            'username' => 'gabsbiler',
+            'barangay' => 'Cotta'
+        ]);
 
         // \App\Models\Household::factory()->count(50)->create();
-        \App\Models\Demographic::factory()->count(20)->create();
+        // \App\Models\Demographic::factory()->count(20)->create();
     }
 }
