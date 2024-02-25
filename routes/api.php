@@ -47,7 +47,7 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::post('/lookup/add', [LookupController::class, 'addLookup']);
     Route::post('/lookup/entry/add', [LookupController::class, 'addNewLookupEntry']);
     Route::post('/household-container', [HouseholdContainerController::class, 'add']);
-
+    Route::post('/indicator/count', [ReportController::class, 'countOfIndicators']);
 
     Route::put('/household/survey-status', [HouseholdController::class, 'updateSurveyStatus']);
     Route::put('/lookup', [LookupController::class, 'updateLookup']);

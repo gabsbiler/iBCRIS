@@ -1,54 +1,7 @@
 <script setup lang="ts">
 import axiosIns from '@/plugins/axios';
 
-
-const isSettingVisible = ref(true)
-const generateLoading = ref(false)
-const dateToday = new Date()
-const ageFrom = ref()
-const ageTo = ref()
-const data = ref()
-const settings = ref({
-  dateFrom: dateToday,
-  dateTo: dateToday,
-  barangay: [],
-  ageRange: [
-    {
-      from: 0,
-      to: 5
-    },
-    {
-      from: 6,
-      to: 10
-    },
-    {
-      from: 11,
-      to: 15
-    },
-    {
-      from: 16,
-      to: 20
-    },
-    {
-      from: 21,
-      to: 25
-    },
-    {
-      from: 26,
-      to: 30
-    },
-    {
-      from: 31,
-      to: 35
-    },
-    {
-      from: 36,
-      to: 40
-    },
-
-  ]
-})
-
+const isOptionShow = ref(true)
 const baranggayList = [
 'Alitao',
 'Alupay',
@@ -118,55 +71,69 @@ const baranggayList = [
 'Wakas'
 ]
 
-const removeElementArray = (index) => {
-  if(index >= 0 && index < settings.value.ageRange.length) {
-    settings.value.ageRange.splice(index, 1);
+const indicators = ref()
+
+const settings = ref({
+  barangay: [],
+  indicator: undefined
+})
+
+const results = ref([])
+
+const fetchIndicators = async () => {
+  try {
+    const response = await axiosIns.get('api/lookup');
+    indicators.value = response.data.map((item:any) => ({
+      lookup_name: `[${item.column_number}] ${item.lookup_name}`,
+      id: item.id
+    }));
+  } catch (e) {
+    console.error(e);
   }
 };
 
-const addAndSortByFrom = (from, to) => {
-  settings.value.ageRange.push({ from, to });
-  settings.value.ageRange.sort((a, b) => a.from - b.from);
-};
+const generate = async () => {
 
-const clearData = () => {
-  data.value = null
-}
-
-const generateReport = async() => {
-  generateLoading.value = true
   try{
-    const response = await axiosIns.get('/api/reports/generate', {
-      params: settings.value
-    })
-    data.value = response.data
-  }catch(error){
-    console.log(error)
+    const data = {
+      barangays: settings.value.barangay,
+      indicator: settings.value.indicator.id
+    }
+    const response = await axiosIns .post('/api/indicator/count', data)
+    results.value.push(response.data)
+  }catch(e){
+    console.log(e)
   }
-  generateLoading.value = false
-  isSettingVisible.value = false
+  isOptionShow.value = false
 }
 
+onMounted(() => {
+  fetchIndicators()
+})
 </script>
+
 <template>
-  <div class="d-flex flex-column gap-y-5">
-    
+  <div>
+    <!-- Report Options -->
     <VCard>
-      <VCardTitle class="d-flex justify-space-between align-center" @click="isSettingVisible = !isSettingVisible">
-        <h6 class="text-h6">Settings</h6>
+      <VCardTitle 
+        class="d-flex justify-space-between align-center" 
+        @click="isOptionShow =! isOptionShow"
+        style="cursor: pointer;"
+      >
+        <h6 class="text-h6">Report Options</h6>
         <VBtn 
-          :icon="isSettingVisible ? 'mdi-chevron-down' : 'mdi-chevron-up'"
+          :icon="isOptionShow ? 'mdi-chevron-up':'mdi-chevron-down' " 
           variant="text"
         />
       </VCardTitle>
       <VExpandTransition>
-        <div v-show="isSettingVisible">
-          <VDivider/>
-          <VCardText>
+        <div v-show="isOptionShow">
+          <VCardText >
             <VRow>
               <VCol>
-                <VCombobox 
-                  label="Selected Barangay" 
+                <VCombobox
+                  label="Select Barangay" 
                   :items="baranggayList"
                   v-model="settings.barangay"
                   multiple
@@ -174,125 +141,83 @@ const generateReport = async() => {
                   clearable
                 />
               </VCol>
-            </VRow>
-            <VDivider class="my-5"/>
-            <VRow>
-              <VCol cols="12" md="6">
-                <VText>Pick a Date:</VText>
-                <VRow class="mt-1">
-                  <VCol cols="6">
-                    <AppDateTimePicker 
-                      label="From" 
-                      v-model="settings.dateFrom"
-                    />
-                  </VCol>
-                  <VCol cols="6">
-                    <AppDateTimePicker 
-                      label="To" 
-                      v-model="settings.dateTo"
-                    />
-                  </VCol>
-                </VRow>
-              </VCol>
-              <VDivider vertical/>
-              <VCol cols="12" md="6">
-                <VText>Select Age:</VText>
-                <VRow class="mt-1">
-                  <VCol>
-                    <VTextField label="From" v-model="ageFrom" type="number"/>
-                  </VCol>
-                  <VCol class="d-flex flex-row align-center gap-x-4">
-                    <VTextField label="To" v-model="ageTo" type="number"/>
-                    <VBtn 
-                      icon="mdi-plus" 
-                      @click="addAndSortByFrom(ageFrom, ageTo)" 
-                      :disabled="!(ageFrom > 0 && ageTo > 0)"
-                    />
-                    
-                  </VCol>
-                </VRow>
-                <VRow>
-                  <VCol class="gap-x-2" >
-                    <VChip color="primary" v-for="(value, key) in settings.ageRange" class="mx-1 mt-2">
-                      <VText>
-                        {{ value.from }} - {{ value.to }}
-                      </VText> 
-                      <Button class="d-flex align-center ms-1" @click="removeElementArray(key)">
-                        <VIcon icon="mdi-close" style="font-size: 0.9rem !important;"/>
-                      </Button>
-                    </VChip>
-                  </VCol>
-                </VRow>
+              <VCol>
+                <VCombobox
+                  label="Select Indicator" 
+                  :items="indicators"
+                  item-title="lookup_name"
+                  item-value="id"
+                  v-model="settings.indicator"
+                  clearable
+                />
               </VCol>
             </VRow>
-            
-            
-            
-            <VDivider class="my-5"/>
-            <div class="d-flex justify-end">
-              <VBtn variant="text" @click="clearData">
-                Clear
-              </VBtn>
-              <VBtn variant="elevated" @click="generateReport" :loading="generateLoading">
-                Generate
-              </VBtn>
-            </div>
-            
           </VCardText>
+          <VCardAction>
+            <VRow>
+              <VCol class="d-flex justify-end mb-5 me-5 gap-x-3">
+                <VBtn
+                  variant="outlined"
+                  :disabled="!(results.length > 1)"
+                  @click="results = []"
+                >
+                  Reset
+                </VBtn>
+                <VBtn 
+                  @click="generate"
+                  :disabled="!(settings.barangay && settings.indicator)"
+                >
+                  Add Report
+                </VBtn>
+                
+              </VCol>
+            </VRow>
+          </VCardAction>
         </div>
       </VExpandTransition>
     </VCard>
-
-
-    <VRow v-if="data">
-      <VCol cols="12" md="6">
-        <TotalGenderCount :data="data"/>
-      </VCol>
-
-      <VCol cols="12" md="6">
-        <GenderByAge :data="data"/>
-      </VCol>
-
-      <VCol cols="12">
-        <VCard title="Martial By Age">
-          <VCardText >
-            <VTable>
-              <thead>
-                <th>Age</th>
-                <th>Single</th>
-                <th>Married</th>
-                <th>Consensual</th>
-                <th>Widow</th>
-                <th>Divorced</th>
-                <th>Common Law</th>
-                <th>Unknown</th>
-              </thead>
-              <tbody>
-                <tr v-for="item in data.countMaritalByAge">
-                  <td>{{item.age.from}}-{{item.age.to}}</td>
-                  <td>{{ item.status.single }}</td>
-                  <td>{{ item.status.married }}</td>
-                  <td>{{ item.status.consensual }}</td>
-                  <td>{{ item.status.widow }}</td>
-                  <td>{{ item.status.divorced }}</td>
-                  <td>{{ item.status.commonLaw }}</td>
-                  <td>{{ item.status.unknown }}</td>
-                </tr>
-              </tbody>
-            </VTable>
-          </VCardText>
-        </VCard>
-      </VCol>
-
-      <VCol cols="12" md="6">
-        <MaleMarital :data="data"/>
-      </VCol>
-
-      <VCol cols="12" md="6">
-        <FemaleMarital :data="data"/>
-      </VCol>
-    </VRow>
-
-
+    
+    <!-- Report -->
+    <VCard 
+      class="mt-5"
+      :title="`Count of ${result.indicator } for Brgy/s ${result.barangays.join(', ')}`"
+      v-for="result in results"
+    >
+      <VCardText>
+          <h6 class="text-body-1">
+            <b></b> 
+          </h6>
+          <VTable>
+            <thead>
+              <tr>
+                <th>
+                  [Code] Description
+                </th>
+                <th v-for="brgy in result.barangays">
+                  {{ brgy }}
+                </th>
+                <th>
+                  Total
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="content in result.content">
+                <td>
+                <b>[{{content.code}}] {{content.description}}</b>
+                </td>
+                <td v-for="value in content.count">
+                  {{ value }}
+                </td>
+                <td>
+                  <b>{{ content.count.reduce((acc, val) => acc + val, 0) }}</b>
+                </td>
+              </tr>
+            </tbody>
+          </VTable>
+        
+      </VCardText>
+    </VCard>
   </div>
+  
 </template>

@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Lookup;
+use Illuminate\Support\Facades\DB;
 use App\Models\Demographic;
 use Carbon\Carbon;
 
@@ -170,5 +172,90 @@ class ReportController extends Controller
         }
 
         return $femaleMaritalStatsByAge;
+    }
+
+    // public function countOfIndicators(Request $request)
+    // {
+    //     $lookupId = $request->input('indicator');
+    //     $barangays = $request->input('barangays');
+
+    //     $lookup = Lookup::with('lookupList')->find($lookupId);
+
+    //     $column = '_' . ($lookup->column_number);
+
+    //     $results = [];
+
+    //     foreach ($lookup->lookupList as $listItem) {
+    //         $counts = [];
+
+    //         foreach ($barangays as $barangay) {
+    //             // Join the tables and count occurrences of each code for the barangay
+    //             $count = DB::table('households')
+    //                 ->join('household_members', 'households.id', '=', 'household_members.household_id')
+    //                 ->join('member_details', 'household_members.id', '=', 'member_details.household_member_id')
+    //                 ->where('households.barangay', $barangay)
+    //                 ->where('member_details.' . $column, $listItem->lookup_key)
+    //                 ->count();
+
+    //             $counts[] = $count;
+    //         }
+
+    //         $results[] = [
+    //             'indicator' => $lookup->lookup_name,
+    //             'barangays' => $barangays,
+    //             'content' => [
+    //                 'code' => $listItem->lookup_key,
+    //                 'description' => $listItem->description,
+    //                 'count' => $counts
+    //             ]
+    //         ];
+    //     }
+
+    //     return response()->json(['results' => $results]);
+    // }
+
+    public function countOfIndicators(Request $request)
+    {
+        $lookupId = $request->input('indicator');
+        $barangays = $request->input('barangays');
+
+        $lookup = Lookup::with('lookupList')->find($lookupId);
+
+        if (!$lookup) {
+            return response()->json(['error' => 'Lookup not found'], 404);
+        }
+
+        $column = '_' . ($lookup->column_number);
+        $content = [];
+
+        foreach ($lookup->lookupList as $listItem) {
+            $counts = [];
+
+            foreach ($barangays as $barangay) {
+                // Join the tables and count occurrences of each code for the barangay
+                $count = DB::table('households')
+                    ->join('household_members', 'households.id', '=', 'household_members.household_id')
+                    ->join('member_details', 'household_members.id', '=', 'member_details.household_member_id')
+                    ->where('households.barangay', $barangay)
+                    ->where('member_details.' . $column, $listItem->lookup_key)
+                    ->count();
+
+                $counts[] = $count;
+            }
+
+            $content[] = [
+                'code' => $listItem->lookup_key,
+                'description' => $listItem->description,
+                'count' => $counts
+            ];
+        }
+
+        $results = [
+            'indicator' => $lookup->lookup_name,
+            'barangays' => $barangays,
+            'content' => $content
+        ];
+
+        return response()->json($results);
     }
 }
