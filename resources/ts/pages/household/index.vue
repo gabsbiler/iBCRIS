@@ -60,17 +60,15 @@
             />
           </VCol>
         </VRow>
-        <div v-if="!households">
-          Fetching data...
-        </div>
-        <VDataTable
+        <VDataTableServer
           class="mt-3"
+          v-model:items-per-page="itemsPerPage"
           :headers="headers"
           :items="households"
-          :server-items-length="totalHouseholds"
-          :options.sync="options"
-          items-per-page="12"
-          v-if="households"
+          :items-length="totalHouseholds"
+          :search="search"
+          :loading="isLoading"
+          @update:options="fetchData"
         >
           <!-- Count -->
           <template #item.Count="{ item }">
@@ -117,7 +115,7 @@
               </IconBtn>
             </div>
           </template>
-        </VDataTable>
+        </VDataTableServer>
       </VCardText>
       <VSnackbar
         v-model="isSnackbarSuccessVisible"
@@ -142,12 +140,12 @@
 <script setup lang="ts">
 
 import axios from '@axios';
-import { VDataTable } from 'vuetify/labs/VDataTable';
+import { VDataTableServer } from 'vuetify/labs/VDataTable';
 
 const filterShow = ref(false)
 const containers = ref()
-const isLoading = ref(true)
-
+const isLoading = ref(false)
+const itemsPerPage = ref(15)
 const households = ref([]);
 const totalHouseholds = ref(0);
 const options = ref({});
@@ -203,20 +201,13 @@ const showSnackBar = data =>{
   isSnackbarSuccessVisible.value = true
 }
 
-const fetchData = async () => {
-  const { page, itemsPerPage, sortBy, sortDesc } = options.value;
+const fetchData = async (options) => {
+  isLoading.value = true
   try {
-    const sortByField = sortBy?.[0] ?? ''; // Default to an empty string if undefined
-    const sortDescValue = sortDesc?.[0] ? 'desc' : 'asc'; // Default to 'asc' if undefined
+    // const sortByField = sortBy?.[0] ?? '';
 
     const response = await axios.get('/api/household', {
-      params: { 
-        page, 
-        itemsPerPage, 
-        sortBy: sortByField, 
-        sortDesc: sortDescValue, 
-        search: search.value 
-      },
+      params: options,
     });
 
     households.value = response.data.data;
@@ -224,11 +215,8 @@ const fetchData = async () => {
   } catch (error) {
     console.error('Error fetching data:', error);
   }
+  isLoading.value=false
 };
-
-
-watch(() => options.value, fetchData, { deep: true });
-watch(search, fetchData);
 
 const deleteItem = async (householdId) => {
   try {
@@ -247,9 +235,6 @@ const deleteItem = async (householdId) => {
   }
 };
 
-onMounted(() => {
-  fetchData()
-})
 </script>
 
 

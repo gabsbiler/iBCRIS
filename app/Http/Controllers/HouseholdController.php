@@ -542,69 +542,71 @@ class HouseholdController extends Controller
 
     public function multipleUploads(Request $request)
     {
-        return response()->json(['data' => $request]);
-        // DB::beginTransaction();
+        // return response()->json(['data' => $request['recordbatch']]);
+        // return response()->json(['data' => "hell0"]);
 
-        // // Check if the HouseholdContainer already exists
-        // $container = HouseholdContainer::firstOrCreate([
-        //     'name' => 'Unassigned'
-        // ]);
-        // $householdKey = '';
+        DB::beginTransaction();
 
-        // try {
+        // Check if the HouseholdContainer already exists
+        $container = HouseholdContainer::firstOrCreate([
+            'name' => $request['recordbatch']
+        ]);
+        $householdKey = '';
 
-        //     $households = [];
+        try {
 
-        //     foreach ($request->input('data') as $item) {
-        //         if ($item['household_id'] == null || $item['household_id'] == '') continue;
+            $households = [];
+
+            foreach ($request->input('data') as $item) {
+                if ($item['household_id'] == null || $item['household_id'] == '') continue;
 
 
-        //         // Use the provided household ID from the front end
-        //         $householdKey = $item['household_id'];
+                // Use the provided household ID from the front end
+                $householdKey = $item['household_id'];
 
-        //         // Check if the household is already processed and mark the first member as head
-        //         $isFirstMember = !isset($households[$householdKey]);
+                // Check if the household is already processed and mark the first member as head
+                $isFirstMember = !isset($households[$householdKey]);
 
-        //         // Create or update the Household
-        //         $household = Household::updateOrCreate(
-        //             [
-        //                 'container_id' => $container->id, 'HouseholdKey' => $householdKey, 'bsn' => $item['bsn'], 'husn' => $item['husn'], 'hsn' => $item['hsn'],
-        //                 'barangay' => $item['barangay'], 'sitio' => $item['sitio'], 'address' => $item['address']
-        //             ]
-        //         );
+                // Create or update the Household
+                $household = Household::updateOrCreate(
+                    [
+                        'container_id' => $container->id, 'HouseholdKey' => $householdKey, 'bsn' => $item['bsn'], 'husn' => $item['husn'], 'hsn' => $item['hsn'],
+                        'barangay' => $request['barangay'], 'sitio' => $item['sitio'], 'address' => $item['address']
+                    ]
+                );
 
-        //         if ($isFirstMember) {
-        //             $households[$householdKey] = $household->toArray();
-        //             $households[$householdKey]['members'] = [];
-        //         }
+                if ($isFirstMember) {
+                    $households[$householdKey] = $household->toArray();
+                    $households[$householdKey]['members'] = [];
+                }
 
-        //         // Create a new HouseholdMember and associate it with the Household
-        //         $member = new HouseholdMember();
-        //         $member->household_id = $household->id; // Directly using the ID from the created/updated household
-        //         $member->head = $isFirstMember; // Mark the first member as head
-        //         $member->save();
+                // Create a new HouseholdMember and associate it with the Household
+                $member = new HouseholdMember();
+                $member->household_id = $household->id; // Directly using the ID from the created/updated household
+                $member->head = $isFirstMember; // Mark the first member as head
+                $member->save();
 
-        //         // Prepare demographic data excluding specific keys
-        //         $demographicData = array_diff_key($item, array_flip(['bsn', 'husn', 'hsn', 'barangay', 'sitio', 'address']));
+                // Prepare demographic data excluding specific keys
+                $demographicData = array_diff_key($item, array_flip(['bsn', 'husn', 'hsn', 'barangay', 'sitio', 'address']));
 
-        //         // Create or update member's demographic details
-        //         $demographic = new Demographic($demographicData);
-        //         $demographic->household_member_id = $member->id;
-        //         $demographic->save();
+                // Create or update member's demographic details
+                $demographic = new Demographic($demographicData);
+                $demographic->household_member_id = $member->id;
+                $demographic->save();
 
-        //         // Add the member and demographic details to the household's members array
-        //         $households[$householdKey]['members'][] = [
-        //             'member' => $member->toArray(),
-        //             'demographic' => $demographic->toArray()
-        //         ];
-        //     }
-        //     DB::commit();
-        //     return response()->json('Uploaded Successful');
-        // } catch (\Exception $e) {
-        //     DB::rollback();
-        //     return response()->json(['error' => $e->getMessage()]);
-        //     // return response()->json($demographic);
-        // }
+                // Add the member and demographic details to the household's members array
+                $households[$householdKey]['members'][] = [
+                    'member' => $member->toArray(),
+                    'demographic' => $demographic->toArray()
+                ];
+            }
+            DB::commit();
+            return response()->json('Uploaded Successful');
+        } catch (\Exception $e) {
+            DB::rollback();
+            return response()->json(['error' => $e->getMessage()]);
+            // return response()->json($demographic);
+        }
     }
 
     public function updateMemberStatus(Request $request, $id)

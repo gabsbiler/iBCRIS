@@ -5,7 +5,7 @@ import Papa from 'papaparse';
 import { VDataTable } from 'vuetify/labs/VDataTable';
 
 
-const isUploadDialogOpen= ref(true)
+const isUploadDialogOpen= ref(false)
 const barangay = ref()
 const recordbatch = ref()
 const uploadLoading = ref(false)
@@ -524,9 +524,9 @@ const processUpload = async () => {
   uploadLoading.value = true
   try {
     
-    const response = await axios.post('/api/households/multiple/upload', { 
+    const response = await axiosIns.post('/api/households/multiple/upload', { 
       data: uploaded.value,
-      baranggay: barangay.value,
+      barangay: barangay.value,
       recordbatch: recordbatch.value
     });
 
@@ -545,17 +545,16 @@ const fetchContainers = async () => {
   try {
     const response = await axiosIns.get('/api/container')
 
-    containers.value = response.data
-
+    containers.value = response.data.map(item => item.name)
   
   } catch (error) {
     console.error('Error fetching data:', error)
   }
 }
 
-// onMounted(() => {
-  
-// }),
+onMounted(() => {
+  fetchContainers()
+})
 
 
 </script>
@@ -611,7 +610,7 @@ const fetchContainers = async () => {
               <VSelect label="Select Barangay" :items="barangayList" v-model="barangay"></VSelect>
             </VCol>
             <VCol>
-              <VSelect label="Select Record Batch"></VSelect>
+              <VSelect label="Select Record Batch" :items="containers" v-model="recordbatch"></VSelect>
             </VCol>
           </VRow>
             
