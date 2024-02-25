@@ -1,10 +1,16 @@
 <script setup lang="ts">
 import SnackBar from '@/components/SnackBar.vue';
-import axios from 'axios';
+import axiosIns from '@/plugins/axios';
 import Papa from 'papaparse';
 import { VDataTable } from 'vuetify/labs/VDataTable';
 
+
+const isUploadDialogOpen= ref(true)
+const barangay = ref()
+const recordbatch = ref()
+const uploadLoading = ref(false)
 const SnackBarRef=ref(null)
+const containers = ref()
 const headers = [
   {
     title: "Household UUID",
@@ -323,6 +329,74 @@ const headers = [
     key: '_50_1'
   },
 ]
+const barangayList = [
+'Alitao',
+'Alupay',
+'Angeles Zone I (Pob.)',
+'Angeles Zone II',
+'Angeles Zone III',
+'Angeles Zone IV',
+'Angustias Zone I (Pob.)',
+'Angustias Zone II',
+'Angustias Zone III,',
+'Angustias Zone IV',
+'Anos',
+'Ayaas',
+'Baguio',
+'Banilad',
+'Calantas',
+'Camaysa',
+'Dapdap',
+'Gibanga',
+'Alsam Ibaba',
+'Bukal Ibaba',
+'Ilasan Ibaba',
+'Nangka Ibaba',
+'Palale Ibaba',
+'Ibas',
+'Alsam Ilaya',
+'Bukal Ilaya',
+'Ilasan Ilaya',
+'Nangka Ilaya',
+'Palale Ilaya',
+'Ipilan',
+'Isabang',
+'Calumpang',
+'Domoit Kanluran',
+'Katigan Kanluran',
+'Palale Kanluran',
+'Lakawan',
+'Lalo',
+'Lawigue',
+'Lita (Pob.)',
+'Malaoa',
+'Masin',
+'Mate',
+'Mateuna',
+'Mayowe',
+'Opias',
+'Pandakaki',
+'Pook',
+'Potol',
+'San Diego Zone I (Pob.)',
+'San Diego Zone II',
+'San Diego Zone III',
+'San Diego Zone IV',
+'San Isidro Zone I (Pob.)',
+'San Isidro Zone II',
+'San Isidro Zone III',
+'San Isidro Zone IV',
+'San Roque Zone I (Pob.)',
+'San Roque Zone II',
+'Domoit Silangan',
+'Katigan Silangan',
+'Palale Silangan',
+'Talolong',
+'Tamlong',
+'Tongko',
+'Valencia',
+'Wakas'
+]
 
 const uploaded = ref([]);
 
@@ -447,9 +521,16 @@ const parseCSV = (content: string | ArrayBuffer | null) => {
 
 const processUpload = async () => {
   console.log(uploaded.value)
+  uploadLoading.value = true
   try {
-    const response = await axios.post('/api/households/multiple/upload', { data: uploaded.value });
+    
+    const response = await axios.post('/api/households/multiple/upload', { 
+      data: uploaded.value,
+      baranggay: barangay.value,
+      recordbatch: recordbatch.value
+    });
 
+    console.log(response.data)
     SnackBarRef.value.show('success', response.data)
     // Handle successful upload response
   } catch (error) {
@@ -457,7 +538,24 @@ const processUpload = async () => {
     SnackBarRef.value.show('error', error)
     // Handle error response
   }
+  uploadLoading.value = false
 };
+
+const fetchContainers = async () => {
+  try {
+    const response = await axiosIns.get('/api/container')
+
+    containers.value = response.data
+
+  
+  } catch (error) {
+    console.error('Error fetching data:', error)
+  }
+}
+
+// onMounted(() => {
+  
+// }),
 
 
 </script>
@@ -496,11 +594,37 @@ const processUpload = async () => {
 
       <VRow>
         <VCol class="d-flex flex-row-reverse">
-          <VBtn color="primary" @click="processUpload" :disabled=" uploaded.length > 1 ? false : true">Upload</VBtn>
+          <!-- <VBtn color="primary" @click="processUpload" :disabled=" uploaded.length > 1 ? false : true">Upload</VBtn> -->
+          <VBtn color="primary" @click="isUploadDialogOpen = !isUploadDialogOpen" :disabled=" uploaded.length > 1 ? false : true">Upload</VBtn>
+
         </VCol>
       </VRow>
       
     </VCard>
     
+
+    <VDialog v-model="isUploadDialogOpen">
+      <VCard max-width="500" min-width="300" class="mx-auto" title="Mass Upload">
+        <VCardText>
+          <VRow>
+            <VCol cols="12">
+              <VSelect label="Select Barangay" :items="barangayList" v-model="barangay"></VSelect>
+            </VCol>
+            <VCol>
+              <VSelect label="Select Record Batch"></VSelect>
+            </VCol>
+          </VRow>
+            
+        </VCardText>
+        <VCardActions class="d-flex justify-end pb-5 pe-5">
+          <VBtn @click="isUploadDialogOpen = !isUploadDialogOpen">
+              Cancel
+            </VBtn>
+            <VBtn variant="outlined" :loading="uploadLoading" @click="processUpload">
+              Apply
+            </VBtn>
+        </VCardActions>
+      </VCard>
+    </VDialog>
   </section>
 </template>

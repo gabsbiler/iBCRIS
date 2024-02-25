@@ -24,9 +24,38 @@ export default [
   {
     title: 'Reports',
     icon: { icon: 'mdi-chart-pie-outline' },
-    to: {name: 'reports'},
-    action: 'Access',
-    subject: 'Reports'
+    children: [
+      {
+        title: 'Count of Indicators', 
+        to: {name: 'reports'},
+        action: 'Access',
+        subject: 'Reports'
+      },
+      {
+        title: 'Age Distribution', 
+        to: {name: 'reports'},
+        action: 'Access',
+        subject: 'Reports'
+      },
+      {
+        title: 'RBI', 
+        to: {name: 'reports'},
+        action: 'Access',
+        subject: 'Reports'
+      },
+      {
+        title: 'Death Records', 
+        to: {name: 'reports'},
+        action: 'Access',
+        subject: 'Reports'
+      },
+      {
+        title: 'Customize List Reports', 
+        to: {name: 'reports'},
+        action: 'Access',
+        subject: 'Reports'
+      },
+    ]
   },
   {
     title: 'Settings',

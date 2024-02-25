@@ -3,7 +3,7 @@
     <VCard>
       <VCardTitle class="mt-2 d-flex justify-space-between">
         <div>
-          Filter
+          Batches
         </div>
         <VBtn
           :icon="filterShow ? 'mdi-chevron-up' : 'mdi-chevron-down'"
@@ -67,14 +67,15 @@
           class="mt-3"
           :headers="headers"
           :items="households"
-          :search="search"
+          :server-items-length="totalHouseholds"
+          :options.sync="options"
           items-per-page="12"
           v-if="households"
         >
           <!-- Count -->
           <template #item.Count="{ item }">
             {{item.raw.household_members.length }}
-          </template>
+          </template> 
         
           <template #item.Head.Lastname="{ item }">
             {{ 
@@ -144,10 +145,13 @@ import axios from '@axios';
 import { VDataTable } from 'vuetify/labs/VDataTable';
 
 const filterShow = ref(false)
-const households = ref()
 const containers = ref()
-const search = ref()
 const isLoading = ref(true)
+
+const households = ref([]);
+const totalHouseholds = ref(0);
+const options = ref({});
+const search = ref('');
 
 const isSnackbarSuccessVisible = ref(false)
 const alertMessage = ref()
@@ -199,29 +203,32 @@ const showSnackBar = data =>{
   isSnackbarSuccessVisible.value = true
 }
 
-async function fetchData(){
-  isLoading.value = true
+const fetchData = async () => {
+  const { page, itemsPerPage, sortBy, sortDesc } = options.value;
   try {
-    const response = await axios.get('/api/household')
+    const sortByField = sortBy?.[0] ?? ''; // Default to an empty string if undefined
+    const sortDescValue = sortDesc?.[0] ? 'desc' : 'asc'; // Default to 'asc' if undefined
 
-    households.value = response.data
+    const response = await axios.get('/api/household', {
+      params: { 
+        page, 
+        itemsPerPage, 
+        sortBy: sortByField, 
+        sortDesc: sortDescValue, 
+        search: search.value 
+      },
+    });
 
-  
+    households.value = response.data.data;
+    totalHouseholds.value = response.data.total;
   } catch (error) {
-    console.error('Error fetching data:', error)
+    console.error('Error fetching data:', error);
   }
+};
 
-  try {
-    const response = await axios.get('/api/container')
 
-    containers.value = response.data
-
-  
-  } catch (error) {
-    console.error('Error fetching data:', error)
-  }
-  isLoading.value = false
-}
+watch(() => options.value, fetchData, { deep: true });
+watch(search, fetchData);
 
 const deleteItem = async (householdId) => {
   try {

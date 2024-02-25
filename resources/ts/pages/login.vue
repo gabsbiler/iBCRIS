@@ -53,8 +53,8 @@ const onSubmit = async () => {
 
 
     updateCASLAbilities(userRole)
-
-    router.replace(route.query.to ? String(route.query.to) : '/');
+    window.location.replace("/");
+    // router.replace(route.query.to ? String(route.query.to) : '/');
   } catch (error) {
     console.error(error);
     isPromptShow.value = true;
