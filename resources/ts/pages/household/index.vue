@@ -139,7 +139,7 @@
 
 <script setup lang="ts">
 
-import axios from '@axios';
+import axiosIns from '@/plugins/axios';
 import { VDataTableServer } from 'vuetify/labs/VDataTable';
 
 const filterShow = ref(false)
@@ -148,7 +148,6 @@ const isLoading = ref(false)
 const itemsPerPage = ref(15)
 const households = ref([]);
 const totalHouseholds = ref(0);
-const options = ref({});
 const search = ref('');
 
 const isSnackbarSuccessVisible = ref(false)
@@ -206,7 +205,7 @@ const fetchData = async (options) => {
   try {
     // const sortByField = sortBy?.[0] ?? '';
 
-    const response = await axios.get('/api/household', {
+    const response = await axiosIns.get('/api/household', {
       params: options,
     });
 
@@ -218,10 +217,21 @@ const fetchData = async (options) => {
   isLoading.value=false
 };
 
+const fetchContainers = async () => {
+  try {
+    const response = await axiosIns.get('/api/container')
+
+    containers.value = response.data
+  
+  } catch (error) {
+    console.error('Error fetching data:', error)
+  }
+}
+
 const deleteItem = async (householdId) => {
   try {
     // Make the delete request
-    const response = await axios.delete(`/api/households`, { data: { household_id: householdId } });
+    const response = await axiosIns.delete(`/api/households`, { data: { household_id: householdId } });
 
     // Show success message
     showSnackBar({ message: 'Household successfully deleted', type: 'success' });
@@ -234,6 +244,10 @@ const deleteItem = async (householdId) => {
     showSnackBar({ message: 'Error deleting household', type: 'error' });
   }
 };
+
+onMounted(() => {
+  fetchContainers()
+})
 
 </script>
 

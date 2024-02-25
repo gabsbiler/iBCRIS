@@ -29,6 +29,9 @@ class HouseholdController extends Controller
                 ->orWhere('HUSN', 'like', "%{$search}%")
                 ->orWhere('HSN', 'like', "%{$search}%")
                 ->orWhere('Barangay', 'like', "%{$search}%")
+                ->orWhereHas('householdContainer', function ($query) use ($search) {
+                    $query->where('name', 'like', "%{$search}%");
+                })
                 ->orWhereHas('householdMembers', function ($query) use ($search) {
                     $query->where('updated_at', 'like', "%{$search}%")
                         ->orWhereHas('demographic', function ($subQuery) use ($search) {
