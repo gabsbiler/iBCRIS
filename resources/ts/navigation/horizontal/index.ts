@@ -27,31 +27,31 @@ export default [
     children: [
       {
         title: 'Count of Indicators', 
-        to: {name: 'reports'},
+        to: { name: 'reports-indicators' },
         action: 'Access',
         subject: 'Reports'
       },
       {
         title: 'Age Distribution', 
-        to: {name: 'reports'},
+        to: {name: 'reports-distribution'},
         action: 'Access',
         subject: 'Reports'
       },
       {
         title: 'RBI', 
-        to: {name: 'reports'},
+        to: {name: 'reports-rbi'},
         action: 'Access',
         subject: 'Reports'
       },
       {
         title: 'Death Records', 
-        to: {name: 'reports'},
+        to: {name: 'reports-death'},
         action: 'Access',
         subject: 'Reports'
       },
       {
         title: 'Customize List Reports', 
-        to: {name: 'reports'},
+        to: {name: 'reports-custom'},
         action: 'Access',
         subject: 'Reports'
       },
