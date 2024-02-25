@@ -107,6 +107,43 @@ const generate = async () => {
   isOptionShow.value = false
 }
 
+const convertResultsToCSV = (data) => {
+  let csvContent = "";
+
+  csvContent += "Code,Description," + data.barangays.join(",") + ",Total\r\n";
+
+  data.content.forEach((item) => {
+    const rowTotal = item.count.reduce((sum, value) => sum + value, 0);
+    const row = [
+      item.code,
+      item.description,
+      ...item.count,
+      rowTotal
+    ].join(",");
+    
+    csvContent += row + "\r\n";
+  });
+
+  return csvContent;
+};
+
+const downloadCSV = (csvString, fileName) => {
+  const blob = new Blob([csvString], { type: 'text/csv;charset=utf-8;' });
+  const link = document.createElement('a');
+  link.href = URL.createObjectURL(blob);
+  link.setAttribute('download', fileName);
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+};
+
+const downloadTableAsCSV = (content) => {
+  // Use the first item in results.value for CSV generation (as an example)
+  // In practice, you might need to adjust this to handle multiple results or a selected result
+  const csvString = convertResultsToCSV(content);
+  downloadCSV(csvString, 'export.csv');
+};
+
 onMounted(() => {
   fetchIndicators()
 })
@@ -122,6 +159,7 @@ onMounted(() => {
         style="cursor: pointer;"
       >
         <h6 class="text-h6">Report Options</h6>
+        
         <VBtn 
           :icon="isOptionShow ? 'mdi-chevron-up':'mdi-chevron-down' " 
           variant="text"
@@ -158,7 +196,7 @@ onMounted(() => {
               <VCol class="d-flex justify-end mb-5 me-5 gap-x-3">
                 <VBtn
                   variant="outlined"
-                  :disabled="!(results.length > 1)"
+                  :disabled="!(results.length > 0)"
                   @click="results = []"
                 >
                   Reset
@@ -180,9 +218,26 @@ onMounted(() => {
     <!-- Report -->
     <VCard 
       class="mt-5"
-      :title="`Count of ${result.indicator } for Brgy/s ${result.barangays.join(', ')}`"
-      v-for="result in results"
+      v-for="(result, index) in results"
     >
+      <VCardTitle class="d-flex justify-space-between align-center pt-3">
+        <h6 class="text-h6">
+          Count of {{result.indicator }} for Brgy/s {{result.barangays.join(', ')}}
+        </h6>
+        <div>
+          <VBtn 
+            @click="downloadTableAsCSV(result)" 
+            icon="mdi-download"
+            variant="text"
+          />
+          <VBtn 
+            icon="mdi-trash-can-outline" 
+            variant="text"
+            @click="results.splice(index, 1)"
+          />
+        </div>
+        
+      </VCardTitle>
       <VCardText>
           <h6 class="text-body-1">
             <b></b> 
