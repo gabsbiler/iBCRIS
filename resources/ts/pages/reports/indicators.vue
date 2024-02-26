@@ -167,35 +167,36 @@ onMounted(() => {
       </VCardTitle>
       <VExpandTransition>
         <div v-show="isOptionShow">
-          <VCardText >
-            <VRow>
-              <VCol>
-                
-                <VCombobox
-                  label="Select Barangay" 
-                  :items="baranggayList"
-                  v-model="settings.barangay"
-                  multiple
-                  chips
-                  clearable
-                />
-              </VCol>
-              <VCol>
-                <VCombobox
-                  label="Select Indicator" 
-                  :items="indicators"
-                  item-title="lookup_name"
-                  item-value="id"
-                  v-model="settings.indicator"
-                  clearable
-                />
-              </VCol>
-            </VRow>
-          </VCardText>
-          <VCardAction>
-            <VRow>
-              <VCol class="d-flex justify-end mb-5 me-5 gap-x-3">
+          <div class="d-flex flex-column justify-end">
+            <VCardText>
+              <VRow>
+                <VCol cols="12" md="6">
+                  
+                  <VCombobox
+                    label="Select Barangay" 
+                    :items="baranggayList"
+                    v-model="settings.barangay"
+                    multiple
+                    chips
+                    clearable
+                  />
+                </VCol>
+                <VCol cols="12" md="6">
+                  <VCombobox
+                    label="Select Indicator" 
+                    :items="indicators"
+                    item-title="lookup_name"
+                    item-value="id"
+                    v-model="settings.indicator"
+                    clearable
+                  />
+                </VCol>
+              </VRow>
+            </VCardText>
+            <VCardAction class="ms-auto">
+              <div style="display: inline;">
                 <VBtn
+                  class="ma-2"
                   variant="outlined"
                   @click="() => {
                     settings.barangay.length !== baranggayList.length ? settings.barangay = baranggayList : settings.barangay = []
@@ -204,6 +205,7 @@ onMounted(() => {
                   {{settings.barangay.length !== baranggayList.length ? 'Select' : "Deselect"}} All Brgy
                 </VBtn>
                 <VBtn
+                  class="ma-2"
                   variant="outlined"
                   :disabled="!(results.length > 0)"
                   @click="results = []"
@@ -211,15 +213,16 @@ onMounted(() => {
                   Reset
                 </VBtn>
                 <VBtn 
+                  class="ma-2"
                   @click="generate"
                   :disabled="!(settings.barangay && settings.indicator)"
                 >
                   Add Report
                 </VBtn>
-                
-              </VCol>
-            </VRow>
-          </VCardAction>
+              </div>
+              
+            </VCardAction>
+          </div>
         </div>
       </VExpandTransition>
     </VCard>
@@ -230,9 +233,12 @@ onMounted(() => {
       v-for="(result, index) in results"
     >
       <VCardTitle class="d-flex justify-space-between align-center pt-3">
-        <h6 class="text-h6">
+        <div style="overflow-x: scroll; scrollbar-width: none;">
+          <h6 class="text-h6">
           Count of {{result.indicator }} for Brgy/s {{result.barangays.join(', ')}}
         </h6>
+        </div>
+        
         <div>
           <VBtn 
             @click="downloadTableAsCSV(result)" 
