@@ -170,6 +170,7 @@ onMounted(() => {
           <VCardText >
             <VRow>
               <VCol>
+                
                 <VCombobox
                   label="Select Barangay" 
                   :items="baranggayList"
@@ -194,6 +195,14 @@ onMounted(() => {
           <VCardAction>
             <VRow>
               <VCol class="d-flex justify-end mb-5 me-5 gap-x-3">
+                <VBtn
+                  variant="outlined"
+                  @click="() => {
+                    settings.barangay.length !== baranggayList.length ? settings.barangay = baranggayList : settings.barangay = []
+                  }"
+                >
+                  {{settings.barangay.length !== baranggayList.length ? 'Select' : "Deselect"}} All Brgy
+                </VBtn>
                 <VBtn
                   variant="outlined"
                   :disabled="!(results.length > 0)"
