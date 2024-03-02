@@ -11,12 +11,8 @@ const isTableVisible = ref(false)
   <VCard>
     <VCardTitle class="mt-3 d-flex justify-space-between">
       <h6 class="text-h6">Male (Single & Married)</h6>
-      <!-- <VBtn variant="text" @click="isTableVisible = !isTableVisible">Show Table</VBtn> -->
     </VCardTitle>
     <VCardText>
-      <!-- <countMaritalStatsChart
-        :data="props.data.countMaleMaritalStats"
-      /> -->
       <div class="mt-5">
           <VTable>
             <thead>
@@ -24,7 +20,7 @@ const isTableVisible = ref(false)
               <th>Single<br>Male</th>
               <th>Single<br>Female</th>
               <th>Married<br>Male</th>
-              <th>Married<br>Male</th>
+              <th>Married<br>Female</th>
             </thead>
             <tbody>
               
