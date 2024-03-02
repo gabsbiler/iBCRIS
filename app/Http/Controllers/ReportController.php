@@ -216,10 +216,10 @@ class ReportController extends Controller
     {
         $maleMaritalStatsByAge = [];
         foreach ($this->ageRange as $age) {
-            $singleMale = Demographic::whereBetween('_7', [$age['from'], $age['to']])
-                ->where('_5', '01')
-                ->where('_21', '1')
-                ->count();
+            // $singleMale = Demographic::whereBetween('_7', [$age['from'], $age['to']])
+            //     ->where('_5', '01')
+            //     ->where('_21', '1')
+            //     ->count();
 
             $singleMale = DB::table('households')
                 ->join('household_members', 'households.id', '=', 'household_members.household_id')
@@ -227,6 +227,7 @@ class ReportController extends Controller
                 ->where('households.barangay', $this->barangay)
                 ->where('member_details._5', '01')
                 ->where('member_details._21', '1')
+                ->whereBetween('member_details._7', [$age['from'], $age['to']])
                 ->whereBetween('member_details.created_at', [$this->dateFrom, $this->dateTo])
                 ->count();
 
@@ -236,6 +237,7 @@ class ReportController extends Controller
                 ->where('households.barangay', $this->barangay)
                 ->where('member_details._5', '02')
                 ->where('member_details._21', '1')
+                ->whereBetween('member_details._7', [$age['from'], $age['to']])
                 ->whereBetween('member_details.created_at', [$this->dateFrom, $this->dateTo])
                 ->count();
 
@@ -245,6 +247,7 @@ class ReportController extends Controller
                 ->where('households.barangay', $this->barangay)
                 ->where('member_details._5', '01')
                 ->where('member_details._21', '2')
+                ->whereBetween('member_details._7', [$age['from'], $age['to']])
                 ->whereBetween('member_details.created_at', [$this->dateFrom, $this->dateTo])
                 ->count();
 
@@ -254,6 +257,7 @@ class ReportController extends Controller
                 ->where('households.barangay', $this->barangay)
                 ->where('member_details._5', '02')
                 ->where('member_details._21', '2')
+                ->whereBetween('member_details._7', [$age['from'], $age['to']])
                 ->whereBetween('member_details.created_at', [$this->dateFrom, $this->dateTo])
                 ->count();
 
@@ -264,11 +268,6 @@ class ReportController extends Controller
                 'marriedMale' => $marriedMale,
                 'marriedFemale' => $marriedFemale
             ];
-
-            $singleMale = [];
-            $singleFemale = [];
-            $marriedMale = [];
-            $marriedFemale = [];
         }
 
         return $maleMaritalStatsByAge;
