@@ -9,6 +9,7 @@ use Carbon\Carbon;
 use Exception;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Http\Request;
+use Mockery\Undefined;
 
 class ReportController extends Controller
 {
@@ -263,6 +264,11 @@ class ReportController extends Controller
                 'marriedMale' => $marriedMale,
                 'marriedFemale' => $marriedFemale
             ];
+
+            $singleMale = [];
+            $singleFemale = [];
+            $marriedMale = [];
+            $marriedFemale = [];
         }
 
         return $maleMaritalStatsByAge;
