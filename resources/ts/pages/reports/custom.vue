@@ -139,6 +139,7 @@ const updateSelectedLookup = (selectedValue) => {
   settings.value.selectedLookup = selectedValue
   selectedLookupList.value = selectedValue.lookup_list;
   settings.value.selectedIndicators = []
+  data.value = undefined
 };
 
 onMounted(() => {
@@ -161,6 +162,35 @@ const generateReport = async () => {
     console.log(e)
   }
 }
+
+const convertToCSV = (data) => {
+  // CSV header
+  let csvContent = "data:text/csv;charset=utf-8,";
+  csvContent += "Age Range," + data[0].result.map(i => i.indicator).join(",") + "\r\n";
+
+  // CSV rows
+  data.forEach((item) => {
+    const row = [item.ageRange];
+    item.result.forEach((res) => {
+      row.push(res.count);
+    });
+    csvContent += row.join(",") + "\r\n";
+  });
+
+  return csvContent;
+};
+
+const exportToCSV = () => {
+  const csvString = convertToCSV(data.value);
+  const encodedUri = encodeURI(csvString);
+  const link = document.createElement("a");
+  link.setAttribute("href", encodedUri);
+  link.setAttribute("download", "custom_report.csv");
+  document.body.appendChild(link); // Required for FF
+  link.click(); // This will download the data file named "custom_report.csv".
+};
+
+
 </script>
 
 <template>
@@ -301,7 +331,7 @@ const generateReport = async () => {
     <VCard class="mt-5" v-if="data">
       <VCardTitle class="d-flex justify-space-between mt-2 mx-1 align-center">
         <h6 class="text-h6">{{ settings.selectedLookup.lookup_name }}</h6>
-        <VBtn variant="outlined">
+        <VBtn variant="outlined" @click="exportToCSV">
           Export
         </VBtn>
       </VCardTitle>
