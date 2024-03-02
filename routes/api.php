@@ -63,3 +63,5 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::delete('/lookup', [LookupController::class, 'deleteLookup']);
     Route::delete('/household-container/{id}', [HouseholdContainerController::class, 'deleteContainer']);
 });
+
+Route::get('get-rbi', [ReportController::class, 'getRbi']);

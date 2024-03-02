@@ -13,11 +13,6 @@ use PhpParser\Node\Stmt\TryCatch;
 
 class HouseholdController extends Controller
 {
-    // public function show()
-    // {
-    //     $household = Household::with(['householdContainer', 'householdMembers.demographic'])->get();
-    //     return $household;
-    // }
 
     public function show(Request $request)
     {

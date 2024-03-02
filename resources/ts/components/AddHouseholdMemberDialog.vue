@@ -1,5 +1,5 @@
-<script setup>
-import axios from '@axios'
+<script setup lang="ts">
+import axios from '@axios';
 
 const emit  = defineEmits(['snackbar', 'refreshTable'])
 

@@ -1,7 +1,5 @@
 <script setup lang="ts">
-import countGenderByAgeChart from '@/components/reports/countGenderByAge.vue';
 const props = defineProps(['data'])
-const isTableVisible = ref()
 </script>
 
 
@@ -9,14 +7,13 @@ const isTableVisible = ref()
   <VCard>
     <VCardTitle class="mt-3 d-flex justify-space-between">
       <h6 class="text-h6">Gender By Age</h6>
-      <VBtn variant="text" @click="isTableVisible = !isTableVisible">Show Table</VBtn>
+      <!-- <VBtn variant="text" @click="isTableVisible = !isTableVisible">Show Table</VBtn> -->
     </VCardTitle>
     <VCardText>
-      <countGenderByAgeChart
+      <!-- <countGenderByAgeChart
         :data="props.data.countGenderByAge"
-      />
-      <VExpandTransition>
-      <div v-show="isTableVisible">
+      /> -->
+      <div >
         <VTable>
           <thead>
             <tr>
@@ -36,7 +33,6 @@ const isTableVisible = ref()
           </tbody>
         </VTable>
       </div>
-    </VExpandTransition>
     </VCardText>
     
   </VCard>

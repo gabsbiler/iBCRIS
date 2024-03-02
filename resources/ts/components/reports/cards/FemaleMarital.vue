@@ -1,7 +1,6 @@
 
 
 <script setup lang="ts">
-import countMaritalStatsChart from '@/components/reports/countMaritalStats.vue';
 
 const props = defineProps(['data'])
 
@@ -12,14 +11,13 @@ const isTableVisible = ref(false)
   <VCard>
     <VCardTitle class="mt-3 d-flex justify-space-between">
       <h6 class="text-h6">Female (Single & Married)</h6>
-      <VBtn variant="text" @click="isTableVisible = !isTableVisible">Show Table</VBtn>
+      <!-- <VBtn variant="text" @click="isTableVisible = !isTableVisible">Show Table</VBtn> -->
     </VCardTitle>
     <VCardText>
-      <countMaritalStatsChart
+      <!-- <countMaritalStatsChart
         :data="props.data.countFemaleMaritalStats"
-      />
-      <VExpandTransition>
-        <div v-show="isTableVisible" class="mt-5">
+      /> -->
+      <div>
           <VTable>
             <thead>
               <th>Age</th>
@@ -35,7 +33,6 @@ const isTableVisible = ref(false)
             </tbody>
           </VTable>
         </div>
-      </VExpandTransition>
     </VCardText>
   </VCard>
 </template>

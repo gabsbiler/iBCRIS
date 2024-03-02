@@ -6,7 +6,7 @@ use App\Models\Lookup;
 use Illuminate\Support\Facades\DB;
 use App\Models\Demographic;
 use Carbon\Carbon;
-
+use Exception;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Http\Request;
 
@@ -174,46 +174,6 @@ class ReportController extends Controller
         return $femaleMaritalStatsByAge;
     }
 
-    // public function countOfIndicators(Request $request)
-    // {
-    //     $lookupId = $request->input('indicator');
-    //     $barangays = $request->input('barangays');
-
-    //     $lookup = Lookup::with('lookupList')->find($lookupId);
-
-    //     $column = '_' . ($lookup->column_number);
-
-    //     $results = [];
-
-    //     foreach ($lookup->lookupList as $listItem) {
-    //         $counts = [];
-
-    //         foreach ($barangays as $barangay) {
-    //             // Join the tables and count occurrences of each code for the barangay
-    //             $count = DB::table('households')
-    //                 ->join('household_members', 'households.id', '=', 'household_members.household_id')
-    //                 ->join('member_details', 'household_members.id', '=', 'member_details.household_member_id')
-    //                 ->where('households.barangay', $barangay)
-    //                 ->where('member_details.' . $column, $listItem->lookup_key)
-    //                 ->count();
-
-    //             $counts[] = $count;
-    //         }
-
-    //         $results[] = [
-    //             'indicator' => $lookup->lookup_name,
-    //             'barangays' => $barangays,
-    //             'content' => [
-    //                 'code' => $listItem->lookup_key,
-    //                 'description' => $listItem->description,
-    //                 'count' => $counts
-    //             ]
-    //         ];
-    //     }
-
-    //     return response()->json(['results' => $results]);
-    // }
-
     public function countOfIndicators(Request $request)
     {
         $lookupId = $request->input('indicator');
@@ -256,6 +216,110 @@ class ReportController extends Controller
             'content' => $content
         ];
 
+        return response()->json($results);
+    }
+
+    public function getRbi(Request $request)
+    {
+
+        $validated = $request->validate([
+            'barangay' => 'required | array',
+            'dateFrom' => 'required | date',
+            'dateTo' => 'required | date',
+            'ageRange' => 'required | array'
+        ]);
+
+        $ages = [];
+        $male = 0;
+        $female = 0;
+        $household = 0;
+        $unknown = 0;
+        $results = [];
+        foreach ($validated['barangay'] as $barangay) {
+            // household
+            try {
+                $household = DB::table('households')
+                    ->where('households.barangay', $barangay)
+                    ->whereBetween('households.created_at', [$validated['dateFrom'], $validated['dateTo']])
+                    ->count();
+            } catch (Exception $e) {
+                return response()->json($e);
+            }
+
+
+            // male
+            try {
+                $male = DB::table('households')
+                    ->join('household_members', 'households.id', '=', 'household_members.household_id')
+                    ->join('member_details', 'household_members.id', '=', 'member_details.household_member_id')
+                    ->where('households.barangay', $barangay)
+                    ->where('member_details._5', '01')
+                    ->whereBetween('member_details.created_at', [$validated['dateFrom'], $validated['dateTo']])
+                    ->count();
+            } catch (Exception $e) {
+                return response()->json($e);
+            }
+
+            // female
+            try {
+                $female = DB::table('households')
+                    ->join('household_members', 'households.id', '=', 'household_members.household_id')
+                    ->join('member_details', 'household_members.id', '=', 'member_details.household_member_id')
+                    ->where('households.barangay', $barangay)
+                    ->where('member_details._5', '02')
+                    ->whereBetween('member_details.created_at', [$validated['dateFrom'], $validated['dateTo']])
+                    ->count();
+            } catch (Exception $e) {
+                return response()->json($e);
+            }
+
+            // unknown
+            try {
+                $unknown = DB::table('households')
+                    ->join('household_members', 'households.id', '=', 'household_members.household_id')
+                    ->join('member_details', 'household_members.id', '=', 'member_details.household_member_id')
+                    ->where('households.barangay', $barangay)
+                    ->whereNot('member_details._5', '02')
+                    ->whereNot('member_details._5', '01')
+                    ->whereBetween('member_details.created_at', [$validated['dateFrom'], $validated['dateTo']])
+                    ->count();
+            } catch (Exception $e) {
+                return response()->json($e);
+            }
+
+            // Age Range
+            foreach ($validated['ageRange'] as $ageRange) {
+                try {
+                    $age = DB::table('households')
+                        ->join('household_members', 'households.id', '=', 'household_members.household_id')
+                        ->join('member_details', 'household_members.id', '=', 'member_details.household_member_id')
+                        ->where('households.barangay', $barangay)
+                        ->whereBetween('member_details._7', [$ageRange['from'], $ageRange['to']])
+                        ->whereBetween('member_details.created_at', [$validated['dateFrom'], $validated['dateTo']])
+                        ->count();
+
+                    $ages[] = $age;
+                } catch (Exception $e) {
+                    return response()->json($e);
+                }
+            };
+
+
+            $results[] = [
+                'household' => $household,
+                'barangay' => $barangay,
+                'ageRange' => $ages,
+                'male' => $male,
+                'female' => $female,
+                'unknown' => $unknown
+            ];
+
+            $ages = [];
+            $male = 0;
+            $female = 0;
+            $household = 0;
+            $unknown = 0;
+        }
         return response()->json($results);
     }
 }
