@@ -421,4 +421,46 @@ class ReportController extends Controller
         }
         return response()->json($results);
     }
+
+    public function generateCustomReport(Request $request)
+    {
+        $validated = $request->validate([
+            'barangay' => 'required|string',
+            'dateFrom' => 'required|date',
+            'dateTo' => 'required|date',
+            'ageRange' => 'required|array',
+            'selectedLookup' => 'required|array',
+            'selectedIndicators'  => 'required|array'
+        ]);
+
+        $results = [];
+        foreach ($validated['ageRange'] as $age) {
+            $resultWithIndicator = [];
+            foreach ($validated['selectedIndicators'] as $indicator) {
+                $columnNumber = $validated['selectedLookup']['column_number'];
+                $columnName = "member_details._" . $columnNumber;
+
+                $count = DB::table('households')
+                    ->join('household_members', 'households.id', '=', 'household_members.household_id')
+                    ->join('member_details', 'household_members.id', '=', 'member_details.household_member_id')
+                    ->where('households.barangay', $validated['barangay'])
+                    ->where($columnName, $indicator['lookup_key'])
+                    ->whereBetween('member_details._7', [$age['from'], $age['to']]) // Assuming '_7' is your age column
+                    ->whereBetween('member_details.created_at', [$validated['dateFrom'], $validated['dateTo']])
+                    ->count();
+
+                $resultWithIndicator[] = [
+                    'indicator' => '[' . $indicator['lookup_key'] . '] ' . $indicator['description'],
+                    'count' => $count,
+                ];
+            }
+
+            $results[] = [
+                'result' => $resultWithIndicator,
+                'ageRange' => $age['from'] . '-' . $age['to'],
+            ];
+        }
+
+        return response()->json($results);
+    }
 }

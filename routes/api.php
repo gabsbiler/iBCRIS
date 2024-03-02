@@ -38,6 +38,8 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::get('household-list', [HouseholdController::class, 'findHousehold']);
     Route::get('household-member', [HouseholdController::class, 'findHouseholdMember']);
     Route::get('/reports/generate', [ReportController::class, 'generate']);
+    Route::get('get-rbi', [ReportController::class, 'getRbi']);
+    Route::get('/report/custom', [ReportController::class, 'generateCustomReport']);
 
     Route::post('addHousehold', [HouseholdController::class, 'addHousehold']);
     Route::post('addMember', [HouseholdController::class, 'addMember']);
@@ -63,5 +65,3 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::delete('/lookup', [LookupController::class, 'deleteLookup']);
     Route::delete('/household-container/{id}', [HouseholdContainerController::class, 'deleteContainer']);
 });
-
-Route::get('get-rbi', [ReportController::class, 'getRbi']);

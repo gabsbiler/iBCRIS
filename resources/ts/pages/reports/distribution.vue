@@ -251,7 +251,7 @@ function exportData() {
     
     <VCard>
       <VCardTitle class="d-flex justify-space-between align-center" @click="isSettingVisible = !isSettingVisible">
-        <h6 class="text-h6">Settings</h6>
+        <h6 class="text-h6">Filter</h6>
         <VBtn 
           :icon="isSettingVisible ? 'mdi-chevron-up' : 'mdi-chevron-down'"
           variant="text"
