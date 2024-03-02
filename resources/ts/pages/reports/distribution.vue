@@ -4,14 +4,13 @@ import axiosIns from '@/plugins/axios';
 
 const isSettingVisible = ref(true)
 const generateLoading = ref(false)
-const dateToday = new Date()
 const ageFrom = ref()
 const ageTo = ref()
 const data = ref()
 const settings = ref({
-  dateFrom: dateToday,
-  dateTo: dateToday,
-  barangay: [],
+  dateFrom:  new Date(new Date().setFullYear(new Date().getFullYear() - 1)),
+  dateTo: new Date(),
+  barangay: '',
   ageRange: [
     {
       from: 0,
@@ -147,6 +146,105 @@ const generateReport = async() => {
   isSettingVisible.value = false
 }
 
+function convertToCSV(obj) {
+  if (!obj) {
+    console.error('convertToCSV was called with undefined or null object');
+    return '';
+  }
+
+  const rows = [];
+
+  // General Information
+  rows.push("General Information");
+  rows.push(`Date From: ${obj.dateFrom}`);
+  rows.push(`Date To: ${obj.dateTo}`);
+  rows.push(`Barangay: ${obj.barangay}`);
+  rows.push(""); // Separate sections
+
+  // Age Range (assuming you want to list the ranges)
+  rows.push("Age Ranges");
+  if (obj.ageRange && Array.isArray(obj.ageRange)) {
+    obj.ageRange.forEach(range => {
+      rows.push(`From: ${range.from}, To: ${range.to}`);
+    });
+  
+  // Convert totalCountGender
+  if (obj.totalCountGender) {
+    rows.push("Gender,Count");
+    Object.entries(obj.totalCountGender).forEach(([key, value]) => {
+      rows.push(`${key},${value}`);
+    });
+    rows.push(""); // Add a blank line to separate sections
+  }
+
+  // Convert countGenderByAge
+  if (obj.countGenderByAge && Array.isArray(obj.countGenderByAge)) {
+    rows.push("Age Range,Male,Female,Unknown");
+    obj.countGenderByAge.forEach(item => {
+      const ageRange = `${item.age.from}-${item.age.to}`;
+      rows.push(`${ageRange},${item.male},${item.female},${item.unknown}`);
+    });
+    rows.push(""); // Separate sections
+  }
+
+  // Convert countMaritalByAge
+  if (obj.countMaritalByAge && Array.isArray(obj.countMaritalByAge)) {
+    rows.push("Age Range,Marital Status Counts");
+    obj.countMaritalByAge.forEach(item => {
+      const ageRange = `${item.age.from}-${item.age.to}`;
+      const statusCounts = Object.entries(item.status).map(([status, count]) => `${status}: ${count}`).join(", ");
+      rows.push(`${ageRange},${statusCounts}`);
+    });
+    rows.push(""); // Separate sections
+  }
+
+  // Convert countMaritalStatus
+  if (obj.countMaritalStatus && Array.isArray(obj.countMaritalStatus)) {
+    rows.push("Age Range,Marital Status Detailed Counts");
+    obj.countMaritalStatus.forEach(item => {
+      const ageRange = `${item.age.from}-${item.age.to}`;
+      const maritalStatusCounts = Object.entries(item).filter(([key]) => key !== 'age').map(([status, count]) => `${status}: ${count}`).join(", ");
+      rows.push(`${ageRange},${maritalStatusCounts}`);
+    });
+    rows.push(""); // Separate sections
+  }
+
+  // Convert countFemaleMaritalStats
+  if (obj.countFemaleMaritalStats && Array.isArray(obj.countFemaleMaritalStats)) {
+    rows.push("Age Range,Female Marital Status Counts");
+    obj.countFemaleMaritalStats.forEach(item => {
+      const ageRange = `${item.age.from}-${item.age.to}`;
+      const femaleMaritalStatusCounts = Object.entries(item).filter(([key]) => key !== 'age').map(([status, count]) => `${status}: ${count}`).join(", ");
+      rows.push(`${ageRange},${femaleMaritalStatusCounts}`);
+    });
+    rows.push(""); // Separate sections
+  }
+
+  
+
+  
+  }
+
+  return rows.join("\n");
+}
+
+
+
+function downloadCSV(csvContent:any, fileName = "data.csv") {
+  const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+  const link = document.createElement('a');
+  link.href = URL.createObjectURL(blob);
+  link.setAttribute('download', fileName);
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+}
+
+function exportData() {
+  const csvData = convertToCSV(data.value);
+  downloadCSV(csvData, "exportedData.csv");
+}
+
 </script>
 <template>
   <div class="d-flex flex-column gap-y-5">
@@ -155,7 +253,7 @@ const generateReport = async() => {
       <VCardTitle class="d-flex justify-space-between align-center" @click="isSettingVisible = !isSettingVisible">
         <h6 class="text-h6">Settings</h6>
         <VBtn 
-          :icon="isSettingVisible ? 'mdi-chevron-down' : 'mdi-chevron-up'"
+          :icon="isSettingVisible ? 'mdi-chevron-up' : 'mdi-chevron-down'"
           variant="text"
         />
       </VCardTitle>
@@ -169,8 +267,6 @@ const generateReport = async() => {
                   label="Selected Barangay" 
                   :items="baranggayList"
                   v-model="settings.barangay"
-                  multiple
-                  chips
                   clearable
                 />
               </VCol>
@@ -229,13 +325,19 @@ const generateReport = async() => {
             
             
             <VDivider class="my-5"/>
-            <div class="d-flex justify-end">
-              <VBtn variant="text" @click="clearData">
+            <div class="d-flex justify-space-between">
+              <VBtn @click="exportData" :disabled="!(settings.barangay.length > 0)" variant="outlined">
+                Export Result
+              </VBtn>
+              <div>
+                <VBtn variant="text" @click="clearData">
                 Clear
               </VBtn>
-              <VBtn variant="elevated" @click="generateReport" :loading="generateLoading">
+              <VBtn variant="elevated" @click="generateReport" :loading="generateLoading" :disabled="!(settings.barangay.length > 0)">
                 Generate
               </VBtn>
+              </div>
+              
             </div>
             
           </VCardText>
@@ -254,7 +356,7 @@ const generateReport = async() => {
       </VCol>
 
       <VCol cols="12">
-        <VCard title="Martial By Age">
+        <VCard title="Age Distribution by Marital Status">
           <VCardText >
             <VTable>
               <thead>
@@ -265,6 +367,7 @@ const generateReport = async() => {
                 <th>Widow</th>
                 <th>Divorced</th>
                 <th>Common Law</th>
+                <th>Legally Separated</th>
                 <th>Unknown</th>
               </thead>
               <tbody>
@@ -276,6 +379,7 @@ const generateReport = async() => {
                   <td>{{ item.status.widow }}</td>
                   <td>{{ item.status.divorced }}</td>
                   <td>{{ item.status.commonLaw }}</td>
+                  <td>{{ item.status.legallySeparated }}</td>
                   <td>{{ item.status.unknown }}</td>
                 </tr>
               </tbody>
@@ -284,12 +388,8 @@ const generateReport = async() => {
         </VCard>
       </VCol>
 
-      <VCol cols="12" md="6">
-        <MaleMarital :data="data"/>
-      </VCol>
-
-      <VCol cols="12" md="6">
-        <FemaleMarital :data="data"/>
+      <VCol cols="12">
+        <Marital :data="data"/>
       </VCol>
     </VRow>
 

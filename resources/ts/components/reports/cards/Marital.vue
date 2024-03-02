@@ -21,14 +21,19 @@ const isTableVisible = ref(false)
           <VTable>
             <thead>
               <th>Age</th>
-              <th>Single</th>
-              <th>Married</th>
+              <th>Single<br>Male</th>
+              <th>Single<br>Female</th>
+              <th>Married<br>Male</th>
+              <th>Married<br>Male</th>
             </thead>
             <tbody>
-              <tr v-for="item in props.data.countMaleMaritalStats">
+              
+              <tr v-for="item in props.data.countMaritalStatus">
                 <td>{{item.age.from}}-{{item.age.to}}</td>
-                <td>{{ item.single }}</td>
-                <td>{{ item.married }}</td>
+                <td>{{ item.singleMale }}</td>
+                <td>{{ item.singleFemale }}</td>
+                <td>{{ item.marriedMale }}</td>
+                <td>{{ item.marriedFemale }}</td>
               </tr>
             </tbody>
           </VTable>

@@ -19,17 +19,22 @@ class ReportController extends Controller
     //
     public function generate(Request $request)
     {
-        $this->dateFrom = Carbon::parse($request['dateFrom'])->toDateString();
-        $this->dateTo = Carbon::parse($request['dateTo'])->toDateString();
-        $this->barangay = $request['barangay'];
-        $this->ageRange = $request['ageRange'];
+        $validated = $request->validate([
+            'barangay' => 'required | string',
+            'dateFrom' => 'required | date',
+            'dateTo' => 'required | date',
+            'ageRange' => 'required | array'
+        ]);
+        $this->dateFrom = $validated['dateFrom'];
+        $this->dateTo = $validated['dateTo'];
+        $this->barangay = $validated['barangay'];
+        $this->ageRange = $validated['ageRange'];
 
         return response()->json([
             'totalCountGender' => $this->countGender(),
             'countGenderByAge' => $this->countGenderByAge(),
             'countMaritalByAge' => $this->countMaritalByAge(),
-            'countMaleMaritalStats' => $this->countMaleMaritalStats(),
-            'countFemaleMaritalStats' => $this->countFemaleMaritalStats(),
+            'countMaritalStatus' => $this->countMaritalStatus(),
             'dateFrom' => $this->dateFrom,
             'dateTo' => $this->dateTo,
             'barangay' => $this->barangay,
@@ -39,9 +44,25 @@ class ReportController extends Controller
 
     private function countGender()
     {
-        $maleCount = Demographic::where('_5', '01')->count();
-        $femaleCount = Demographic::where('_5', '02')->count();
-        $unknown = Demographic::whereNotIn('_5', ['01', '02'])->count();
+        $maleCount = DB::table('households')
+            ->join('household_members', 'households.id', '=', 'household_members.household_id')
+            ->join('member_details', 'household_members.id', '=', 'member_details.household_member_id')
+            ->where('households.barangay', $this->barangay)
+            ->where('member_details._5', '01')
+            ->whereBetween('member_details.created_at', [$this->dateFrom, $this->dateTo])
+            ->count();
+        $femaleCount = DB::table('households')
+            ->join('household_members', 'households.id', '=', 'household_members.household_id')
+            ->join('member_details', 'household_members.id', '=', 'member_details.household_member_id')
+            ->where('households.barangay', $this->barangay)
+            ->where('member_details._5', '02')
+            ->whereBetween('member_details.created_at', [$this->dateFrom, $this->dateTo])
+            ->count();
+        $unknown = DB::table('households')
+            ->join('household_members', 'households.id', '=', 'household_members.household_id')
+            ->join('member_details', 'household_members.id', '=', 'member_details.household_member_id')
+            ->where('households.barangay', $this->barangay)
+            ->whereNotIn('member_details._5', ['01', '02'])->count();
 
         return [
             'Male' => $maleCount,
@@ -55,19 +76,31 @@ class ReportController extends Controller
         $genderCountByAge = [];
 
         foreach ($this->ageRange as $age) {
-            $male = Demographic::whereBetween('_7', [$age['from'], $age['to']])->where('_5', '01')
-                // ->whereRaw("DATE_FORMAT(created_at, '%Y-%m-%d') >= ?", [$this->dateFrom])
-                // ->whereRaw("DATE_FORMAT(created_at, '%Y-%m-%d') <= ?", [$this->dateTo])
+            $male = DB::table('households')
+                ->join('household_members', 'households.id', '=', 'household_members.household_id')
+                ->join('member_details', 'household_members.id', '=', 'member_details.household_member_id')
+                ->where('households.barangay', $this->barangay)
+                ->where('member_details._5', '01')
+                ->whereBetween('member_details._7', [$age['from'], $age['to']])
+                ->whereBetween('member_details.created_at', [$this->dateFrom, $this->dateTo])
                 ->count();
 
-            $female = Demographic::whereBetween('_7', [$age['from'], $age['to']])->where('_5', '02')
-                // ->whereRaw("DATE_FORMAT(created_at, '%Y-%m-%d') >= ?", [$this->dateFrom])
-                // ->whereRaw("DATE_FORMAT(created_at, '%Y-%m-%d') <= ?", [$this->dateTo])
+            $female = DB::table('households')
+                ->join('household_members', 'households.id', '=', 'household_members.household_id')
+                ->join('member_details', 'household_members.id', '=', 'member_details.household_member_id')
+                ->where('households.barangay', $this->barangay)
+                ->where('member_details._5', '02')
+                ->whereBetween('member_details._7', [$age['from'], $age['to']])
+                ->whereBetween('member_details.created_at', [$this->dateFrom, $this->dateTo])
                 ->count();
 
-            $unknown = Demographic::whereBetween('_7', [$age['from'], $age['to']])->whereNotIn('_5', ['01', '02'])
-                // ->whereRaw("DATE_FORMAT(created_at, '%Y-%m-%d') >= ?", [$this->dateFrom])
-                // ->whereRaw("DATE_FORMAT(created_at, '%Y-%m-%d') <= ?", [$this->dateTo])
+            $unknown = DB::table('households')
+                ->join('household_members', 'households.id', '=', 'household_members.household_id')
+                ->join('member_details', 'household_members.id', '=', 'member_details.household_member_id')
+                ->where('households.barangay', $this->barangay)
+                ->whereNotIn('member_details._5', ['01', '02'])
+                ->whereBetween('member_details._7', [$age['from'], $age['to']])
+                ->whereBetween('member_details.created_at', [$this->dateFrom, $this->dateTo])
                 ->count();
 
             $genderCountByAge[] = [
@@ -85,26 +118,77 @@ class ReportController extends Controller
     {
         $maritalCountByAge = [];
         foreach ($this->ageRange as $age) {
-            $unknown = Demographic::whereBetween('_7', [$age['from'], $age['to']])
-                ->whereNotIn('_5', ['01', '02'])
+            $unknown = DB::table('households')
+                ->join('household_members', 'households.id', '=', 'household_members.household_id')
+                ->join('member_details', 'household_members.id', '=', 'member_details.household_member_id')
+                ->where('households.barangay', $this->barangay)
+                ->whereNotIn('member_details._21', ['1', '2', '3', '4', '5', '6', '7'])
+                ->whereBetween('member_details._7', [$age['from'], $age['to']])
+                ->whereBetween('member_details.created_at', [$this->dateFrom, $this->dateTo])
                 ->count();
-            $single = Demographic::whereBetween('_7', [$age['from'], $age['to']])
-                ->where('_21', '1')
+
+            $single = DB::table('households')
+                ->join('household_members', 'households.id', '=', 'household_members.household_id')
+                ->join('member_details', 'household_members.id', '=', 'member_details.household_member_id')
+                ->where('households.barangay', $this->barangay)
+                ->where('member_details._21', '1')
+                ->whereBetween('member_details._7', [$age['from'], $age['to']])
+                ->whereBetween('member_details.created_at', [$this->dateFrom, $this->dateTo])
                 ->count();
-            $married = Demographic::whereBetween('_7', [$age['from'], $age['to']])
-                ->where('_21', '2')
+
+
+            $married = DB::table('households')
+                ->join('household_members', 'households.id', '=', 'household_members.household_id')
+                ->join('member_details', 'household_members.id', '=', 'member_details.household_member_id')
+                ->where('households.barangay', $this->barangay)
+                ->where('member_details._21', '2')
+                ->whereBetween('member_details._7', [$age['from'], $age['to']])
+                ->whereBetween('member_details.created_at', [$this->dateFrom, $this->dateTo])
                 ->count();
-            $consensual = Demographic::whereBetween('_7', [$age['from'], $age['to']])
-                ->where('_21', '3')
+
+            $consensual = DB::table('households')
+                ->join('household_members', 'households.id', '=', 'household_members.household_id')
+                ->join('member_details', 'household_members.id', '=', 'member_details.household_member_id')
+                ->where('households.barangay', $this->barangay)
+                ->where('member_details._21', '3')
+                ->whereBetween('member_details._7', [$age['from'], $age['to']])
+                ->whereBetween('member_details.created_at', [$this->dateFrom, $this->dateTo])
                 ->count();
-            $widow = Demographic::whereBetween('_7', [$age['from'], $age['to']])
-                ->where('_21', '4')
+
+            $widow = DB::table('households')
+                ->join('household_members', 'households.id', '=', 'household_members.household_id')
+                ->join('member_details', 'household_members.id', '=', 'member_details.household_member_id')
+                ->where('households.barangay', $this->barangay)
+                ->where('member_details._21', '4')
+                ->whereBetween('member_details._7', [$age['from'], $age['to']])
+                ->whereBetween('member_details.created_at', [$this->dateFrom, $this->dateTo])
                 ->count();
-            $divorced = Demographic::whereBetween('_7', [$age['from'], $age['to']])
-                ->where('_21', '5')
+
+            $divorced = DB::table('households')
+                ->join('household_members', 'households.id', '=', 'household_members.household_id')
+                ->join('member_details', 'household_members.id', '=', 'member_details.household_member_id')
+                ->where('households.barangay', $this->barangay)
+                ->where('member_details._21', '5')
+                ->whereBetween('member_details._7', [$age['from'], $age['to']])
+                ->whereBetween('member_details.created_at', [$this->dateFrom, $this->dateTo])
                 ->count();
-            $commonLaw = Demographic::whereBetween('_7', [$age['from'], $age['to']])
-                ->where('_21', '5')
+
+            $commonLaw = DB::table('households')
+                ->join('household_members', 'households.id', '=', 'household_members.household_id')
+                ->join('member_details', 'household_members.id', '=', 'member_details.household_member_id')
+                ->where('households.barangay', $this->barangay)
+                ->where('member_details._21', '6')
+                ->whereBetween('member_details._7', [$age['from'], $age['to']])
+                ->whereBetween('member_details.created_at', [$this->dateFrom, $this->dateTo])
+                ->count();
+
+            $legallySeparated = DB::table('households')
+                ->join('household_members', 'households.id', '=', 'household_members.household_id')
+                ->join('member_details', 'household_members.id', '=', 'member_details.household_member_id')
+                ->where('households.barangay', $this->barangay)
+                ->where('member_details._21', '9')
+                ->whereBetween('member_details._7', [$age['from'], $age['to']])
+                ->whereBetween('member_details.created_at', [$this->dateFrom, $this->dateTo])
                 ->count();
 
 
@@ -120,58 +204,68 @@ class ReportController extends Controller
                     'widow' => $widow,
                     'divorced' => $divorced,
                     'commonLaw' => $commonLaw,
+                    'legallySeparated' => $legallySeparated
                 ]
             ];
         }
         return $maritalCountByAge;
     }
 
-    private function countMaleMaritalStats()
+    private function countMaritalStatus()
     {
         $maleMaritalStatsByAge = [];
         foreach ($this->ageRange as $age) {
-            $single = Demographic::whereBetween('_7', [$age['from'], $age['to']])
+            $singleMale = Demographic::whereBetween('_7', [$age['from'], $age['to']])
                 ->where('_5', '01')
                 ->where('_21', '1')
                 ->count();
 
-            $married = Demographic::whereBetween('_7', [$age['from'], $age['to']])
-                ->where('_5', '01')
-                ->where('_21', '2')
+            $singleMale = DB::table('households')
+                ->join('household_members', 'households.id', '=', 'household_members.household_id')
+                ->join('member_details', 'household_members.id', '=', 'member_details.household_member_id')
+                ->where('households.barangay', $this->barangay)
+                ->where('member_details._5', '01')
+                ->where('member_details._21', '1')
+                ->whereBetween('member_details.created_at', [$this->dateFrom, $this->dateTo])
+                ->count();
+
+            $singleFemale = DB::table('households')
+                ->join('household_members', 'households.id', '=', 'household_members.household_id')
+                ->join('member_details', 'household_members.id', '=', 'member_details.household_member_id')
+                ->where('households.barangay', $this->barangay)
+                ->where('member_details._5', '02')
+                ->where('member_details._21', '1')
+                ->whereBetween('member_details.created_at', [$this->dateFrom, $this->dateTo])
+                ->count();
+
+            $marriedMale = DB::table('households')
+                ->join('household_members', 'households.id', '=', 'household_members.household_id')
+                ->join('member_details', 'household_members.id', '=', 'member_details.household_member_id')
+                ->where('households.barangay', $this->barangay)
+                ->where('member_details._5', '01')
+                ->where('member_details._21', '2')
+                ->whereBetween('member_details.created_at', [$this->dateFrom, $this->dateTo])
+                ->count();
+
+            $marriedFemale = DB::table('households')
+                ->join('household_members', 'households.id', '=', 'household_members.household_id')
+                ->join('member_details', 'household_members.id', '=', 'member_details.household_member_id')
+                ->where('households.barangay', $this->barangay)
+                ->where('member_details._5', '02')
+                ->where('member_details._21', '2')
+                ->whereBetween('member_details.created_at', [$this->dateFrom, $this->dateTo])
                 ->count();
 
             $maleMaritalStatsByAge[] = [
                 'age' => $age,
-                'single' => $single,
-                'married' => $married
+                'singleMale' => $singleMale,
+                'singleFemale' => $singleFemale,
+                'marriedMale' => $marriedMale,
+                'marriedFemale' => $marriedFemale
             ];
         }
 
         return $maleMaritalStatsByAge;
-    }
-
-    private function countFemaleMaritalStats()
-    {
-        $femaleMaritalStatsByAge = [];
-        foreach ($this->ageRange as $age) {
-            $single = Demographic::whereBetween('_7', [$age['from'], $age['to']])
-                ->where('_5', '02')
-                ->where('_21', '1')
-                ->count();
-
-            $married = Demographic::whereBetween('_7', [$age['from'], $age['to']])
-                ->where('_5', '02')
-                ->where('_21', '2')
-                ->count();
-
-            $femaleMaritalStatsByAge[] = [
-                'age' => $age,
-                'single' => $single,
-                'married' => $married
-            ];
-        }
-
-        return $femaleMaritalStatsByAge;
     }
 
     public function countOfIndicators(Request $request)

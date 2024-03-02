@@ -48,3 +48,4 @@ dist-ssr
 
 # iconify dist files
 resources/ts/@iconify/*.js
+public/hot

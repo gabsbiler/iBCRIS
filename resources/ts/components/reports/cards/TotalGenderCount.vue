@@ -20,7 +20,7 @@ const transformData = (input) => {
     style="height: 100%;" 
   >
     <VCardTitle class="mt-3 d-flex justify-space-between align-center">
-      <h6 class="text-h6">Total Gender Count</h6>
+      <h6 class="text-h6">Total Population Collected</h6>
       <!-- <VBtn variant="text" @click="isTableVisible = !isTableVisible">Show Table</VBtn> -->
     </VCardTitle>
     <VCardText>

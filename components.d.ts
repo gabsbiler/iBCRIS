@@ -47,6 +47,7 @@ declare module '@vue/runtime-core' {
     GenderByAge: typeof import('./resources/ts/components/reports/cards/GenderByAge.vue')['default']
     I18n: typeof import('./resources/ts/@core/components/I18n.vue')['default']
     MaleMarital: typeof import('./resources/ts/components/reports/cards/MaleMarital.vue')['default']
+    Marital: typeof import('./resources/ts/components/reports/cards/Marital.vue')['default']
     MoreBtn: typeof import('./resources/ts/@core/components/MoreBtn.vue')['default']
     Notifications: typeof import('./resources/ts/@core/components/Notifications.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
