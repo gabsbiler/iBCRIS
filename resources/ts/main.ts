@@ -11,7 +11,7 @@ import '@core-scss/template/index.scss'
 import '@styles/styles.scss'
 import { createPinia } from 'pinia'
 import { createApp } from 'vue'
-
+import VueApexCharts from "vue3-apexcharts"
 loadFonts()
 
 // Create vue app
@@ -22,7 +22,7 @@ app.use(vuetify)
 app.use(createPinia())
 app.use(router)
 app.use(layoutsPlugin)
-
+app.use(VueApexCharts);
 app.use(abilitiesPlugin, ability, {
   useGlobalProperties: true,
 })

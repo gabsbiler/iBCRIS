@@ -1,8 +1,7 @@
 <script setup lang="ts">
-import { getDonutChartConfig } from '@core/libs/apex-chart/apexCharConfig';
+import { getPolarChartConfig } from '@core/libs/chartjs/chartjsConfig';
+import PolarAreaChart from '@core/libs/chartjs/components/PolarAreaChart';
 import { useTheme } from 'vuetify';
-import { getPolarChartConfig } from '@core/libs/chartjs/chartjsConfig'
-import PolarAreaChart from '@core/libs/chartjs/components/PolarAreaChart'
 
 const colors = {
   yellow: '#ffe802',
