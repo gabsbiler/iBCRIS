@@ -7,18 +7,10 @@
     </VRow>
     <VRow>
       <VCol cols="12" md="6">
-        <VCard title="Skills Development (they have vs want to have)">
-          <VCardText>
-            <SkillsDevelopment/>
-          </VCardText>
-        </VCard>
+        <SkillsDevelopment/>
       </VCol>
       <VCol cols="12" md="3">
-        <VCard title="Working Status">
-          <VCardText>
-            <WorkingStatus/>
-          </VCardText>
-        </VCard>
+        <WorkingStatus/>
       </VCol>
       <VCol cols="12" md="3">
         <VCard title="Income Bracket (Column 14d)">
