@@ -55,6 +55,12 @@ export default [
         action: 'Access',
         subject: 'Reports'
       },
+      {
+        title: 'Customize Count Reports', 
+        to: {name: 'reports-count'},
+        action: 'Access',
+        subject: 'Reports'
+      },
     ]
   },
   {

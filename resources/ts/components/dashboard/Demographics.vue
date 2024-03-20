@@ -7,33 +7,7 @@
     </VRow>
     <VRow>
       <VCol cols="12" md="3">
-        <VCard>
-          <VCardTitle>
-            <h6 class="text-h6">
-              Sex Distribution
-            </h6>
-            <div class="d-flex gap-x-3">
-              <div>
-                <p class="text-body-2">
-                  Male: <b>30,000</b>
-                </p>
-              </div>
-              <div>
-                <p class="text-body-2">
-                  Female: <b>20,000</b>
-                </p>
-              </div>
-              <div>
-                <p class="text-body-2">
-                  Unknown: <b>500</b>
-                </p>
-              </div>
-            </div>
-          </VCardTitle>
-          <VCardText>
-            <SexDistribution/>
-          </VCardText>
-        </VCard>
+        <SexDistribution></SexDistribution>
       </VCol>
       <VCol cols="12" md="5">
         <VCard>

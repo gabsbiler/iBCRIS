@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\HouseholdContainerController;
 use App\Http\Controllers\LookupController;
 use App\Http\Controllers\HouseholdController;
@@ -64,4 +65,8 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::delete('/lookup/entry', [LookupController::class, 'deleteLookupEntry']);
     Route::delete('/lookup', [LookupController::class, 'deleteLookup']);
     Route::delete('/household-container/{id}', [HouseholdContainerController::class, 'deleteContainer']);
+
+
+    // Dashboard
+    Route::get('dashboard/demographics/sex-distribution', [DashboardController::class, 'countGender']);
 });
