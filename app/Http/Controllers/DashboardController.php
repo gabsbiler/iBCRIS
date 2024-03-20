@@ -133,7 +133,7 @@ class DashboardController extends Controller
         $data = [];
 
         $lookups = Lookup::join('lookup_list', 'lookups.id', '=', 'lookup_list.lookup_id')
-            ->where('column_number', $column_number)
+            ->where('column_number', str_replace('_', '.', $column_number))
             ->get();
 
         foreach ($lookups as $lookup) {
@@ -151,8 +151,6 @@ class DashboardController extends Controller
 
     public function countLookup($column_number = 11, $lookup_number = 00)
     {
-
-
         $dbResponse = DB::table('households')
             ->join('household_members', 'households.id', '=', 'household_members.household_id')
             ->join('member_details', 'household_members.id', '=', 'member_details.household_member_id')
