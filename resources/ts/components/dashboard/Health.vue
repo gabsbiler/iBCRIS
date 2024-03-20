@@ -11,43 +11,15 @@
       <VCol cols="12" md="4">
         <VRow>
           <VCol cols="12">
-            <VCard>
-              <VCardText class="card">
-                <div class="circle" style="background-color: #9c82e2;"></div>
-                <div>
-                  <div class="text-body-2">
-                    Number of Pregnant
-                  </div>
-                  <h4 class="text-h4">
-                    1,000
-                  </h4>
-                </div>
-              </VCardText>
-            </VCard>
+            <Pregnant></Pregnant>
           </VCol>
           <VCol cols="12">
-            <VCard>
-              <VCardText class="card">
-                <div class="circle" style="background-color: #9c82e2;"></div>
-                <div>
-                  <div class="text-body-2">
-                    Number of Family who used Family Planning
-                  </div>
-                  <h4 class="text-h4">
-                    1,000
-                  </h4>
-                </div>
-              </VCardText>
-            </VCard>
+            <FamilyPlanning></FamilyPlanning>
           </VCol>
         </VRow>
       </VCol>
       <VCol cols="12" md="8">
-        <VCard title="Health Insurance">
-          <VCardText>
-            <HealthInsurance/>
-          </VCardText>
-        </VCard>
+        <HealthInsurance/>
       </VCol>
     </VRow>
   </section>

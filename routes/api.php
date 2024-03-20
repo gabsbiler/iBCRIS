@@ -69,6 +69,9 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
 
     // Dashboard
     Route::get('dashboard/member/count/{column_number}', [DashboardController::class, 'count']);
+
     // Route::get('dashboard/demographics/sex-distribution', [DashboardController::class, 'countGender']);
     // Route::get('dashboard/demographics/religious-affiliation', [DashboardController::class, 'countReligiousAffiliation']);
 });
+
+Route::get('dashboard/member/count-lookup/{column_number}/{lookup_number}', [DashboardController::class, 'countLookup']);

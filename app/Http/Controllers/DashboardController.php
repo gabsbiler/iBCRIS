@@ -148,4 +148,18 @@ class DashboardController extends Controller
 
         return $data;
     }
+
+    public function countLookup($column_number = 11, $lookup_number = 00)
+    {
+
+
+        $dbResponse = DB::table('households')
+            ->join('household_members', 'households.id', '=', 'household_members.household_id')
+            ->join('member_details', 'household_members.id', '=', 'member_details.household_member_id')
+            ->where('member_details._' . $column_number, $lookup_number)
+            ->count();
+
+
+        return $dbResponse;
+    }
 }
