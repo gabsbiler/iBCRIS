@@ -248,7 +248,14 @@ function exportData() {
 </script>
 <template>
   <div class="d-flex flex-column gap-y-5">
-    
+    <VCard>
+      <VCardTitle class="mt-2 ms-1">
+        Generate Report for Age Distribution per Barangay
+      </VCardTitle>
+      <VCardText>
+        This module allows you to generate a report for the Age distribution per brgy. Just select the barangay, Date range of reports and compose the age ranges. Defaults ranges are defined already but you can still modify it. The generated reports can also be exported to CSV format
+      </VCardText>
+    </VCard>
     <VCard>
       <VCardTitle class="d-flex justify-space-between align-center" @click="isSettingVisible = !isSettingVisible">
         <h6 class="text-h6">Filter</h6>
@@ -357,7 +364,7 @@ function exportData() {
 
       <VCol cols="12">
         <VCard title="Age Distribution by Marital Status">
-          <VCardText >
+          <VCardText>
             <VTable>
               <thead>
                 <th>Age</th>

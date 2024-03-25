@@ -116,6 +116,14 @@ const settings = ref({
 
 <template>
   <div class="d-flex gap-y-5 flex-column">
+    <VCard>
+      <VCardTitle class="mt-2 ms-1">
+        Generate Death Reports
+      </VCardTitle>
+      <VCardText>
+        This module allows you to generate a report of Death Records. Just select the barangay, then the date range of report. It will display the death records.
+      </VCardText>
+    </VCard>
     <!-- Filter -->
     <VCard>
       <VCardTitle class="d-flex justify-space-between align-center" @click="isShow = !isShow">

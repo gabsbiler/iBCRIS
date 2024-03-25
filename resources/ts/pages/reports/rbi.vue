@@ -147,6 +147,14 @@ const generate = async () => {
 
 <template>
   <div>
+    <VCard class="mb-5">
+      <VCardTitle class="mt-2 ms-1">
+        Generate Registry of Barangay Inhabitants (RBI)
+      </VCardTitle>
+      <VCardText>
+        This module allows you to generate a formatted report of RBI per barangay. Just select the barangay you want to generate, the date range and the age range. The default age ranges are already defined there but you can still modify if needed.
+      </VCardText>
+    </VCard>
     <VCard>
       <VCardTitle class="d-flex justify-space-between align-center" @click="isShow = !isShow">
         <h6 class="text-h6">

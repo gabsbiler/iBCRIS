@@ -195,6 +195,14 @@ const exportToCSV = () => {
 
 <template>
   <div>
+    <VCard>
+      <VCardTitle class="mt-2 ms-1">
+        Generate Customized Reports 
+      </VCardTitle>
+      <VCardText>
+        This module allows you to generate a customized list reports where you can select columns or details you want to include. Just select the columns that you want to be included. Then perform some filtering if needed. You will be given a table of the generated data where you can also export as CSV file.
+      </VCardText>
+    </VCard>
     <!-- Filter -->
     <VCard>
       <VCardTitle class="d-flex justify-space-between align-center" @click="isShow = !isShow">

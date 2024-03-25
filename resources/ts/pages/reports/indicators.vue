@@ -151,6 +151,14 @@ onMounted(() => {
 
 <template>
   <div>
+    <VCard class="mb-5">
+      <VCardTitle class="mt-2 ms-1">
+        Generate Reports on the counts of a certain Indicators
+      </VCardTitle>
+      <VCardText>
+        This module allows you to generate a report that display the count of a certain indicator in selected barangay/s. For Example, you want to generate the count of Sex in Alitao, just select the barangay (can be multiple select) and the indicators you want. Also, you can generate as many reports as you want on. The reports will appear below. Each report can be downloaded in CSV format.
+      </VCardText>
+    </VCard>
     <!-- Report Options -->
     <VCard>
       <VCardTitle 

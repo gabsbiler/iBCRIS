@@ -85,6 +85,12 @@ export default [
         action: 'Access',
         subject: 'RecordBatch'
       },
+      {
+        title: 'Barangay', 
+        to: 'barangay',
+        action: 'Access',
+        subject: 'RecordBatch'
+      },
     ]
   }
   
