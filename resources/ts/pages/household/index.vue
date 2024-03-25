@@ -3,7 +3,7 @@
     <VCard>
       <VCardTitle class="mt-2 d-flex justify-space-between">
         <div>
-          Batches
+          Filters
         </div>
         <VBtn
           :icon="filterShow ? 'mdi-chevron-up' : 'mdi-chevron-down'"
@@ -14,17 +14,46 @@
       
       <VExpandTransition>
         <div v-show="filterShow">
-
           <VCardText>
             <VRow>
-              <VCol v-for="i in containers" :key="i" >
-                <VBtn block variant="outlined" v-if="search!=i.name" @click="() => {search = search === i.name ? '' : i.name}">
-                  {{ i.name }}
-                </VBtn>
-                <VBtn block  v-else  @click="() => {search = search === i.name ? '' : i.name}">
-                  {{ i.name }}
-                </VBtn>
+              <VCol cols="12" md="6">
+                <VCombobox 
+                  label="Selected Barangay" 
+                  :items="baranggayList"
+                  clearable
+                  multiple
+                  disabled
+                  
+                />
               </VCol>
+              <VCol cols="12" md="6">
+                <VSelect 
+                  label="Survey Status"
+                  :items="[
+                    {status: 'Completed', value: true},
+                    {status: 'Not Completed', value: false},
+                    {status: 'All', value: 'all'}
+                  ]"
+                  item-title="status"
+                  item-value="value"
+                  disabled
+
+                />
+              </VCol>
+              <VDivider></VDivider>
+              <VCol cols="12"> 
+                <VRow >
+                  <VCol v-for="i in containers" :key="i">
+                    <VBtn block variant="outlined" v-if="search!=i.name" @click="() => {search = search === i.name ? '' : i.name}">
+                      {{ i.name }}
+                    </VBtn>
+                    <VBtn block  v-else  @click="() => {search = search === i.name ? '' : i.name}">
+                      {{ i.name }}
+                    </VBtn>
+                  </VCol>
+                </VRow>
+              </VCol>
+              
             </VRow>
           </VCardText>
         </div>
@@ -93,7 +122,7 @@
             class="font-weight-medium"
             size="small"
             >
-            {{item.raw.surveyStatus ? 'Complete' : 'Not Completed'}}
+            {{item.raw.surveyStatus ? 'Completed' : 'Not Completed'}}
             </VChip>
           </template>
 
@@ -153,8 +182,7 @@ const search = ref('');
 const isSnackbarSuccessVisible = ref(false)
 const alertMessage = ref()
 const type = ref()
-
-const user = JSON.parse(localStorage.getItem('userData'))
+const baranggayList = ref([])
 
 const headers = [
   {
@@ -254,10 +282,25 @@ const deleteItem = async (householdId) => {
   }
 };
 
-onMounted(() => {
+const user = JSON.parse(localStorage.getItem('userData'))
+const fetchBarangay = async () => {
+  try {
+    // Include search in the API call
+    const response = await axiosIns.get('/api/barangays')
+    baranggayList.value = response.data.map(item => item.barangay);
+  } catch (error) {
+    console.error('Error fetching data:', error);
+  }
+}
+
+onMounted(()=> {
+  if(user.role === 'admin'){
+    fetchBarangay()
+  }else{
+    baranggayList.value  = [user.barangay]
+  }
   fetchContainers()
 })
-
 </script>
 
 
