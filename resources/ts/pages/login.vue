@@ -53,7 +53,12 @@ const onSubmit = async () => {
 
 
     updateCASLAbilities(userRole)
-    window.location.replace("/");
+    if(userRole === 'brgyEncoder'){
+      window.location.replace("/household");
+    }else{
+      window.location.replace("/");
+    }
+    
     // router.replace(route.query.to ? String(route.query.to) : '/');
   } catch (error) {
     console.error(error);
