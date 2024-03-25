@@ -1,77 +1,10 @@
 <script setup>
-import axios from '@axios'
+import axios from '@axios';
 
 const emit  = defineEmits(['snackbar', 'refreshTable'])
 
-const items = [
-'Alitao',
-'Alupay',
-'Angeles Zone I (Pob.)',
-'Angeles Zone II',
-'Angeles Zone III',
-'Angeles Zone IV',
-'Angustias Zone I (Pob.)',
-'Angustias Zone II',
-'Angustias Zone III,',
-'Angustias Zone IV',
-'Anos',
-'Ayaas',
-'Baguio',
-'Banilad',
-'Calantas',
-'Camaysa',
-'Dapdap',
-'Gibanga',
-'Alsam Ibaba',
-'Bukal Ibaba',
-'Ilasan Ibaba',
-'Nangka Ibaba',
-'Palale Ibaba',
-'Ibas',
-'Alsam Ilaya',
-'Bukal Ilaya',
-'Ilasan Ilaya',
-'Nangka Ilaya',
-'Palale Ilaya',
-'Ipilan',
-'Isabang',
-'Calumpang',
-'Domoit Kanluran',
-'Katigan Kanluran',
-'Palale Kanluran',
-'Lakawan',
-'Lalo',
-'Lawigue',
-'Lita (Pob.)',
-'Malaoa',
-'Masin',
-'Mate',
-'Mateuna',
-'Mayowe',
-'Opias',
-'Pandakaki',
-'Pook',
-'Potol',
-'San Diego Zone I (Pob.)',
-'San Diego Zone II',
-'San Diego Zone III',
-'San Diego Zone IV',
-'San Isidro Zone I (Pob.)',
-'San Isidro Zone II',
-'San Isidro Zone III',
-'San Isidro Zone IV',
-'San Roque Zone I (Pob.)',
-'San Roque Zone II',
-'Domoit Silangan',
-'Katigan Silangan',
-'Palale Silangan',
-'Talolong',
-'Tamlong',
-'Tongko',
-'Valencia',
-'Wakas'
-]
-
+const barangayList = ref([])
+const user = JSON.parse(localStorage.getItem('userData'))
 
 const baranggay = ref()
 const sitio = ref()
@@ -82,6 +15,7 @@ const address = ref()
 const headLastname = ref()
 const headFirstname = ref()
 const headMiddlename = ref()
+const loading = ref()
 
 const alertMessage = ref()
 const type = ref()
@@ -137,6 +71,28 @@ const resetForm = () => {
   headMiddlename.value = ''
   isDialogVisible.value = false
 }
+
+const fetchBarangay = async () => {
+  loading.value = true;
+  try {
+    // Include search in the API call
+    const response = await axios.get('/api/barangays')
+    barangayList.value = response.data.map(item => item.barangay);
+  } catch (error) {
+    console.error('Error fetching data:', error);
+  } finally {
+    loading.value = false;
+  }
+}
+
+onMounted(()=> {
+  if(user.role === 'admin'){
+    fetchBarangay()
+  }else{
+    barangayList.value  = [user.barangay]
+  }
+  
+})
 </script>
 
 <template>
@@ -174,7 +130,7 @@ const resetForm = () => {
             >
               <VSelect
                 v-model="baranggay"
-                :items="items"
+                :items="barangayList"
                 label="Select Baranggay"
               />
             </VCol>
