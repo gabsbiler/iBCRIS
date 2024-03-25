@@ -1,75 +1,9 @@
 <script setup lang="ts">
 import axiosIns from '@/plugins/axios';
 const isDialogOpen = ref(false)
-
-const barangay = [
-'Alitao',
-'Alupay',
-'Angeles Zone I (Pob.)',
-'Angeles Zone II',
-'Angeles Zone III',
-'Angeles Zone IV',
-'Angustias Zone I (Pob.)',
-'Angustias Zone II',
-'Angustias Zone III,',
-'Angustias Zone IV',
-'Anos',
-'Ayaas',
-'Baguio',
-'Banilad',
-'Calantas',
-'Camaysa',
-'Dapdap',
-'Gibanga',
-'Alsam Ibaba',
-'Bukal Ibaba',
-'Ilasan Ibaba',
-'Nangka Ibaba',
-'Palale Ibaba',
-'Ibas',
-'Alsam Ilaya',
-'Bukal Ilaya',
-'Ilasan Ilaya',
-'Nangka Ilaya',
-'Palale Ilaya',
-'Ipilan',
-'Isabang',
-'Calumpang',
-'Domoit Kanluran',
-'Katigan Kanluran',
-'Palale Kanluran',
-'Lakawan',
-'Lalo',
-'Lawigue',
-'Lita (Pob.)',
-'Malaoa',
-'Masin',
-'Mate',
-'Mateuna',
-'Mayowe',
-'Opias',
-'Pandakaki',
-'Pook',
-'Potol',
-'San Diego Zone I (Pob.)',
-'San Diego Zone II',
-'San Diego Zone III',
-'San Diego Zone IV',
-'San Isidro Zone I (Pob.)',
-'San Isidro Zone II',
-'San Isidro Zone III',
-'San Isidro Zone IV',
-'San Roque Zone I (Pob.)',
-'San Roque Zone II',
-'Domoit Silangan',
-'Katigan Silangan',
-'Palale Silangan',
-'Talolong',
-'Tamlong',
-'Tongko',
-'Valencia',
-'Wakas'
-]
+const loading = ref(false)
+const SnackBarRef = ref()
+const barangay = ref([])
 
 const userTypes = [
   {
@@ -98,6 +32,7 @@ const user = ref({
 })
 
 const addUser = async () => {
+  loading.value=true
   axiosIns.post('/api/auth/register', user.value).then(
     response => {
       console.log(response)
@@ -116,10 +51,29 @@ const addUser = async () => {
       emits('submitted')
     })
     .catch(error => {
+      SnackBarRef.value.show('error', error.response.data.message)
       console.log(error)
     })
+  loading.value=false
 }
 
+
+const fetchBarangay = async () => {
+  loading.value = true;
+  try {
+    // Include search in the API call
+    const response = await axiosIns.get('/api/barangays')
+    barangay.value = response.data.map(item => item.barangay);
+  } catch (error) {
+    console.error('Error fetching data:', error);
+  } finally {
+    loading.value = false;
+  }
+}
+
+onMounted(()=> {
+  fetchBarangay()
+})
 const emits = defineEmits(['submitted'])
 </script>
 
@@ -174,7 +128,7 @@ const emits = defineEmits(['submitted'])
                 label="Confirm Password"
               />
             </VCol>
-            <VCol cols="12" md="6">
+            <VCol>
               <VSelect
                 v-model="user.role"
                 :items="userTypes"
@@ -184,7 +138,7 @@ const emits = defineEmits(['submitted'])
               />
             </VCol>
             
-            <VCol cols="12" md="6">
+            <VCol v-show="user.role != 'admin'">
               <VSelect
                 v-model="user.barangay"
                 label="Select Barangay"
@@ -197,16 +151,19 @@ const emits = defineEmits(['submitted'])
         
       </VCardText>
       <VCardAction class="d-flex justify-center gap-x-3 pb-5">
-        <VBtn type="submit" @click="addUser">
+        <VBtn type="submit" @click="addUser" :loading="loading">
           Submit
         </VBtn>
         <VBtn
           variant="outlined"
           type="button"
+          @click="isDialogOpen = false"
         >
           Cancel
         </VBtn>
       </VCardAction>
     </VCard>
+
+    <SnackBar ref="SnackBarRef"></SnackBar>
   </VDialog>
 </template>

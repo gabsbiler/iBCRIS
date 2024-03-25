@@ -67,6 +67,7 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::delete('/lookup/entry', [LookupController::class, 'deleteLookupEntry']);
     Route::delete('/lookup', [LookupController::class, 'deleteLookup']);
     Route::delete('/household-container/{id}', [HouseholdContainerController::class, 'deleteContainer']);
+    Route::delete('/user/{id}', [AuthController::class, 'deleteUser'])->middleware('auth:sanctum');
 
     // Dashboard
     Route::get('dashboard/member/count-lookup/{column_number}/{lookup_number}', [DashboardController::class, 'countLookup']);

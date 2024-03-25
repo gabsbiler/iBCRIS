@@ -1,21 +1,23 @@
+<script setup lang="ts">
+const user = ref(JSON.parse(localStorage.getItem('userData')))
+</script>
+
 <template>
   <section>
     <VRow>
       <VCol cols="12" md="6">
         <div>
           <h5 class="text-h4">
-            <em>Welcome to </em><b>iBCRIS</b>
+            Welcome <b>{{ user.name }}</b> <br>of Brgy.{{ user.barangay }} to <b>iBCRIS</b> 
           </h5>
 
           <p class="text-body-2 mt-2">
-            a short text about iBCRIS here a short text about iBCRIS here a short text about <br>
-            iBCRIS here a short text about iBCRIS here a short text about iBCRIS here a short <br>
-            text about iBCRIS here a short text about iBCRIS here
+            Integrated Barangay Civil Registration System in an information system of civil records of household members in the 66 barangays of the City of Tayabas. It served as repository of records to produce analytical reports that can be used by the barangays and the Local Governement Unit of the City of Tayabas in making better decisions in relation to their various programs and projects.
           </p>
         </div>
       </VCol>
       <VCol cols="12" md="3">
-        <VCard >
+        <VCard>
           <VCardText class="card">
             <div class="circle" style="background-color: #9c82e2;"></div>
             <div>

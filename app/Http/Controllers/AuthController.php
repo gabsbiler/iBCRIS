@@ -39,10 +39,10 @@ class AuthController extends Controller
             'first_name' => 'required|string',
             'last_name' => 'required|string',
             'username' => 'required|string',
-            'barangay' => 'required|string',
+            'barangay' => 'string|nullable',
             'role' => 'required|string',
-            'email' => 'required|string|unique:users',
-            'password' => 'required|string',
+            'email' => 'required|string|email|unique:users',
+            'password' => 'required|string|min:6',
             'c_password' => 'required|same:password'
         ]);
 
@@ -74,13 +74,19 @@ class AuthController extends Controller
 
     public function login(Request $request)
     {
+        // Validate the request
         $request->validate([
-            'email' => 'required|string|email',
+            'login' => 'required|string', // 'login' can be either username or email
             'password' => 'required|string',
             'remember_me' => 'boolean'
         ]);
 
-        $credentials = request(['email', 'password']);
+        // Determine if the login request is using 'email' or 'username'
+        $loginType = filter_var($request->input('login'), FILTER_VALIDATE_EMAIL) ? 'email' : 'username';
+
+        // Set the credentials for authentication attempt
+        $credentials = [$loginType => $request->input('login'), 'password' => $request->input('password')];
+
         if (!Auth::attempt($credentials)) {
             return response()->json([
                 'message' => 'Unauthorized'
@@ -109,6 +115,7 @@ class AuthController extends Controller
         ]);
     }
 
+
     /**
      * Get the authenticated User
      *
@@ -131,5 +138,34 @@ class AuthController extends Controller
         return response()->json([
             'message' => 'Successfully logged out'
         ]);
+    }
+
+    /**
+     * Delete a user
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function deleteUser(Request $request, $id)
+    {
+
+        $user = User::find($id);
+
+        if (!$user) {
+            return response()->json(['message' => 'User not found'], 404);
+        }
+
+        // Optional: Prevent users from deleting their own account through this method
+        if ($user->id === Auth::id()) {
+            return response()->json(['message' => 'You cannot delete your own account'], 403);
+        }
+
+        try {
+            $user->delete();
+            return response()->json(['message' => 'User successfully deleted'], 200);
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'User deletion failed', 'error' => $e->getMessage()], 500);
+        }
     }
 }
