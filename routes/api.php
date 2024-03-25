@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\BarangayController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\HouseholdContainerController;
 use App\Http\Controllers\LookupController;
@@ -42,6 +43,7 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::get('get-rbi', [ReportController::class, 'getRbi']);
     Route::get('/report/custom', [ReportController::class, 'generateCustomReport']);
 
+
     Route::post('addHousehold', [HouseholdController::class, 'addHousehold']);
     Route::post('addMember', [HouseholdController::class, 'addMember']);
     Route::post('updateMember', [HouseholdController::class, 'updateMember']);
@@ -66,13 +68,10 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::delete('/lookup', [LookupController::class, 'deleteLookup']);
     Route::delete('/household-container/{id}', [HouseholdContainerController::class, 'deleteContainer']);
 
-
     // Dashboard
-
-
-    // Route::get('dashboard/demographics/sex-distribution', [DashboardController::class, 'countGender']);
-    // Route::get('dashboard/demographics/religious-affiliation', [DashboardController::class, 'countReligiousAffiliation']);
+    Route::get('dashboard/member/count-lookup/{column_number}/{lookup_number}', [DashboardController::class, 'countLookup']);
+    Route::get('dashboard/member/count/{column_number}', [DashboardController::class, 'count']);
 });
-
-Route::get('dashboard/member/count-lookup/{column_number}/{lookup_number}', [DashboardController::class, 'countLookup']);
-Route::get('dashboard/member/count/{column_number}', [DashboardController::class, 'count']);
+// Route::get('barangay', [BarangayController::class, 'index']);
+Route::get('/barangays/datatables', [BarangayController::class, 'datatables']);
+Route::apiResource('barangays', BarangayController::class);

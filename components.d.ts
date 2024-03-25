@@ -10,6 +10,7 @@ export {}
 declare module '@vue/runtime-core' {
   export interface GlobalComponents {
     Add: typeof import('./resources/ts/components/dialogs/Settings/HouseholdContainer/Add.vue')['default']
+    AddBarangay: typeof import('./resources/ts/components/dialogs/Settings/Barangay/AddBarangay.vue')['default']
     AddHouseholdDialog: typeof import('./resources/ts/components/AddHouseholdDialog.vue')['default']
     AddHouseholdMemberDialog: typeof import('./resources/ts/components/AddHouseholdMemberDialog.vue')['default']
     AddLookupEntry: typeof import('./resources/ts/components/AddLookupEntry.vue')['default']
