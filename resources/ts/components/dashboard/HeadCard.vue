@@ -7,10 +7,13 @@ const user = ref(JSON.parse(localStorage.getItem('userData')))
     <VRow>
       <VCol cols="12" md="6">
         <div>
-          <h5 class="text-h4">
+          <h5 class="text-h4" v-if="user.role != 'admin'">
             Welcome <b>{{ user.name }}</b> <br>of Brgy.{{ user.barangay }} to <b>iBCRIS</b> 
           </h5>
-
+          <h5 class="text-h4" v-else>
+            Welcome <b>{{ user.name }}</b> to <b>iBCRIS</b> 
+          </h5>
+          <!--  -->
           <p class="text-body-2 mt-2">
             Integrated Barangay Civil Registration System in an information system of civil records of household members in the 66 barangays of the City of Tayabas. It served as repository of records to produce analytical reports that can be used by the barangays and the Local Governement Unit of the City of Tayabas in making better decisions in relation to their various programs and projects.
           </p>

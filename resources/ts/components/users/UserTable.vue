@@ -28,6 +28,7 @@ const headers = [
 const userList = ref([])
 const SnackBarRef = ref()
 const EditUserDialogRef = ref()
+const user = JSON.parse(localStorage.getItem('userData'))
 
 const fetchData = async () => {
   try {
@@ -104,6 +105,7 @@ defineExpose({fetchData})
             density="compact" 
             icon="mdi-delete-outline"
             @click="deleteUser(item.raw.id)"
+            v-if="user.role ==='admin'"
           />
         </div>
       </template>

@@ -16,7 +16,7 @@ const user = JSON.parse(localStorage.getItem('userData'))
         />
         <AddUserDialog @submitted="UserTableRef.fetchData()" v-if="user.role == 'admin'"/>
       </VCardTitle>
-      <VCardText class="text-center">
+      <VCardText class="text-center"> 
         <UserTable ref="UserTableRef"/>
       </VCardText>
     </VCard>
