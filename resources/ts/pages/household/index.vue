@@ -154,6 +154,8 @@ const isSnackbarSuccessVisible = ref(false)
 const alertMessage = ref()
 const type = ref()
 
+const user = JSON.parse(localStorage.getItem('userData'))
+
 const headers = [
   {
     title: 'Record Batch',
@@ -203,11 +205,18 @@ const showSnackBar = data =>{
 const fetchData = async (options) => {
   isLoading.value = true
   try {
+    let response = {}
     // const sortByField = sortBy?.[0] ?? '';
-
-    const response = await axiosIns.get('/api/household', {
-      params: options,
-    });
+    if(user.role == 'admin'){
+      response = await axiosIns.get('/api/household', {
+        params: options,
+      });
+    }else{
+      response = await axiosIns.get(`/api/household/${user.barangay}`, {
+        params: options,
+      });
+    }
+    
 
     households.value = response.data.data;
     totalHouseholds.value = response.data.total;

@@ -47,6 +47,44 @@ class HouseholdController extends Controller
         return $query->paginate($perPage);
     }
 
+    public function showFromBarangay(Request $request, $barangay)
+    {
+        $query = Household::with(['householdContainer', 'householdMembers.demographic']);
+
+        // Initialize a basic where condition for Barangay
+        $query->where('Barangay', '=', $barangay);
+
+        // Search within the specified Barangay
+        if ($search = $request->input('search')) {
+            $query->where(function ($query) use ($search) {
+                $query->where('BSN', 'like', "%{$search}%")
+                    ->orWhere('HUSN', 'like', "%{$search}%")
+                    ->orWhere('HSN', 'like', "%{$search}%")
+                    ->orWhereHas('householdContainer', function ($q) use ($search) {
+                        $q->where('name', 'like', "%{$search}%");
+                    })
+                    ->orWhereHas('householdMembers', function ($q) use ($search) {
+                        $q->where('updated_at', 'like', "%{$search}%")
+                            ->orWhereHas('demographic', function ($subQuery) use ($search) {
+                                $subQuery->where('lastname', 'like', "%{$search}%")
+                                    ->orWhere('firstname', 'like', "%{$search}%");
+                            });
+                    });
+            });
+        }
+
+        // Sorting
+        if ($sortBy = $request->input('sortBy')) {
+            $sortDesc = $request->input('sortDesc') === 'true' ? 'desc' : 'asc'; // Corrected to compare against 'true'
+            $query->orderBy($sortBy, $sortDesc);
+        }
+
+        // Pagination
+        $perPage = $request->input('itemsPerPage', 15);
+        return $query->paginate($perPage);
+    }
+
+
 
     public function findHousehold(Request $request)
     {

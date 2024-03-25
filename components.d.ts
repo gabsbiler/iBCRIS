@@ -50,6 +50,7 @@ declare module '@vue/runtime-core' {
     DialogCloseBtn: typeof import('./resources/ts/@core/components/DialogCloseBtn.vue')['default']
     Edit: typeof import('./resources/ts/components/dialogs/Settings/HouseholdContainer/Edit.vue')['default']
     EditHouseholdDialog: typeof import('./resources/ts/components/EditHouseholdDialog.vue')['default']
+    EditUserDialog: typeof import('./resources/ts/components/users/EditUserDialog.vue')['default']
     ErrorHeader: typeof import('./resources/ts/components/ErrorHeader.vue')['default']
     FamilyPlanning: typeof import('./resources/ts/components/dashboard/Health/FamilyPlanning.vue')['default']
     FemaleMarital: typeof import('./resources/ts/components/reports/cards/FemaleMarital.vue')['default']

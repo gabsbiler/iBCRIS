@@ -27,6 +27,8 @@ const headers = [
 ]
 const userList = ref([])
 const SnackBarRef = ref()
+const EditUserDialogRef = ref()
+
 const fetchData = async () => {
   try {
     const response = await axiosIns.get('/api/users/all')
@@ -94,6 +96,7 @@ defineExpose({fetchData})
             color="secondary" 
             density="compact" 
             icon="mdi-pencil-outline"
+            @click="EditUserDialogRef.fetchUser(item.raw.id)"
           />
           <VBtn 
             variant="text" 
@@ -102,16 +105,10 @@ defineExpose({fetchData})
             icon="mdi-delete-outline"
             @click="deleteUser(item.raw.id)"
           />
-
-          <VBtn 
-            variant="text" 
-            color="secondary" 
-            density="compact" 
-            icon="mdi-information-outline"
-          />
         </div>
       </template>
     </VDataTable>
     <SnackBar ref="SnackBarRef"></SnackBar>
+    <EditUserDialog ref="EditUserDialogRef" @applied="fetchData()"></EditUserDialog>
   </div>
 </template>

@@ -21,6 +21,8 @@ use App\Http\Controllers\ReportController;
 |
 */
 
+
+
 Route::group(['prefix' => 'auth'], function () {
     Route::post('login', [AuthController::class, 'login']);
     Route::post('register', [AuthController::class, 'register']);
@@ -32,17 +34,21 @@ Route::group(['prefix' => 'auth'], function () {
 });
 
 Route::group(['middleware' => 'auth:sanctum'], function () {
+    Route::apiResource('barangays', BarangayController::class);
+
     Route::get('users/all', [AuthController::class, 'showAll']);
     Route::get('container', [HouseholdContainerController::class, 'show']);
     Route::get('lookup', [LookupController::class, 'show']);
     Route::get('lookup-list', [LookupController::class, 'showLookupList']);
+    Route::get('household/{barangay}', [HouseholdController::class, 'showFromBarangay']);
     Route::get('household', [HouseholdController::class, 'show']);
     Route::get('household-list', [HouseholdController::class, 'findHousehold']);
     Route::get('household-member', [HouseholdController::class, 'findHouseholdMember']);
     Route::get('/reports/generate', [ReportController::class, 'generate']);
     Route::get('get-rbi', [ReportController::class, 'getRbi']);
     Route::get('/report/custom', [ReportController::class, 'generateCustomReport']);
-
+    Route::get('/barangays/datatables', [BarangayController::class, 'datatables']);
+    Route::get('/user/{id}', [AuthController::class, 'showUser']);
 
     Route::post('addHousehold', [HouseholdController::class, 'addHousehold']);
     Route::post('addMember', [HouseholdController::class, 'addMember']);
@@ -62,6 +68,8 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::put('/household/{id}/container', [HouseholdController::class, 'updateContainer']);
     Route::put('/household-container/{id}', [HouseholdContainerController::class, 'update']);
 
+    Route::patch('/user/{id}', [AuthController::class, 'updateUser']);
+
     Route::delete('/households', [HouseholdController::class, 'deleteHousehold']);
     Route::delete('/household/member', [HouseholdController::class, 'deleteHouseholdMember']);
     Route::delete('/lookup/entry', [LookupController::class, 'deleteLookupEntry']);
@@ -73,6 +81,3 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::get('dashboard/member/count-lookup/{column_number}/{lookup_number}', [DashboardController::class, 'countLookup']);
     Route::get('dashboard/member/count/{column_number}', [DashboardController::class, 'count']);
 });
-// Route::get('barangay', [BarangayController::class, 'index']);
-Route::get('/barangays/datatables', [BarangayController::class, 'datatables']);
-Route::apiResource('barangays', BarangayController::class);

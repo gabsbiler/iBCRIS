@@ -1,5 +1,6 @@
 <script setup lang="ts">
 const UserTableRef = ref()
+const user = JSON.parse(localStorage.getItem('userData'))
 </script>
 <template>
   <div>
@@ -13,7 +14,7 @@ const UserTableRef = ref()
           density="compact"
           style="max-width: 300px;"
         />
-        <AddUserDialog @submitted="UserTableRef.fetchData()"/>
+        <AddUserDialog @submitted="UserTableRef.fetchData()" v-if="user.role == 'admin'"/>
       </VCardTitle>
       <VCardText class="text-center">
         <UserTable ref="UserTableRef"/>

@@ -168,4 +168,65 @@ class AuthController extends Controller
             return response()->json(['message' => 'User deletion failed', 'error' => $e->getMessage()], 500);
         }
     }
+
+    /**
+     * Display the specified user.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function showUser($id)
+    {
+        $user = User::find($id);
+
+        if (!$user) {
+            return response()->json(['message' => 'User not found'], 404);
+        }
+
+        return response()->json($user);
+    }
+
+    /**
+     * Update the specified user.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function updateUser(Request $request, $id)
+    {
+        // Validate the incoming request
+        $request->validate([
+            'name' => 'sometimes|string',
+            'username' => 'sometimes|string|unique:users,username,' . $id,
+            'barangay' => 'nullable|string',
+            'role' => 'sometimes|string',
+            'email' => 'sometimes|string|email|unique:users,email,' . $id,
+            // Do not require the password in updates, but validate if provided
+            'password' => 'nullable|string|min:6',
+        ]);
+
+        $user = User::find($id);
+
+        if (!$user) {
+            return response()->json(['message' => 'User not found'], 404);
+        }
+
+        // Update user information
+        $user->name = $request->input('name', $user->name);
+        $user->username = $request->input('username', $user->username);
+        $user->barangay = $request->input('barangay', $user->barangay);
+        $user->role = $request->input('role', $user->role);
+        $user->email = $request->input('email', $user->email);
+        if ($request->filled('password')) {
+            $user->password = bcrypt($request->input('password'));
+        }
+
+        try {
+            $user->save();
+            return response()->json(['message' => 'User successfully updated'], 200);
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'User update failed', 'error' => $e->getMessage()], 500);
+        }
+    }
 }
