@@ -4,74 +4,7 @@ import axiosIns from '@/plugins/axios';
 
 
 const isShow = ref(true)
-const baranggayList = [
-'Alitao',
-'Alupay',
-'Angeles Zone I (Pob.)',
-'Angeles Zone II',
-'Angeles Zone III',
-'Angeles Zone IV',
-'Angustias Zone I (Pob.)',
-'Angustias Zone II',
-'Angustias Zone III,',
-'Angustias Zone IV',
-'Anos',
-'Ayaas',
-'Baguio',
-'Banilad',
-'Calantas',
-'Camaysa',
-'Dapdap',
-'Gibanga',
-'Alsam Ibaba',
-'Bukal Ibaba',
-'Ilasan Ibaba',
-'Nangka Ibaba',
-'Palale Ibaba',
-'Ibas',
-'Alsam Ilaya',
-'Bukal Ilaya',
-'Ilasan Ilaya',
-'Nangka Ilaya',
-'Palale Ilaya',
-'Ipilan',
-'Isabang',
-'Calumpang',
-'Domoit Kanluran',
-'Katigan Kanluran',
-'Palale Kanluran',
-'Lakawan',
-'Lalo',
-'Lawigue',
-'Lita (Pob.)',
-'Malaoa',
-'Masin',
-'Mate',
-'Mateuna',
-'Mayowe',
-'Opias',
-'Pandakaki',
-'Pook',
-'Potol',
-'San Diego Zone I (Pob.)',
-'San Diego Zone II',
-'San Diego Zone III',
-'San Diego Zone IV',
-'San Isidro Zone I (Pob.)',
-'San Isidro Zone II',
-'San Isidro Zone III',
-'San Isidro Zone IV',
-'San Roque Zone I (Pob.)',
-'San Roque Zone II',
-'Domoit Silangan',
-'Katigan Silangan',
-'Palale Silangan',
-'Talolong',
-'Tamlong',
-'Tongko',
-'Valencia',
-'Wakas'
-]
+const baranggayList = ref([])
 const SnackBarRef = ref(null)
 
 const ageFrom = ref()
@@ -142,9 +75,6 @@ const updateSelectedLookup = (selectedValue) => {
   data.value = undefined
 };
 
-onMounted(() => {
-  fetchData(); 
-});
 
 
 const generateReport = async () => {
@@ -190,6 +120,25 @@ const exportToCSV = () => {
   link.click(); // This will download the data file named "custom_report.csv".
 };
 
+const user = JSON.parse(localStorage.getItem('userData'))
+const fetchBarangay = async () => {
+  try {
+    // Include search in the API call
+    const response = await axiosIns.get('/api/barangays')
+    baranggayList.value = response.data.map(item => item.barangay);
+  } catch (error) {
+    console.error('Error fetching data:', error);
+  }
+}
+
+onMounted(()=> {
+  if(user.role === 'admin'){
+    fetchBarangay()
+  }else{
+    baranggayList.value  = [user.barangay]
+  }
+  fetchData(); 
+})
 
 </script>
 
