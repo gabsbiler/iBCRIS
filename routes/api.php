@@ -81,3 +81,6 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::get('dashboard/member/count-lookup/{column_number}/{lookup_number}', [DashboardController::class, 'countLookup']);
     Route::get('dashboard/member/count/{column_number}', [DashboardController::class, 'count']);
 });
+
+Route::get('dashboard/household/member/count', [DashboardController::class, 'countMembers']);
+Route::get('dashboard/household/count', [DashboardController::class, 'countHousehold']);

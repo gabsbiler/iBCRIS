@@ -1,5 +1,34 @@
 <script setup lang="ts">
+import axiosIns from '@/plugins/axios';
+
 const user = ref(JSON.parse(localStorage.getItem('userData')))
+const householdCount = ref(0)
+const memberCount = ref(0)
+
+const fetchHouseholdCount = async () => {
+  try{
+    const response = await axiosIns.get('/api/dashboard/household/count')
+    console.log(response)
+    householdCount.value = response.data
+  }catch(e){
+    console.log(e)
+  }
+}
+
+const fetchMemberCount = async () => {
+  try{
+    const response = await axiosIns.get('/api/dashboard/household/member/count')
+    console.log(response)
+    memberCount.value = response.data
+  }catch(e){
+    console.log(e)
+  }
+}
+
+onMounted(() => {
+  fetchHouseholdCount()
+  fetchMemberCount()
+})
 </script>
 
 <template>
@@ -28,7 +57,7 @@ const user = ref(JSON.parse(localStorage.getItem('userData')))
                 Household Recorded
               </div>
               <h4 class="text-h4">
-                14,000
+                {{householdCount}}
               </h4>
             </div>
           </VCardText>
@@ -43,7 +72,7 @@ const user = ref(JSON.parse(localStorage.getItem('userData')))
                 Total Household Members recorded
               </div>
               <h4 class="text-h4">
-                150,000
+                {{memberCount}}
               </h4>
             </div>
           </VCardText>

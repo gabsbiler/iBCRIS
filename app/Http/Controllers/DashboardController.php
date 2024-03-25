@@ -160,4 +160,16 @@ class DashboardController extends Controller
 
         return $dbResponse;
     }
+
+    public function countMembers()
+    {
+        $result = DB::table('member_details')->count();
+        return $result;
+    }
+
+    public function countHousehold()
+    {
+        $result = DB::table('households')->count();
+        return $result;
+    }
 }
