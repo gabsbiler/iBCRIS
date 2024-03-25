@@ -78,11 +78,8 @@ const updateCASLAbilities = (userRole) => {
     } else if (userRole === 'brgyAdmin' ){
       abilities.push(
           { action: 'Access', subject: 'Dashboard' },
-          { action: 'Access', subject: 'Users' },
           { action: 'Access', subject: 'Records' },
-          { action: 'Access', subject: 'Lookups' },
-          { action: 'Access', subject: 'MassUpload' },
-          { action: 'Access', subject: 'RecordBatch' },
+          { action: 'Access', subject: 'Reports' },
       );
     }else if (userRole === 'brgyEncoder') {
       abilities.push(
