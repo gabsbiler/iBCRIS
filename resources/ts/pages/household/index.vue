@@ -195,8 +195,12 @@ const headers = [
     key: 'household_container.name'
   },
   {
-    title: "BRGY/PUROK/SITIO",
+    title: "BRGY/PUROK",
     key: 'Barangay',
+  },
+  {
+    title: "SITIO",
+    key: 'sitio',
   },
   {
     title: "BSN",

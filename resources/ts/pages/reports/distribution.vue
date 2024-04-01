@@ -207,11 +207,26 @@ onMounted(()=> {
     </VCard>
     <VCard>
       <VCardTitle class="d-flex justify-space-between align-center" @click="isSettingVisible = !isSettingVisible">
-        <h6 class="text-h6">Filter</h6>
-        <VBtn 
-          :icon="isSettingVisible ? 'mdi-chevron-up' : 'mdi-chevron-down'"
-          variant="text"
-        />
+        
+        <div class="d-flex gap-x-3 align-center">
+          <h6 class="text-h6">Filter</h6>
+          
+        </div>
+        <div class="d-flex gap-x-3 align-center">
+          <VBtn 
+            @click="exportData" 
+            variant="outlined"
+            :disabled="!(data)"
+            v-if="!isSettingVisible"
+          >
+            Export Result
+          </VBtn>
+          <VBtn 
+            :icon="isSettingVisible ? 'mdi-chevron-up' : 'mdi-chevron-down'"
+            variant="text"
+          />
+        </div>
+        
       </VCardTitle>
       <VExpandTransition>
         <div v-show="isSettingVisible">
@@ -282,7 +297,7 @@ onMounted(()=> {
             
             <VDivider class="my-5"/>
             <div class="d-flex justify-space-between">
-              <VBtn @click="exportData" :disabled="!(settings.barangay.length > 0)" variant="outlined">
+              <VBtn @click="exportData" :disabled="!(data)" variant="outlined">
                 Export Result
               </VBtn>
               <div>

@@ -34,6 +34,8 @@ const authThemeImg = useGenerateImageVariant(
   authV2LoginIllustrationBorderedDark,
   true)
 
+const errorMessage = ref()
+
 const authThemeMask = useGenerateImageVariant(authV2MaskLight, authV2MaskDark)
 
 const onSubmit = async () => {
@@ -62,6 +64,7 @@ const onSubmit = async () => {
     // router.replace(route.query.to ? String(route.query.to) : '/');
   } catch (error) {
     console.error(error);
+    errorMessage.value = error.response.data.message
     isPromptShow.value = true;
   }
 };
@@ -183,7 +186,7 @@ const updateCASLAbilities = (userRole) => {
                   >
                     Login
                   </VBtn>
-                  <p class="text-error mt-1" v-show="isPromptShow">Please check your email and password.</p>
+                  <p class="text-error mt-1" v-show="isPromptShow">{{errorMessage ? errorMessage : 'Please check your email and password.'}}</p>
                 </VCol>
 
               </VRow>
