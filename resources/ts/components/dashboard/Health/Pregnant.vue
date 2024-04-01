@@ -4,7 +4,7 @@ import axiosIns from '@/plugins/axios';
 const data = ref()
 const fetchData = async () => {
   try{  
-    const response = await axiosIns.get('/api/dashboard/member/count-lookup/39A/1')
+    const response = await axiosIns.get(`/api/dashboard/member/count-lookup/39A/1?barangay=${localStorage.getItem('selectedBarangay')}`)
     data.value = response.data
   }catch(e){
     console.log(e)

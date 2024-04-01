@@ -1,12 +1,14 @@
 <script setup lang="ts">
-
+const fetchAll = () => {
+  location.reload()
+}
 </script>
 
 <template>
   <div>
     <VRow>
       <VCol cols="12">
-        <HeadCard />
+        <HeadCard @change-barangay="fetchAll"/>
       </VCol>
 
       <VDivider/>

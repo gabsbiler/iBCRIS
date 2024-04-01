@@ -5,7 +5,7 @@ const data =ref()
 
 const fetchData = async () => {
   try{  
-    const response = await axiosIns.get('/api/dashboard/member/count/44_2')
+    const response = await axiosIns.get(`/api/dashboard/member/count/44_2?barangay=${localStorage.getItem('selectedBarangay')}`)
     const sortedArray = Object.entries(response.data).sort((a, b) => b[1] - a[1]);
 
     const top7 = sortedArray.slice(0, 7);

@@ -128,7 +128,7 @@ class DashboardController extends Controller
     }
 
 
-    public function count($column_number = 11)
+    public function count($column_number = 11, Request $request)
     {
         $data = [];
 
@@ -137,11 +137,16 @@ class DashboardController extends Controller
             ->get();
 
         foreach ($lookups as $lookup) {
-            $dbResponse = DB::table('households')
+            $query = DB::table('households')
                 ->join('household_members', 'households.id', '=', 'household_members.household_id')
                 ->join('member_details', 'household_members.id', '=', 'member_details.household_member_id')
-                ->where('member_details._' . $column_number, $lookup['lookup_key'])
-                ->count();
+                ->where('member_details._' . $column_number, $lookup['lookup_key']);
+
+            if ($request->has('barangay')) {
+                $query->where('households.barangay', $request->barangay);
+            }
+
+            $dbResponse = $query->count();
 
             $data[$lookup->description] = $dbResponse;
         }
@@ -149,27 +154,48 @@ class DashboardController extends Controller
         return $data;
     }
 
-    public function countLookup($column_number = 11, $lookup_number = 00)
+
+    public function countLookup($column_number = 11, $lookup_number = 00, Request $request)
     {
         $dbResponse = DB::table('households')
             ->join('household_members', 'households.id', '=', 'household_members.household_id')
             ->join('member_details', 'household_members.id', '=', 'member_details.household_member_id')
-            ->where('member_details._' . $column_number, $lookup_number)
-            ->count();
+            ->where('member_details._' . $column_number, $lookup_number);
 
 
-        return $dbResponse;
-    }
+        if ($request->has('barangay')) {
+            $dbResponse->where('households.barangay', $request->barangay);
+        }
 
-    public function countMembers()
-    {
-        $result = DB::table('member_details')->count();
+        $result = $dbResponse->count();
         return $result;
     }
 
-    public function countHousehold()
+    public function countMembers(Request $request)
     {
-        $result = DB::table('households')->count();
+        $query = DB::table('household_members')
+            ->join('households', 'household_members.household_id', '=', 'households.id')
+            ->join('member_details', 'household_members.id', '=', 'member_details.household_member_id');
+
+        if ($request->has('barangay')) {
+            $query->where('households.barangay', $request->barangay);
+        }
+
+        $result = $query->count();
+        return $result;
+    }
+
+
+
+    public function countHousehold(Request $request)
+    {
+        $query = DB::table('households');
+
+        if ($request->has('barangay')) {
+            $query->where('households.barangay', $request->barangay);
+        }
+
+        $result = $query->count();
         return $result;
     }
 }

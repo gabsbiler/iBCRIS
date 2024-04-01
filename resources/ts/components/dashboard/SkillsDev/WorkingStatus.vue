@@ -117,7 +117,7 @@ const getDonutChartConfig = (themeColors: ThemeInstance['themes']['value']['colo
 
 const fetchData = async () => {
   try{  
-    const response = await axiosIns.get('/api/dashboard/member/count/14A')
+    const response = await axiosIns.get(`/api/dashboard/member/count/14A?barangay=${localStorage.getItem('selectedBarangay')}`)
     labels.value = Object.keys(response.data)
     series.value = Object.values(response.data)
 

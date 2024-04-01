@@ -80,7 +80,7 @@ const series = ref([
 
 const fetchData = async () => {
   try{  
-    const response = await axiosIns.get('/api/dashboard/member/count/9')
+    const response = await axiosIns.get(`/api/dashboard/member/count/9?barangay=${localStorage.getItem('selectedBarangay')}`)
     // Convert the object into an array of [key, value] pairs and sort
     const sortedArray = Object.entries(response.data).sort((a, b) => b[1] - a[1]);
 
