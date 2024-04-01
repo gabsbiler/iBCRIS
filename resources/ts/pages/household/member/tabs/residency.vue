@@ -52,7 +52,11 @@ const is15cDisabled = computed(() => {
   return member.value.demographic._15a !== '0000';
 });
 
+const router = useRouter(); // This is the router instance
 
+const goBack = () => {
+  router.go(-1); // Navigate to the previous page
+};
 </script>
 
 <template>
@@ -230,10 +234,9 @@ const is15cDisabled = computed(() => {
                   <VBtn
                     color="secondary"
                     variant="outlined"
-                    type="reset"
-                    @click.prevent="resetForm"
+                    @click="goBack"
                   >
-                    Reset
+                    Back
                   </VBtn>
                 </VCol>
               </VRow>

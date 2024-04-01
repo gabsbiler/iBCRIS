@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import axios from '@axios';
-import avatar1 from '@images/avatars/avatar-1.png';
 import backdrop from '@images/pages/background-1.jpg';
 import { VDataTable } from 'vuetify/labs/VDataTable';
 
@@ -181,14 +180,6 @@ const updateHouseholdSurveyStatus = async (householdId, newSurveyStatus) => {
         class="d-flex align-bottom flex-sm-row flex-column justify-center gap-x-4"
         style="min-height: 125px;"
       >
-        <div class="d-flex h-0">
-          <VAvatar
-            rounded
-            size="125"
-            :image="avatar1"
-            class="user-profile-avatar mx-auto"
-          />
-        </div>
 
         <div class="user-profile-info w-100 mt-16 pt-6 pt-sm-0 mt-sm-0">
           <div class="d-flex align-center justify-center justify-sm-space-between flex-wrap gap-4">

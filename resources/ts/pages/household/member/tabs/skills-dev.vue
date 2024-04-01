@@ -43,7 +43,11 @@ const onSubmit = async() => {
   }
 }
 
+const router = useRouter(); // This is the router instance
 
+const goBack = () => {
+  router.go(-1); // Navigate to the previous page
+};
 </script>
 
 <template>
@@ -222,10 +226,9 @@ const onSubmit = async() => {
                   <VBtn
                     color="secondary"
                     variant="outlined"
-                    type="reset"
-                    @click.prevent="resetForm"
+                    @click="goBack"
                   >
-                    Reset
+                    Back
                   </VBtn>
                 </VCol>
               </VRow>

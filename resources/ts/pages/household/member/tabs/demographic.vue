@@ -44,6 +44,12 @@ const resetAvatar = () => {
   avatarImg.value = avatar1
 }
 
+const router = useRouter(); // This is the router instance
+
+const goBack = () => {
+  router.go(-1); // Navigate to the previous page
+};
+
 const route = useRoute()
 
 const resetForm = async() => {
@@ -107,64 +113,9 @@ onBeforeMount(() => {
   <VRow v-if="member && lookups">
     <VCol cols="12">
       <VCard>
-        <VCardText class="d-flex">
-          <!-- 👉 Avatar -->
-          <VAvatar
-            rounded="sm"
-            size="120"
-            class="me-6"
-            :image="avatarImg"
-          />
-
-          <!-- 👉 Upload Photo -->
-          <form class="d-flex flex-column justify-center gap-4">
-            <div class="d-flex flex-wrap gap-4">
-              <VBtn
-                color="primary"
-                @click="refInputEl?.click()"
-              >
-                <VIcon
-                  icon="mdi-cloud-upload-outline"
-                  class="d-sm-none"
-                />
-                <span class="d-none d-sm-block">Upload new photo</span>
-              </VBtn>
-
-              <input
-                ref="refInputEl"
-                type="file"
-                name="file"
-                accept=".jpeg,.png,.jpg,GIF"
-                hidden
-                @input="changeAvatar"
-              >
-
-              <VBtn
-                type="reset"
-                color="error"
-                variant="tonal"
-                @click="resetAvatar"
-              >
-                <span class="d-none d-sm-block">Reset</span>
-                <VIcon
-                  icon="mdi-refresh"
-                  class="d-sm-none"
-                />
-              </VBtn>
-            </div>
-            <p class="text-xs mb-0">
-              Allowed JPG, GIF or PNG. Max size of 800K
-            </p>
-          </form>
-          <VSpacer />
-          <!-- <VBtn
-            icon="mdi-content-save-outline"
-            @click.prevent="submitForm"
-          /> -->
-        </VCardText>
         <VCardText>
           <!-- 👉 Form -->
-          <VForm class="mt-6" @submit.prevent="onSubmit" ref="refForm">
+          <VForm @submit.prevent="onSubmit" ref="refForm">
             <!-- DEMOGRAPHICS CHARACTERISTICS -->
             <div>
               <VText class="text-button">
@@ -378,10 +329,9 @@ onBeforeMount(() => {
                   <VBtn
                     color="secondary"
                     variant="outlined"
-                    type="reset"
-                    @click.prevent="resetForm"
+                    @click="goBack"
                   >
-                    Reset
+                    Back
                   </VBtn>
                 </VCol>
               </VRow>

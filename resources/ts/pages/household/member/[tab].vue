@@ -1,16 +1,15 @@
 <script setup>
 import BirthMariages from '@/pages/household/member/tabs/birth-mariages.vue';
 
+import Death from '@/pages/household/member/tabs/death.vue';
 import Demographic from '@/pages/household/member/tabs/demographic.vue';
 import Health from '@/pages/household/member/tabs/health.vue';
-import Skills from '@/pages/household/member/tabs/skills-dev.vue';
 import Residency from '@/pages/household/member/tabs/residency.vue';
-import SocioCivi from '@/pages/household/member/tabs/sociocivi.vue'
-import teenagePregnancy from '@/pages/household/member/tabs/teenage-pregnancy.vue'
-import Death from '@/pages/household/member/tabs/death.vue';
-import avatar1 from '@images/avatars/avatar-1.png';
-import {watch} from 'vue'
-import axios from "@axios"
+import Skills from '@/pages/household/member/tabs/skills-dev.vue';
+import SocioCivi from '@/pages/household/member/tabs/sociocivi.vue';
+import teenagePregnancy from '@/pages/household/member/tabs/teenage-pregnancy.vue';
+import axios from "@axios";
+import { watch } from 'vue';
 
 const route = useRoute()
 
@@ -131,19 +130,19 @@ onMounted(() => {
 
 <template>
   <div v-if="member && householdInfo">
-    <VCard style="min-height: 10rem;">
+    <VCard >
       <VCardText
         class="d-flex align-bottom flex-sm-row flex-column justify-center gap-x-4"
-        style="min-height: 125px;"
+        style="min-height: 100px;"
       >
-        <div class="d-flex h-0">
+        <!-- <div class="d-flex h-0">
           <VAvatar
             rounded
             size="125"
             :image="avatar1"
             class=" mx-auto"
           />
-        </div>
+        </div> -->
 
         <div class="w-100 mt-16 pt-6 pt-sm-0 mt-sm-0">
           <div class="d-flex align-center justify-center justify-sm-space-between flex-wrap gap-4">
