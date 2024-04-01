@@ -10,7 +10,7 @@ const isTableVisible = ref(false)
 <template>
   <VCard>
     <VCardTitle class="mt-3 d-flex justify-space-between">
-      <h6 class="text-h6">Male (Single & Married)</h6>
+      <h6 class="text-h6">Age Distribution by Sex</h6>
     </VCardTitle>
     <VCardText>
       <div class="mt-5">

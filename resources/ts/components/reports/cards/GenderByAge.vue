@@ -6,7 +6,7 @@ const props = defineProps(['data'])
 <template>
   <VCard>
     <VCardTitle class="mt-3 d-flex justify-space-between">
-      <h6 class="text-h6">Age Distribution by Gender</h6>
+      <h6 class="text-h6">Age Distribution by Sex</h6>
       <!-- <VBtn variant="text" @click="isTableVisible = !isTableVisible">Show Table</VBtn> -->
     </VCardTitle>
     <VCardText>
