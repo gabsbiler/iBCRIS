@@ -72,7 +72,7 @@ const goBack = () => {
                 <p>Person who died in the last five years</p>
               </VText>
               <VRow class="mt-2">
-                <VCol
+                <!-- <VCol
                   cols="12"
                   md="4"
                 >
@@ -101,8 +101,8 @@ const goBack = () => {
                     label="(27c) Middle Name"
                     :base-color="member.demographic._27c ? null : 'warning'"
                   />
-                </VCol>
-                <VCol
+                </VCol> -->
+                <!-- <VCol
                   md="6"
                   cols="12"
                 > 
@@ -114,9 +114,9 @@ const goBack = () => {
                     item-value="lookup_key"
                     :base-color="member.demographic._28 ? null : 'warning'"
                   />
-                </VCol>
+                </VCol> -->
                 
-                <VCol
+                <!-- <VCol
                   md="6"
                   cols="12"
                 >
@@ -128,8 +128,8 @@ const goBack = () => {
                     item-value="lookup_key"
                     :base-color="member.demographic._29 ? null : 'warning'"
                   />
-                </VCol>
-                <VCol
+                </VCol> -->
+                <!-- <VCol
                   cols="12"
                   md="4"
                 >
@@ -138,10 +138,10 @@ const goBack = () => {
                     label="(30) Date of Birth"
                     :base-color="member.demographic._30 ? null : 'warning'"
                   />
-                </VCol>
+                </VCol> -->
                 <VCol
                   cols="12"
-                  md="4"
+                  md="6"
                 >
                   <AppDateTimePicker
                     v-model="member.demographic._31"
@@ -150,7 +150,7 @@ const goBack = () => {
                   />
                 </VCol>
                 <VCol
-                  md="4"
+                  md="6"
                   cols="12"
                 >
                   <VTextField

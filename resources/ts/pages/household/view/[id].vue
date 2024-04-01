@@ -25,6 +25,8 @@ const isSnackbarSuccessVisible = ref(false)
 const alertMessage = ref()
 const type = ref()
 
+const deceasedCount = ref()
+
 const showSnackBar = data => {
   alertMessage.value = data.message
   type.value = data.type
@@ -41,6 +43,12 @@ async function fetchData(){
 
     householdInfo.value = response.data
     containerId.value = householdInfo.value.household_container.id
+
+    deceasedCount.value = householdInfo.value.household_members.filter(item => {
+      if(item.demographic.tags == 'dead') {
+        return item
+      }
+    }).length
   } catch (error) {
     console.log(error)
   }
@@ -371,7 +379,7 @@ const updateHouseholdSurveyStatus = async (householdId, newSurveyStatus) => {
     </VCard>
 
     <VCard
-      v-if="householdInfo"
+      v-if="householdInfo && deceasedCount>0"
       class="mt-3"
     >
       <VCardText>

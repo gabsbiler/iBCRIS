@@ -12,7 +12,6 @@ import axios from "@axios";
 import { watch } from 'vue';
 
 const route = useRoute()
-
 const activeTab = ref(route.params.tab || 'demographics');
 
 const member = ref()
@@ -73,7 +72,12 @@ async function switchToDeath(){
       isDead: death.value
     });
     console.log(response.data.message); // Success message
-    route.params.tab = "death"
+    
+    if(death.value == true){
+      route.params.tab = "death"
+    }else{
+      route.params.tab = "demographics"
+    }
   } catch (error) {
     console.error('Error updating member status:', error);
     // Handle the error
@@ -202,20 +206,6 @@ onMounted(() => {
           class="v-tabs-pill"
         >
           <VTab
-            v-if="!death"
-            v-for="item in tabs"
-            :key="item.icon"
-            :value="item.tab"
-            :to="{ name: 'household-member-tab', params: { tab: item.tab }, query:{member_id:route.query.member_id, household_id:route.query.household_id}}"
-          >
-              <VIcon
-                size="20"
-                start
-                :icon="item.icon"
-              />
-              {{ item.title }}
-          </VTab>
-          <VTab
             v-if="death"
             key="mdi-coffin"
             value="death"
@@ -228,6 +218,20 @@ onMounted(() => {
             />
             Death
           </VTab>
+          <VTab
+            v-for="item in tabs"
+            :key="item.icon"
+            :value="item.tab"
+            :to="{ name: 'household-member-tab', params: { tab: item.tab }, query:{member_id:route.query.member_id, household_id:route.query.household_id}}"
+          >
+              <VIcon
+                size="20"
+                start
+                :icon="item.icon"
+              />
+              {{ item.title }}
+          </VTab>
+          
         </VTabs>
       </VCol>
       <VCol cols="12" v-if="member && lookups">
@@ -236,6 +240,12 @@ onMounted(() => {
           class="disable-tab-transition"
           :touch="true"
         >
+          <!-- Death -->
+          <VWindowItem value="death">
+            <Death :member="member" :lookups="lookups"/>
+          </VWindowItem>
+
+
           <!-- Demographics -->
           <VWindowItem value="demographics">
             <Demographic :member="member" :lookups="lookups"/>
@@ -273,16 +283,10 @@ onMounted(() => {
             <teenagePregnancy :member="member" :lookups="lookups"/>
           </VWindowItem>
 
-          <!-- Death -->
-          <VWindowItem value="death">
-            <Death :member="member" :lookups="lookups"/>
-          </VWindowItem>
+          
         </VWindow>
       </VCol>
     </VRow>
-    
-
-    
   </div>
 </template>
 
