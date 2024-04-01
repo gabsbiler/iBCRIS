@@ -94,6 +94,12 @@ class AuthController extends Controller
         }
 
         $user = $request->user();
+
+        if ($user['activation'] == false) {
+            return response()->json([
+                'message' => 'Account not activated'
+            ], 401);
+        }
         $tokenResult = $user->createToken('Personal Access Token');
         $token = $tokenResult->plainTextToken;
 
@@ -197,6 +203,7 @@ class AuthController extends Controller
     {
         // Validate the incoming request
         $request->validate([
+            'activation' => 'sometimes|boolean',
             'name' => 'sometimes|string',
             'username' => 'sometimes|string|unique:users,username,' . $id,
             'barangay' => 'nullable|string',
@@ -218,6 +225,7 @@ class AuthController extends Controller
         $user->barangay = $request->input('barangay', $user->barangay);
         $user->role = $request->input('role', $user->role);
         $user->email = $request->input('email', $user->email);
+        $user->activation = $request->input('activation', $user->activation);
         if ($request->filled('password')) {
             $user->password = bcrypt($request->input('password'));
         }

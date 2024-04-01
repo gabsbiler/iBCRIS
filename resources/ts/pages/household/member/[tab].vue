@@ -31,12 +31,12 @@ const tabs = [
   },
   {
     title: 'Skills Dev & Economic Act.',
-    icon: 'mdi-lock-open-outline',
+    icon: 'mdi-walk',
     tab: 'skills-dev',
   },
   {
     title: 'Residency & Migration',
-    icon: 'mdi-lock-open-outline',
+    icon: 'mdi-home',
     tab: 'residency',
   },
   {
@@ -184,11 +184,6 @@ onMounted(() => {
                     @click="switchToDeath"
                   />
                   <VLabel for="death-switch" class="me-2 text-body-1"> Deceased </VLabel>
-                </div>
-                <div class="d-flex flex-row-reverse">
-                  <VBtn>
-                    Change Photo
-                  </VBtn>
                 </div>
               </VCol>
             </VRow>

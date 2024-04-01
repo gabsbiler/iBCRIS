@@ -18,6 +18,23 @@ class HouseholdController extends Controller
     {
         $query = Household::with(['householdContainer', 'householdMembers.demographic']);
 
+        // Existing barangay filter...
+        if ($barangays = $request->input('barangays')) {
+            $query->whereIn('Barangay', explode(',', $barangays)); // Assuming barangays are sent as a comma-separated string
+        }
+
+        // Add survey status filter
+        if ($request->has('surveyStatus')) {
+            $query->where('surveyStatus', $request->input('surveyStatus') === 'true');
+        }
+
+        if ($containers = $request->input('containers')) {
+            $containerNames = explode(',', $containers);
+            $query->whereHas('householdContainer', function ($query) use ($containerNames) {
+                $query->whereIn('name', $containerNames);
+            });
+        }
+
         // Search
         if ($search = $request->input('search')) {
             $query->where('BSN', 'like', "%{$search}%")

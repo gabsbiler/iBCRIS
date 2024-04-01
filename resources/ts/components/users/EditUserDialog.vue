@@ -26,6 +26,7 @@ const user = ref({
   username: '',
   role: null,
   barangay: null,
+  activation: false
 })
 
 const password = ref({
@@ -90,6 +91,25 @@ const updateUser = async () => {
     loading.value = false;
   }
 };
+
+const updateActivation = async () => {
+  loading.value = true
+
+  let payload = {
+    activation: !user.value.activation
+  }
+
+  try {
+    const response = await axiosIns.patch(`/api/user/${user.value.id}`, payload);
+    emits('applied')
+    // isDialogOpen.value = false
+    fetchUser(user.value.id)
+  } catch (error) {
+    console.error('Error updating user:', error);
+  } finally {
+    loading.value = false;
+  }
+}
 
 const formattedDateTime =(datetime)=> {
   const options = { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit', timeZone: 'Asia/Manila'};
@@ -201,6 +221,9 @@ const emits = defineEmits(['applied'])
           } 
         }">
           {{changePasswordEntry ? 'Cancel' : 'Change password'}}
+        </VBtn>
+        <VBtn :variant="user.activation ? 'elevated' : 'outlined'" @click="updateActivation()" :loading="loading">
+          {{ user.activation ? "Activated" : "Activate" }}
         </VBtn>
         <VSpacer></VSpacer>
         <VBtn type="submit" :loading="loading" @click="updateUser">

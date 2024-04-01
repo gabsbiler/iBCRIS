@@ -20,14 +20,13 @@
                 <VCombobox 
                   label="Selected Barangay" 
                   :items="baranggayList"
+                  v-model="selectedBarangays"
                   clearable
                   multiple
-                  disabled
-                  
                 />
               </VCol>
               <VCol cols="12" md="6">
-                <VSelect 
+                <VSelect
                   label="Survey Status"
                   :items="[
                     {status: 'Completed', value: true},
@@ -36,18 +35,19 @@
                   ]"
                   item-title="status"
                   item-value="value"
-                  disabled
-
+                  v-model="selectedSurveyStatus"
                 />
               </VCol>
               <VDivider></VDivider>
               <VCol cols="12"> 
                 <VRow >
                   <VCol v-for="i in containers" :key="i">
-                    <VBtn block variant="outlined" v-if="search!=i.name" @click="() => {search = search === i.name ? '' : i.name}">
-                      {{ i.name }}
-                    </VBtn>
-                    <VBtn block  v-else  @click="() => {search = search === i.name ? '' : i.name}">
+                    <VBtn
+                      block
+                      variant="outlined"
+                      :color="selectedContainers.includes(i.name) ? 'primary' : ''"
+                      @click="toggleContainerSelection(i.name)"
+                    >
                       {{ i.name }}
                     </VBtn>
                   </VCol>
@@ -183,6 +183,9 @@ const isSnackbarSuccessVisible = ref(false)
 const alertMessage = ref()
 const type = ref()
 const baranggayList = ref([])
+const selectedBarangays = ref([]);
+const selectedSurveyStatus = ref('all'); 
+const selectedContainers = ref([]);
 
 const headers = [
   {
@@ -231,28 +234,27 @@ const showSnackBar = data =>{
 }
 
 const fetchData = async (options) => {
-  isLoading.value = true
-  try {
-    let response = {}
-    // const sortByField = sortBy?.[0] ?? '';
-    if(user.role == 'admin'){
-      response = await axiosIns.get('/api/household', {
-        params: options,
-      });
-    }else{
-      response = await axiosIns.get(`/api/household/${user.barangay}`, {
-        params: options,
-      });
-    }
-    
+  isLoading.value = true;
+  const params = new URLSearchParams({
+    ...options,
+    barangays: selectedBarangays.value.join(','),
+    surveyStatus: selectedSurveyStatus.value !== 'all' ? selectedSurveyStatus.value : '',
+    containers: selectedContainers.value.join(','), // Send the selected containers as a parameter
+  });
 
+  try {
+    const response = await axiosIns.get('/api/household', { params });
     households.value = response.data.data;
     totalHouseholds.value = response.data.total;
   } catch (error) {
     console.error('Error fetching data:', error);
+  } finally {
+    isLoading.value = false;
   }
-  isLoading.value=false
 };
+
+
+
 
 const fetchContainers = async () => {
   try {
@@ -293,14 +295,35 @@ const fetchBarangay = async () => {
   }
 }
 
-onMounted(()=> {
+onMounted(async()=> {
   if(user.role === 'admin'){
-    fetchBarangay()
+    await fetchBarangay()
   }else{
     baranggayList.value  = [user.barangay]
   }
-  fetchContainers()
+  await fetchContainers()
+
+  console.log(households.value)
 })
+
+watch(selectedBarangays, () => {
+  fetchData();
+});
+
+watch(selectedSurveyStatus, () => {
+  fetchData();
+})
+
+const toggleContainerSelection = (name) => {
+  const index = selectedContainers.value.indexOf(name);
+  if (index === -1) {
+    selectedContainers.value.push(name);
+  } else {
+    selectedContainers.value.splice(index, 1);
+  }
+  fetchData(); // Refetch data with the updated filters
+};
+
 </script>
 
 
