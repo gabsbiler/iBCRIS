@@ -60,7 +60,7 @@
       </VExpandTransition>
     </VCard>
 
-    <!-- Data tables -->
+    <!-- Alive Data tables -->
     <VCard>
       <VCardText class="d-flex flex-wrap gap-4 flex-column">
         <VRow>
@@ -163,6 +163,8 @@
         </template>
       </VSnackbar>
     </VCard>
+
+    
   </section>
 </template>
 

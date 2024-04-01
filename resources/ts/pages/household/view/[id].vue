@@ -9,6 +9,7 @@ const householdInfo = ref()
 const containers = ref()
 const progress = ref(97)
 const search = ref()
+const searchDeceased = ref()
 const containerId = ref()
 
 const lookups = ref([])
@@ -243,151 +244,271 @@ const updateHouseholdSurveyStatus = async (householdId, newSurveyStatus) => {
       </VCardText>
     </VCard>
 
-  <VCard
-    v-if="householdInfo"
-    class="mt-3"
-  >
-    <VCardText>
-      <VRow>
-        <VCol  class="d-flex gap-x-3">
-          <VBtn
-            color="primary"
-            @click="addMemberConfirmationBox = true"
-          >
-            Add Member
-          </VBtn>
-        </VCol>
-        <VCol offset-md="4">
-          <VTextField
-            v-model="search"
-            density="compact"
-            label="Search"
-            append-inner-icon="mdi-magnify"
-            single-line
-            hide-details
-            dense
-            outlined
+    <VCard
+      v-if="householdInfo"
+      class="mt-3"
+    >
+      <VCardText>
+        <VRow>
+          <VCol  class="d-flex gap-x-3">
+            <VBtn
+              color="primary"
+              @click="addMemberConfirmationBox = true"
+            >
+              Add Member
+            </VBtn>
+          </VCol>
+          <VCol class="d-flex justify-end">
+            <VTextField
+              v-model="search"
+              density="compact"
+              label="Search"
+              append-inner-icon="mdi-magnify"
+              single-line
+              hide-details
+              dense
+              outlined
+              style="max-width: 20rem;"
+            />
+          </VCol>
+          
+          <ConfirmDialog 
+            :isDialogVisible="addMemberConfirmationBox" 
+            confirmationQuestion="Add another member?" 
+            @confirm="addMember"
+            @cancel="addMemberConfirmationBox=false"
           />
-        </VCol>
-        
-        <ConfirmDialog 
-          :isDialogVisible="addMemberConfirmationBox" 
-          confirmationQuestion="Add another member?" 
-          @confirm="addMember"
-          @cancel="addMemberConfirmationBox=false"
-        />
-        <VBtn
-          class="me-3 my-3 d-md-none"
-          color="primary"
-          icon="mdi-plus"
-        />
-      </VRow>
-    </VCardText>
-    
-    <VCardText>
-      <VDataTable
-        :headers="headers"
-        :items="householdInfo.household_members"
-        :search="search"
-      >
-        <template #item.actions="{ item }">
-          <div class="d-flex px-auto gap-1">
-            <IconBtn @click="confirmDelete(item.raw.id)">
-              <VIcon icon="mdi-delete-outline" />
-            </IconBtn>
-            <IconBtn>
-              <RouterLink :to="{name: 'household-member-tab', params: {tab: 'demographics'}, query:{
-                member_id:item.raw.id,
-                household_id: item.raw.household_id}}">
-                <VIcon
-                  icon="
-                mdi-information-slab-circle-outline"
-                />
-              </RouterLink>
-            </IconBtn>
-          </div>
-        </template>
+          <VBtn
+            class="me-3 my-3 d-md-none"
+            color="primary"
+            icon="mdi-plus"
+          />
+        </VRow>
+      </VCardText>
+      
+      <VCardText>
+        <VDataTable
+          :headers="headers"
+          :items="householdInfo.household_members.filter(item => {
+            if(item.demographic.tags == 'alive') {
+              return item
+            }
+          })"
+          :search="search"
+        >
+          <template #item.actions="{ item }">
+            <div class="d-flex px-auto gap-1">
+              <IconBtn @click="confirmDelete(item.raw.id)">
+                <VIcon icon="mdi-delete-outline" />
+              </IconBtn>
+              <IconBtn>
+                <RouterLink :to="{name: 'household-member-tab', params: {tab: 'demographics'}, query:{
+                  member_id:item.raw.id,
+                  household_id: item.raw.household_id}}">
+                  <VIcon
+                    icon="
+                  mdi-information-slab-circle-outline"
+                  />
+                </RouterLink>
+              </IconBtn>
+            </div>
+          </template>
 
-        <template #item.name="{ item }">
-          {{ item.raw.demographic.lastname +', '+ item.raw.demographic.firstname + ' '+ item.raw.demographic.middlename }}
-        </template>
-        <!-- lookups.value.find(lookup => lookup.lookup_name === 'Relationship').find(lookupkey => lookupkey === '') -->
-        <template #item.demographic.relationship="{ item }">
-          {{lookups.filter(lookup => lookup.column_number === '3')[0]?.lookup_list.filter(lookupkey => lookupkey.lookup_key === item.raw.demographic._3)[0]?.description || "Not Specified" }}
-        </template>
+          <template #item.name="{ item }">
+            {{ item.raw.demographic.lastname +', '+ item.raw.demographic.firstname + ' '+ item.raw.demographic.middlename }}
+          </template>
+          <!-- lookups.value.find(lookup => lookup.lookup_name === 'Relationship').find(lookupkey => lookupkey === '') -->
+          <template #item.demographic.relationship="{ item }">
+            {{lookups.filter(lookup => lookup.column_number === '3')[0]?.lookup_list.filter(lookupkey => lookupkey.lookup_key === item.raw.demographic._3)[0]?.description || "Not Specified" }}
+          </template>
 
-        <template #item.demographic.sex="{ item }">
-          {{lookups.filter(lookup => lookup.column_number === '5')[0]?.lookup_list.filter(lookupkey => lookupkey.lookup_key === item.raw.demographic._5)[0]?.description || "Not Specified"}}
-        </template>
+          <template #item.demographic.sex="{ item }">
+            {{lookups.filter(lookup => lookup.column_number === '5')[0]?.lookup_list.filter(lookupkey => lookupkey.lookup_key === item.raw.demographic._5)[0]?.description || "Not Specified"}}
+          </template>
 
-        <template #item.demographic.age="{ item }">
-          {{
-            new Date().getFullYear() - new Date(item.raw.demographic._6).getFullYear() - (new Date().getMonth() < new Date(item.raw.demographic._6).getMonth() || (new Date().getMonth() === new Date(item.raw.demographic._6).getMonth() && new Date().getDate() < new Date(item.raw.demographic._6).getDate()) ? 1 : 0)
-          }}
-        </template>
+          <template #item.demographic.age="{ item }">
+            {{
+              new Date().getFullYear() - new Date(item.raw.demographic._6).getFullYear() - (new Date().getMonth() < new Date(item.raw.demographic._6).getMonth() || (new Date().getMonth() === new Date(item.raw.demographic._6).getMonth() && new Date().getDate() < new Date(item.raw.demographic._6).getDate()) ? 1 : 0)
+            }}
+          </template>
 
-        <template #item.demographic.tags="{ item }">
-          <span v-for="(val, index) in item.raw.demographic.tags.split(',')" :key="index">
-            <span v-if="val.trim() == 'alive'">
-              <VChip
-                color="success"
-                class="font-weight-medium"
-                size="small"
-              >
-                Alive
-            </VChip>
-            </span>
-            <span v-if="val.trim() == 'teenage_pregnancy'">
-              <VChip
-                color="gray"
-                class="font-weight-medium"
-                size="small"
-              >
-                Teenage Pregnancy
-            </VChip>
-            </span>
-            <span v-if="val.trim() == 'dead'">
-              <VChip
-                color="error"
-                class="font-weight-medium"
-                size="small"
-              >
-                Deceased
+          <template #item.demographic.tags="{ item }">
+            <span v-for="(val, index) in item.raw.demographic.tags.split(',')" :key="index">
+              <span v-if="val.trim() == 'alive'">
+                <VChip
+                  color="success"
+                  class="font-weight-medium"
+                  size="small"
+                >
+                  Alive
               </VChip>
+              </span>
+              <span v-if="val.trim() == 'teenage_pregnancy'">
+                <VChip
+                  color="gray"
+                  class="font-weight-medium"
+                  size="small"
+                >
+                  Teenage Pregnancy
+              </VChip>
+              </span>
+              <span v-if="val.trim() == 'dead'">
+                <VChip
+                  color="error"
+                  class="font-weight-medium"
+                  size="small"
+                >
+                  Deceased
+                </VChip>
+              </span>
+              
+              
             </span>
-            
-            
-          </span>
-        </template>
+          </template>
 
-      </VDataTable>
-    </VCardText>
+        </VDataTable>
+      </VCardText>
+    </VCard>
+
+    <VCard
+      v-if="householdInfo"
+      class="mt-3"
+    >
+      <VCardText>
+        <VRow>
+          <VCol class="d-flex justify-space-between">
+            <div class="text-h6">
+              Deceased Members
+            </div>
+            <VTextField
+              v-model="searchDeceased"
+              density="compact"
+              label="Search"
+              append-inner-icon="mdi-magnify"
+              single-line
+              hide-details
+              dense
+              outlined
+              style="max-width: 20rem;"
+            />
+          </VCol>
+
+          <VBtn
+            class="me-3 my-3 d-md-none"
+            color="primary"
+            icon="mdi-plus"
+          />
+        </VRow>
+      </VCardText>
+      
+      <VCardText>
+        <VDataTable
+          :headers="headers"
+          :items="householdInfo.household_members.filter(item => {
+            if(item.demographic.tags == 'dead') {
+              return item
+            }
+          })"
+          :search="searchDeceased"
+        >
+          <template #item.actions="{ item }">
+            <div class="d-flex px-auto gap-1">
+              <IconBtn @click="confirmDelete(item.raw.id)">
+                <VIcon icon="mdi-delete-outline" />
+              </IconBtn>
+              <IconBtn>
+                <RouterLink :to="{name: 'household-member-tab', params: {tab: 'demographics'}, query:{
+                  member_id:item.raw.id,
+                  household_id: item.raw.household_id}}">
+                  <VIcon
+                    icon="
+                  mdi-information-slab-circle-outline"
+                  />
+                </RouterLink>
+              </IconBtn>
+            </div>
+          </template>
+
+          <template #item.name="{ item }">
+            {{ item.raw.demographic.lastname +', '+ item.raw.demographic.firstname + ' '+ item.raw.demographic.middlename }}
+          </template>
+          <!-- lookups.value.find(lookup => lookup.lookup_name === 'Relationship').find(lookupkey => lookupkey === '') -->
+          <template #item.demographic.relationship="{ item }">
+            {{lookups.filter(lookup => lookup.column_number === '3')[0]?.lookup_list.filter(lookupkey => lookupkey.lookup_key === item.raw.demographic._3)[0]?.description || "Not Specified" }}
+          </template>
+
+          <template #item.demographic.sex="{ item }">
+            {{lookups.filter(lookup => lookup.column_number === '5')[0]?.lookup_list.filter(lookupkey => lookupkey.lookup_key === item.raw.demographic._5)[0]?.description || "Not Specified"}}
+          </template>
+
+          <template #item.demographic.age="{ item }">
+            {{
+              new Date().getFullYear() - new Date(item.raw.demographic._6).getFullYear() - (new Date().getMonth() < new Date(item.raw.demographic._6).getMonth() || (new Date().getMonth() === new Date(item.raw.demographic._6).getMonth() && new Date().getDate() < new Date(item.raw.demographic._6).getDate()) ? 1 : 0)
+            }}
+          </template>
+
+          <template #item.demographic.tags="{ item }">
+            <span v-for="(val, index) in item.raw.demographic.tags.split(',')" :key="index">
+              <span v-if="val.trim() == 'alive'">
+                <VChip
+                  color="success"
+                  class="font-weight-medium"
+                  size="small"
+                >
+                  Alive
+              </VChip>
+              </span>
+              <span v-if="val.trim() == 'teenage_pregnancy'">
+                <VChip
+                  color="gray"
+                  class="font-weight-medium"
+                  size="small"
+                >
+                  Teenage Pregnancy
+              </VChip>
+              </span>
+              <span v-if="val.trim() == 'dead'">
+                <VChip
+                  color="error"
+                  class="font-weight-medium"
+                  size="small"
+                >
+                  Deceased
+                </VChip>
+              </span>
+              
+              
+            </span>
+          </template>
+
+        </VDataTable>
+      </VCardText>
+    </VCard>
+
     <!-- Confirmation Dialog for Deletion -->
     <ConfirmDialog 
-      :isDialogVisible="deleteMemberConfirmationBox" 
-      confirmationQuestion="This will be deleted permanently. Are you sure?" 
-      @confirm="deleteItem"
-      @cancel="deleteMemberConfirmationBox = false"
-    />
-    <VSnackbar
-      v-model="isSnackbarSuccessVisible"
-      location="top center"
-      variant="flat"
-      :color="type"
-    >
-      {{ alertMessage }}
-      <template #actions>
-        <VBtn
-          color="white"
-          @click="isSnackbarSuccessVisible = false"
-        >
-          Close
-        </VBtn>
-      </template>
-    </VSnackbar>
-  </VCard>
+        :isDialogVisible="deleteMemberConfirmationBox" 
+        confirmationQuestion="This will be deleted permanently. Are you sure?" 
+        @confirm="deleteItem"
+        @cancel="deleteMemberConfirmationBox = false"
+      />
+      <VSnackbar
+        v-model="isSnackbarSuccessVisible"
+        location="top center"
+        variant="flat"
+        :color="type"
+      >
+        {{ alertMessage }}
+        <template #actions>
+          <VBtn
+            color="white"
+            @click="isSnackbarSuccessVisible = false"
+          >
+            Close
+          </VBtn>
+        </template>
+      </VSnackbar>
   </section>
-  
 </template>
 
 <style lang="scss">
