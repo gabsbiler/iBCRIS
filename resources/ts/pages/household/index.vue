@@ -22,8 +22,10 @@
                   :items="baranggayList"
                   v-model="selectedBarangays"
                   clearable
+                  :disabled="user.role !== 'admin'"
                   multiple
                 />
+
               </VCol>
               <VCol cols="12" md="6">
                 <VSelect
@@ -180,13 +182,13 @@ const itemsPerPage = ref(15)
 const households = ref([]);
 const totalHouseholds = ref(0);
 const search = ref('');
-
+const user = JSON.parse(localStorage.getItem('userData'))
 const isSnackbarSuccessVisible = ref(false)
 const alertMessage = ref()
 const type = ref()
 const baranggayList = ref([])
-const selectedBarangays = ref([]);
-const selectedSurveyStatus = ref('all'); 
+const selectedBarangays = ref(user.role === 'admin' ? [] : [user.barangay]);
+const selectedSurveyStatus = ref('all');
 const selectedContainers = ref([]);
 
 const headers = [
@@ -290,7 +292,7 @@ const deleteItem = async (householdId) => {
   }
 };
 
-const user = JSON.parse(localStorage.getItem('userData'))
+
 const fetchBarangay = async () => {
   try {
     // Include search in the API call
@@ -301,16 +303,16 @@ const fetchBarangay = async () => {
   }
 }
 
-onMounted(async()=> {
-  if(user.role === 'admin'){
-    await fetchBarangay()
-  }else{
-    baranggayList.value  = [user.barangay]
+onMounted(async () => {
+  if (user.role === 'admin') {
+    await fetchBarangay();
+  } else {
+    // For non-admin users, directly use the user's barangay
+    baranggayList.value = [user.barangay];
+    selectedBarangays.value = [user.barangay];
   }
-  await fetchContainers()
-
-  console.log(households.value)
-})
+  await fetchContainers();
+});
 
 watch(selectedBarangays, () => {
   fetchData();
