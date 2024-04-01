@@ -199,20 +199,23 @@ const updateHouseholdSurveyStatus = async (householdId, newSurveyStatus) => {
                 class="d-flex flex-column"
               >
                 <div class="d-flex gap-x-5">
-                  <span class="d-flex align-center">
-                    <VText>Brgy (Purok/Sitio): <b>{{ householdInfo.Barangay }}</b></VText>
+                  <span class="d-flex align-center" v-if="householdInfo.Barangay">
+                    <VText>Brgy: <b>{{ householdInfo.Barangay }}</b></VText>
                   </span>
-                  <span class="d-flex align-center">
+                  <span class="d-flex align-center" v-if="householdInfo.sitio">
+                    <VText>Purok/Sitio: <b>{{ householdInfo.sitio }}</b></VText>
+                  </span>
+                  <span class="d-flex align-center" v-if="householdInfo.BSN">
                     <VText>BSN: <b>{{ householdInfo.BSN }}</b></VText>
                   </span>
-                  <span class="d-flex align-center">
+                  <span class="d-flex align-center" v-if="householdInfo.HUSN">
                     <VText>HUSN: <b>{{ householdInfo.HUSN }}</b></VText>
                   </span>
-                  <span class="d-flex align-center">
+                  <span class="d-flex align-center" v-if="householdInfo.HSN">
                     <VText>HSN: <b>{{ householdInfo.HSN }}</b></VText>
                   </span>
                 </div>
-                <div class="d-flex">
+                <div class="d-flex" v-if="householdInfo.address">
                     <VText>Complete Address: <b>{{ householdInfo.address }}</b></VText>
                 </div>
               </VCol>
