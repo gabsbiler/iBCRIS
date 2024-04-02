@@ -111,7 +111,7 @@
             item.raw.household_members.find(member => member.head == 1) ?
               item.raw.household_members.find(member => member.head == 1).demographic.lastname  + ", " +
               item.raw.household_members.find(member => member.head == 1).demographic.firstname + " " +
-              item.raw.household_members.find(member => member.head == 1).demographic.middlename
+              (item.raw.household_members.find(member => member.head == 1).demographic.middlename ? item.raw.household_members.find(member => member.head == 1).demographic.middlename : '')
             : 'No Assigned Head'
         
             }}
