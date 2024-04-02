@@ -96,6 +96,31 @@ onMounted(()=> {
   }
   
 })
+
+
+const exportData = async () => {
+  if (!data.value) {
+    SnackBarRef.value.show('error', 'No data to export!');
+    return;
+  }
+
+  // Define your preferred export format (e.g., CSV, Excel)
+
+  // Example for CSV export
+  let csvContent = 'Barangay,No. of Households,Male Count,Female Count,Unkown Count,Total\n';
+  csvContent += data.value.map(item => `${item.barangay},${item.household},${item.male},${item.female},${item.unknown},${item.male + item.female + item.unknown}`).join('\n');
+
+  const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8' });
+  const url = window.URL.createObjectURL(blob);
+
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = 'rbi-report.csv'; // Set your desired filename
+  link.click();
+
+  window.URL.revokeObjectURL(url); // Clean up the temporary URL
+};
+
 </script>
 
 <template>
@@ -113,10 +138,22 @@ onMounted(()=> {
         <h6 class="text-h6">
           Filter
         </h6>
-        <VBtn
-          variant="text" 
-          :icon="isShow ? 'mdi-chevron-up': 'mdi-chevron-down'"
-        />
+        <div>
+          <VBtn 
+            variant="outlined"
+            :disabled="!data"
+            v-if="!isShow"
+            @click="exportData"
+          >
+            Export
+          </VBtn>
+          <VBtn
+            
+            variant="text" 
+            :icon="isShow ? 'mdi-chevron-up': 'mdi-chevron-down'"
+          />
+        </div>
+        
       </VCardTitle>
 
         <VExpandTransition>
@@ -198,7 +235,15 @@ onMounted(()=> {
                 </VChip>
               </div>
             </div>
-            <div class="d-flex justify-end">
+            <div class="d-flex justify-end gap-x-3">
+              <VBtn 
+                variant="outlined"
+                :disabled="!data"
+                v-if="isShow"
+                @click="exportData"
+              >
+                Export
+              </VBtn>
               <VBtn @click="generate" :disabled="!(settings.barangay.length > 0)">
                 Generate
               </VBtn>
