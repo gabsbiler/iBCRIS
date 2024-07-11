@@ -85,10 +85,7 @@
               outlined
               style="max-width: 300px; margin-inline: 0.8rem;"
             />
-            <AddHouseholdDialog
-              @snackbar="showSnackBar"
-              @refresh-table="fetchData"
-            />
+            \
           </VCol>
         </VRow>
         <VDataTableServer

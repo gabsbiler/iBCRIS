@@ -7,17 +7,17 @@ define('LARAVEL_START', microtime(true));
 
 /*
 |--------------------------------------------------------------------------
-| Check If Application Is Under Maintenance
+| Check If The Application Is Under Maintenance
 |--------------------------------------------------------------------------
 |
-| If the application is maintenance / demo mode via the "down" command we
-| will require this file so that any prerendered template can be shown
+| If the application is in maintenance / demo mode via the "down" command
+| we will load this file so that any pre-rendered content can be shown
 | instead of starting the framework, which could cause an exception.
 |
 */
 
-if (file_exists(__DIR__ . '/../../ibcris/storage/framework/maintenance.php')) {
-    require __DIR__ . '/../../ibcris/storage/framework/maintenance.php';
+if (file_exists($maintenance = __DIR__ . '/../storage/framework/maintenance.php')) {
+    require $maintenance;
 }
 
 /*
@@ -31,7 +31,7 @@ if (file_exists(__DIR__ . '/../../ibcris/storage/framework/maintenance.php')) {
 |
 */
 
-require __DIR__ . '/../../ibcris/vendor/autoload.php';
+require __DIR__ . '/../vendor/autoload.php';
 
 /*
 |--------------------------------------------------------------------------
@@ -44,14 +44,12 @@ require __DIR__ . '/../../ibcris/vendor/autoload.php';
 |
 */
 
-$app = require_once __DIR__ . '/../../ibcris/bootstrap/app.php';
-
-app()->usePublicPath(__DIR__);
+$app = require_once __DIR__ . '/../bootstrap/app.php';
 
 $kernel = $app->make(Kernel::class);
 
-$response = tap($kernel->handle(
+$response = $kernel->handle(
     $request = Request::capture()
-))->send();
+)->send();
 
 $kernel->terminate($request, $response);
